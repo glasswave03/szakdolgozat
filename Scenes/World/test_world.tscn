@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://b5000y3t10rg7"]
+
+[ext_resource type="Script" uid="uid://cr22w8eaiyaup" path="res://Scripts/World/test_world.gd" id="1_1srsd"]
+[ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://icon.svg" id="2_18ja4"]
+
+[node name="TestWorld" type="Node2D" unique_id=485076051]
+script = ExtResource("1_1srsd")
+
+[node name="Camera" type="Camera2D" parent="." unique_id=482120012]
+unique_name_in_owner = true
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=1655955405]
+position = Vector2(63, 45)
+texture = ExtResource("2_18ja4")

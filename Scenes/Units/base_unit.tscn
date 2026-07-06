@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://dckh32rd78p2d"]
+
+[ext_resource type="Script" uid="uid://bn2vaamhphpjd" path="res://Scripts/Units/unit.gd" id="1_bkgmb"]
+[ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://icon.svg" id="2_1vmcs"]
+
+[node name="BaseUnit" type="Node2D" unique_id=1585188856]
+script = ExtResource("1_bkgmb")
+health = null
+
+[node name="NavigationAgent" type="NavigationAgent2D" parent="." unique_id=423229197]
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=1947353019]
+texture = ExtResource("2_1vmcs")

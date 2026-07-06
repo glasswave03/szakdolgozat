@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://c76mxvgur7bfd"]
+
+[ext_resource type="Script" uid="uid://c548m78w3ittv" path="res://Scripts/game_manager.gd" id="1_oj352"]
+
+[node name="GameManager" type="Node" unique_id=606005864 node_paths=PackedStringArray("gui", "world")]
+script = ExtResource("1_oj352")
+gui = NodePath("UI")
+world = NodePath("World")
+
+[node name="World" type="Node2D" parent="." unique_id=589015152]
+
+[node name="UI" type="Control" parent="." unique_id=327832724]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
