@@ -7,6 +7,7 @@
 size = Vector2(122, 122)
 
 [node name="BaseUnit" type="CharacterBody2D" unique_id=274065641]
+input_pickable = true
 script = ExtResource("1_bkgmb")
 
 [node name="NavigationAgent" type="NavigationAgent2D" parent="." unique_id=423229197]
