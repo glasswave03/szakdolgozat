@@ -15,7 +15,7 @@ var select_mode : bool = false:
 	set(value):
 		select_mode = value
 		if value:
-			selection_rect = Rect2(Vector2(-8,-8), Vector2(16,16))
+			selection_rect = Rect2(Vector2(-64, -64), Vector2(128, 128))
 			selection_width = 1
 		else:
 			selection_rect = Rect2(0,0,0,0)
@@ -23,12 +23,13 @@ var select_mode : bool = false:
 		queue_redraw()
 
 func _ready() -> void:
-	name = "BaseUnit"
+	name = "Unit"
+	add_to_group("Unit")
 
 func _draw():
-	draw_rect(selection_rect,Color.GREEN, false, selection_width)
+	draw_rect(selection_rect, Color.GREEN, false, selection_width)
  
-func _physics_process(delta):
+func _physics_process(_delta):
 	if nav_agent.is_navigation_finished():
 		#if animation_player.current_animation != "idle":
 		#	animation_player.play("idle")
@@ -72,5 +73,5 @@ func set_health(value):
 		return
 	
 	health = value
-	if value < 0:
+	if value > 0:
 		damaged.emit()

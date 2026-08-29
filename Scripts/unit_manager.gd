@@ -6,33 +6,50 @@ var selected_rect : Rect2:
 		check_unit()
  
 var unit_selected : Array
+var control_group_0 : Array
 var control_group_1 : Array
 var control_group_2 : Array
 var control_group_3 : Array
- 
- 
+var control_group_4 : Array
+var control_group_5 : Array
+var control_group_6 : Array
+var control_group_7 : Array
+var control_group_8 : Array
+var control_group_9 : Array
+var control_groups: Dictionary = {
+	KEY_0: control_group_0,
+	KEY_1: control_group_1,
+	KEY_2: control_group_2,
+	KEY_3: control_group_3,
+	KEY_4: control_group_4,
+	KEY_5: control_group_5,
+	KEY_6: control_group_6,
+	KEY_7: control_group_7,
+	KEY_8: control_group_8,
+	KEY_9: control_group_9
+}
+
 func _input(event):
-	if event is InputEventKey:
-		if event.pressed and event.keycode == KEY_1:
-			if event.ctrl_pressed:
-				control_group_1 = unit_selected
-			else:
-				select_in(control_group_1)
-				unit_selected = control_group_1
-		if event.pressed and event.keycode == KEY_2:
-			if event.ctrl_pressed:
-				control_group_2 = unit_selected
-			else:
-				select_in(control_group_2)
-				unit_selected = control_group_2
-		if event.pressed and event.keycode == KEY_3:
-			if event.ctrl_pressed:
-				control_group_3 = unit_selected
-			else:
-				select_in(control_group_3)
-				unit_selected = control_group_3
- 
- 
+	make_group(event)
+
+
+func make_group(event):
+	const KEY_OFFSET = 48
+	var is_valid_group_event = event is InputEventKey and event.pressed and event.keycode in control_groups
+	
+	if is_valid_group_event:
+		if event.ctrl_pressed:
+			control_groups[event.keycode] = unit_selected
+			print("Group made #" + str(event.keycode - KEY_OFFSET) + " with " 
+				+ str(unit_selected.size()) + " units")
+		else:
+			select_in(control_groups.get(event.keycode))
+			unit_selected = control_groups.get(event.keycode)
+			print("Group id #" + str(event.keycode - KEY_OFFSET) + " selected, number of units: " 
+				+ str(unit_selected.size()))
+			print(unit_selected)
+
+
 func check_unit():
 	unit_selected = []
 	for unit in get_tree().get_nodes_in_group("Unit"):
@@ -65,7 +82,7 @@ func move_to_position(layer : TileMapLayer, tile_pos):
 		unit_selected[i].move_to( layer.map_to_local(formation[i]) )
  
 func select_in(group):
-	for unit in get_tree().get_nodes_in_group("BaseUnit"):
+	for unit in get_tree().get_nodes_in_group("Unit"):
 		if unit in group:
 			unit.select()
 		else:

@@ -47,7 +47,7 @@ func transition_to(target_state_path, msg={}):
 	_state.exit()
 	self._state = target_state
 	_state.enter(msg)
-	Events.player_state_changed.emit(_state.name)
+	#Events.player_state_changed.emit(_state.name)
 
 
 func set_is_active(value):

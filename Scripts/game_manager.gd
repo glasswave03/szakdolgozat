@@ -11,7 +11,6 @@ func _ready() -> void:
 	Global.game_manager = self
 	current_gui = $UI/MainMenu
 	current_world = $World/MenuScreen
-	get_tree().paused = true
 	
 	if current_gui and current_gui.scene_file_path:
 		scene_cache[current_gui.scene_file_path] = current_gui

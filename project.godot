@@ -18,11 +18,16 @@ config/icon="res://icon.svg"
 
 Global="*uid://bqu18lsa8fojj"
 UnitManager="*uid://cvtymdtqtvi7q"
+DialogueManager="*uid://c3rodes2l3gxb"
 
 [display]
 
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg", "res://addons/godotsteam/plugin.cfg")
 
 [input]
 
