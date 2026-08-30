@@ -34,18 +34,18 @@ func _process(_delta: float) -> void:
 	move_camera_up()
 	move_camera_down()
 
-
 func _input(event: InputEvent) -> void:
 	zoom_camera_in(event)
 	zoom_camera_out(event)
 	
+	UnitManager.make_group(event)
+	
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			print(event.position)
 			width = 2
 			drawing = true
-			start_pos = event.position
-			end_pos = event.position
+			start_pos = %Camera.get_global_mouse_position()
+			end_pos = %Camera.get_global_mouse_position()
 		if event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
 			width = 0
 			drawing = false
@@ -56,7 +56,7 @@ func _input(event: InputEvent) -> void:
 			UnitManager.move_to_position(%Ground,get_tile_pos(get_global_mouse_position()))
  
 	if event is InputEventMouseMotion and drawing:
-		end_pos = event.position
+		end_pos = %Camera.get_global_mouse_position()
 		queue_redraw()
 		UnitManager.selected_rect = selection_rect
 	

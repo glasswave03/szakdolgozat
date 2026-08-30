@@ -10,8 +10,6 @@ size = Vector2(122, 122)
 input_pickable = true
 script = ExtResource("1_bkgmb")
 
-[node name="NavigationAgent" type="NavigationAgent2D" parent="." unique_id=423229197]
-
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1947353019]
 texture = ExtResource("2_1vmcs")
 

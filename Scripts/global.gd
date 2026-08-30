@@ -1,16 +1,12 @@
 extends Node
 
-var score: int = 0
-var player_type: PlayerType
-var game_manager: GameManager
 const save_location = "user://save.json"
-const ROTA = 360
 
-enum PlayerType {DEFAULT, MOUSE, HOVER, ZIGZAG}
-
+var game_manager: GameManager
 var contents_to_save: Dictionary = {
 	"highscore": 0
 }
+
 
 func _ready() -> void:
 	pass
@@ -27,7 +23,3 @@ func _load():
 	
 	var save_data = data.duplicate()
 	contents_to_save.highscore = save_data.highscore
-	
-func add_score():
-	score += 5
-	

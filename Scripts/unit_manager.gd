@@ -4,7 +4,7 @@ var selected_rect : Rect2:
 	set(value):
 		selected_rect = value
 		check_unit()
- 
+
 var unit_selected : Array
 var control_group_0 : Array
 var control_group_1 : Array
@@ -29,15 +29,11 @@ var control_groups: Dictionary = {
 	KEY_9: control_group_9
 }
 
-func _input(event):
-	make_group(event)
-
-
 func make_group(event):
 	const KEY_OFFSET = 48
-	var is_valid_group_event = event is InputEventKey and event.pressed and event.keycode in control_groups
-	
-	if is_valid_group_event:
+	if event is not InputEventKey:
+		return
+	if event.pressed and event.keycode in control_groups:
 		if event.ctrl_pressed:
 			control_groups[event.keycode] = unit_selected
 			print("Group made #" + str(event.keycode - KEY_OFFSET) + " with " 
@@ -47,7 +43,6 @@ func make_group(event):
 			unit_selected = control_groups.get(event.keycode)
 			print("Group id #" + str(event.keycode - KEY_OFFSET) + " selected, number of units: " 
 				+ str(unit_selected.size()))
-			print(unit_selected)
 
 
 func check_unit():
@@ -64,7 +59,6 @@ func get_formation(tile_pos):
 	var formation = []  
 	var unit_count = unit_selected.size()
 	var formation_size = ceil(sqrt(unit_count))
- 
 	var index = 0
 	for x in range(-formation_size / 2, formation_size / 2 + 1):
 		for y in range(-formation_size / 2, formation_size / 2 + 1):
@@ -73,13 +67,13 @@ func get_formation(tile_pos):
 				index += 1
 			else:
 				break
- 
+				
 	return formation
  
 func move_to_position(layer : TileMapLayer, tile_pos):
 	var formation = get_formation(tile_pos)
 	for i in range(unit_selected.size()):
-		unit_selected[i].move_to( layer.map_to_local(formation[i]) )
+		unit_selected[i].move_to(layer.map_to_local(formation[i]))
  
 func select_in(group):
 	for unit in get_tree().get_nodes_in_group("Unit"):
