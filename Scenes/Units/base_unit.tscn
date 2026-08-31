@@ -4,13 +4,16 @@
 [ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://icon.svg" id="2_1vmcs"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q5kjn"]
-size = Vector2(122, 122)
+size = Vector2(14, 14)
 
 [node name="BaseUnit" type="CharacterBody2D" unique_id=274065641]
+y_sort_enabled = true
+collision_layer = 2
 input_pickable = true
 script = ExtResource("1_bkgmb")
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1947353019]
+scale = Vector2(0.25, 0.25)
 texture = ExtResource("2_1vmcs")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=973093022]

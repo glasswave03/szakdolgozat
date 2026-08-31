@@ -28,22 +28,26 @@ var control_groups: Dictionary = {
 	KEY_8: control_group_8,
 	KEY_9: control_group_9
 }
+var formation_spacing := 2
 
 func make_group(event):
 	const KEY_OFFSET = 48
-	if event is not InputEventKey:
-		return
-	if event.pressed and event.keycode in control_groups:
-		if event.ctrl_pressed:
-			control_groups[event.keycode] = unit_selected
-			print("Group made #" + str(event.keycode - KEY_OFFSET) + " with " 
-				+ str(unit_selected.size()) + " units")
-		else:
-			select_in(control_groups.get(event.keycode))
-			unit_selected = control_groups.get(event.keycode)
-			print("Group id #" + str(event.keycode - KEY_OFFSET) + " selected, number of units: " 
-				+ str(unit_selected.size()))
+	
+	if event.ctrl_pressed:
+		control_groups[event.keycode] = unit_selected
+		print("Group made #" + str(event.keycode - KEY_OFFSET) + " with " 
+			+ str(unit_selected.size()) + " units")
+	else:
+		select_in(control_groups.get(event.keycode))
+		unit_selected = control_groups.get(event.keycode)
+		print("Group id #" + str(event.keycode - KEY_OFFSET) + " selected, number of units: " 
+			+ str(unit_selected.size()))
 
+func spawn_unit(spawn_pos):
+	var unit_scene = load("res://Scenes/Units/base_unit.tscn")
+	var new_unit = unit_scene.instantiate()
+	new_unit.position = spawn_pos
+	add_child(new_unit)
 
 func check_unit():
 	unit_selected = []
@@ -53,21 +57,19 @@ func check_unit():
 			unit_selected.append(unit)
 		else:
 			unit.deselect()
-	print(unit_selected)
  
 func get_formation(tile_pos):
 	var formation = []  
-	var unit_count = unit_selected.size()
-	var formation_size = ceil(sqrt(unit_count))
+	var formation_size = ceil(sqrt(unit_selected.size()))
 	var index = 0
-	for x in range(-formation_size / 2, formation_size / 2 + 1):
-		for y in range(-formation_size / 2, formation_size / 2 + 1):
-			if index < unit_count:
-				formation.append(tile_pos + Vector2i(x, y))
+	for x in range(0, formation_size + 1):
+		for y in range(0, formation_size):
+			if index < unit_selected.size():
+				formation.append(tile_pos + Vector2i(x * formation_spacing, y * formation_spacing))
 				index += 1
 			else:
 				break
-				
+	
 	return formation
  
 func move_to_position(layer : TileMapLayer, tile_pos):
