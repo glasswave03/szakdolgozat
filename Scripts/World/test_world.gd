@@ -11,7 +11,6 @@ var start_pos := Vector2.ZERO
 var end_pos := Vector2.ZERO
 var selection_rect: Rect2
 var width = 0
-var exact_mouse_pos
 
 
 func _draw():
@@ -30,8 +29,6 @@ func _draw():
 	draw_rect(selection_rect, rect_color, false, width)
 
 func _process(_delta: float) -> void:
-	exact_mouse_pos = %Camera.get_global_mouse_position()
-	
 	move_camera_left()
 	move_camera_right()
 	move_camera_up()
@@ -45,8 +42,8 @@ func _input(event: InputEvent) -> void:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			width = 2
 			drawing = true
-			start_pos = exact_mouse_pos
-			end_pos = exact_mouse_pos
+			start_pos = %Camera.get_global_mouse_position()
+			end_pos = %Camera.get_global_mouse_position()
 		if event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
 			width = 0
 			drawing = false
@@ -54,10 +51,10 @@ func _input(event: InputEvent) -> void:
 			end_pos = Vector2.ZERO
 			queue_redraw()
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-			UnitManager.move_to_position(%Ground, get_tile_pos(exact_mouse_pos))
+			UnitManager.move_to_position(%Ground, get_tile_pos(%Camera.get_global_mouse_position()))
 	
 	if event is InputEventMouseMotion and drawing:
-		end_pos = exact_mouse_pos
+		end_pos = %Camera.get_global_mouse_position()
 		queue_redraw()
 		UnitManager.selected_rect = selection_rect
 	
@@ -68,7 +65,7 @@ func _input(event: InputEvent) -> void:
 		if event.pressed and event.keycode in UnitManager.control_groups:
 			UnitManager.make_group(event)
 		if event.pressed and event.keycode == KEY_Q:
-			UnitManager.spawn_unit(exact_mouse_pos)
+			UnitManager.spawn_unit(%Camera.get_global_mouse_position())
 
 
 func get_tile_pos(global_pos):

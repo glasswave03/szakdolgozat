@@ -59,7 +59,6 @@ func _on_input_event(_viewport, event, _shape_idx):
 					if unit != self:
 						unit.deselect()
 				UnitManager.unit_selected = [self]
-	print("clicked unit")
 
 func move_to(pos):
 	target_pos = pos

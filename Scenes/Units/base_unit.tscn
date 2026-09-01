@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://icon.svg" id="2_1vmcs"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q5kjn"]
-size = Vector2(14, 14)
+size = Vector2(36, 36)
 
 [node name="BaseUnit" type="CharacterBody2D" unique_id=274065641]
 y_sort_enabled = true
