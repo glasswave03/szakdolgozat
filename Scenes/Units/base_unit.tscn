@@ -11,6 +11,9 @@ y_sort_enabled = true
 collision_layer = 2
 input_pickable = true
 script = ExtResource("1_bkgmb")
+move_speed = null
+max_health = 10.0
+type = null
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1947353019]
 scale = Vector2(0.25, 0.25)
@@ -19,4 +22,6 @@ texture = ExtResource("2_1vmcs")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=973093022]
 shape = SubResource("RectangleShape2D_q5kjn")
 
+[connection signal="damaged" from="." to="." method="on_damaged"]
+[connection signal="death" from="." to="." method="on_death"]
 [connection signal="input_event" from="." to="." method="_on_input_event"]

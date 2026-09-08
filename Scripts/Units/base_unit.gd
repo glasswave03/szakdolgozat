@@ -1,33 +1,17 @@
-class_name BaseUnit extends CharacterBody2D
+class_name BaseUnit extends BaseObject
 
-signal death
-signal damaged
-
-@export var move_speed = 250.0
-@export var health := 10.0:
-	set = set_health
-
+@export var move_speed := 250.0
 var target_pos := Vector2.ZERO
-var selection_indicator: Rect2
-var selection_width: int
-var selection_radius := 25
-var select_mode : bool = false:
-	set(value):
-		select_mode = value
-		if value:
-			selection_indicator = Rect2(Vector2(0, 0), Vector2(0, 0))
-			selection_width = 2
-		else:
-			selection_indicator = Rect2(0,0,0,0)
-			selection_width = 0
-		queue_redraw()
+
 
 func _ready() -> void:
-	name = "Unit"
-	add_to_group("Unit")
+	type = BaseObject.UNIT
+	add_to_group("Selectable")
+
 
 func _draw():
 	draw_arc(selection_indicator.position, selection_radius, 0, 360, 100, Color.GREEN, selection_width)
+
 
 func _physics_process(delta):
 	#if nav_agent.is_navigation_finished():
@@ -42,34 +26,51 @@ func _physics_process(delta):
 	
 	move_and_slide()
 
+
 func select():
 	select_mode = true
+
 
 func deselect():
 	select_mode = false
 
+
 func _on_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			select_mode = true
-			if event.ctrl_pressed:
-				UnitManager.unit_selected.append(self)
-			else:
-				for unit in UnitManager.unit_selected:
-					if unit != self:
-						unit.deselect()
-				UnitManager.unit_selected = [self]
+		handle_unit_select(event)
+
+
+func handle_unit_select(event):
+	if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		select_mode = true
+		
+		if event.ctrl_pressed:
+			UnitManager.unit_selected.append(self)
+		else:
+			for unit in UnitManager.unit_selected:
+				if unit != self:
+					unit.deselect()
+			
+			UnitManager.unit_selected = [self]
+		
+		if event.double_click:
+			handle_double_click(get_tree().get_nodes_in_group("Selectable"))
+
+
+func handle_double_click(group):
+	for unit in group:
+		unit.select()
+		UnitManager.unit_selected.append(unit)
+
 
 func move_to(pos):
 	target_pos = pos
 	#animation_player.play("move")
 
-func set_health(value):
-	if value > health: 
-		health = 0
-		death.emit()
-		return
-	
-	health = value
-	if value > 0:
-		damaged.emit()
+
+func on_death():
+	print("Unit died :c ", self)
+
+
+func on_damaged():
+	print("Unit health: ", health, "/", max_health)

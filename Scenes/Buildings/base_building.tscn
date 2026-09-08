@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://ddjnhb1rxr3sa"]
+
+[ext_resource type="Script" uid="uid://ra6knyinp1ee" path="res://Scripts/Buildings/base_building.gd" id="1_6os4v"]
+[ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://icon.svg" id="2_fyotg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8c242"]
+size = Vector2(128, 128)
+
+[node name="BaseBuilding" type="CharacterBody2D" unique_id=1020716328]
+collision_layer = 3
+collision_mask = 3
+script = ExtResource("1_6os4v")
+max_health = 15.0
+type = 1
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=173166282]
+texture = ExtResource("2_fyotg")
+
+[node name="Collision" type="CollisionShape2D" parent="." unique_id=1676115088]
+shape = SubResource("RectangleShape2D_8c242")
+
+[connection signal="damaged" from="." to="." method="_on_damaged"]
+[connection signal="death" from="." to="." method="_on_death"]
+[connection signal="input_event" from="." to="." method="_on_input_event"]

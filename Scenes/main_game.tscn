@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://c76mxvgur7bfd"]
 
-[ext_resource type="Script" uid="uid://c548m78w3ittv" path="res://Scripts/game_manager.gd" id="1_oj352"]
+[ext_resource type="Script" uid="uid://c548m78w3ittv" path="res://Scripts/Managers/game_manager.gd" id="1_l756w"]
 
-[node name="GameManager" type="Node" unique_id=606005864 node_paths=PackedStringArray("gui", "world")]
-script = ExtResource("1_oj352")
+[node name="MainGame" type="Node" unique_id=606005864 node_paths=PackedStringArray("gui", "world")]
+script = ExtResource("1_l756w")
 gui = NodePath("UI")
 world = NodePath("World")
 

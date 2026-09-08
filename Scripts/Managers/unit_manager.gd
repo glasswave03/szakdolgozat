@@ -1,5 +1,7 @@
 extends Node
 
+var building_scene = preload("res://Scenes/Buildings/base_building.tscn")
+var unit_scene = preload("res://Scenes/Units/base_unit.tscn")
 var selected_rect : Rect2:
 	set(value):
 		selected_rect = value
@@ -30,6 +32,7 @@ var control_groups: Dictionary = {
 }
 var formation_spacing := 2
 
+
 func make_group(event):
 	const KEY_OFFSET = 48
 	
@@ -43,21 +46,24 @@ func make_group(event):
 		print("Group id #" + str(event.keycode - KEY_OFFSET) + " selected, number of units: " 
 			+ str(unit_selected.size()))
 
+
 func spawn_unit(spawn_pos):
-	var unit_scene = load("res://Scenes/Units/base_unit.tscn")
 	var new_unit = unit_scene.instantiate()
 	new_unit.position = spawn_pos
 	add_child(new_unit)
 
+
 func check_unit():
 	unit_selected = []
-	for unit in get_tree().get_nodes_in_group("Unit"):
+	for unit in get_tree().get_nodes_in_group("Selectable"):
 		if selected_rect.has_point(unit.global_position):
 			unit.select()
 			unit_selected.append(unit)
 		else:
 			unit.deselect()
+	print(unit_selected)
  
+
 func get_formation(tile_pos):
 	var formation = []  
 	var formation_size = ceil(sqrt(unit_selected.size()))
@@ -72,14 +78,31 @@ func get_formation(tile_pos):
 	
 	return formation
  
+
 func move_to_position(layer : TileMapLayer, tile_pos):
 	var formation = get_formation(tile_pos)
 	for i in range(unit_selected.size()):
+		if unit_selected[i].type == BaseObject.BUILDING:
+			unit_selected[i].deselect()
+			# TODO doesnt actually remove building from unit_selected
+			continue
 		unit_selected[i].move_to(layer.map_to_local(formation[i]))
  
+
 func select_in(group):
-	for unit in get_tree().get_nodes_in_group("Unit"):
+	for unit in get_tree().get_nodes_in_group("Selectable"):
 		if unit in group:
 			unit.select()
 		else:
 			unit.deselect()
+
+
+func select_building(layer: TileMapLayer, spawn_pos):
+	var new_building = building_scene.instantiate()
+	
+	new_building.position = layer.map_to_local(Vector2i(spawn_pos))
+	new_building.modulate = Color(1,1,1,0.3)
+	add_child(new_building)
+	new_building.collision.disabled = true
+	
+	return new_building

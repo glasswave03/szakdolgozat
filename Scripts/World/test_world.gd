@@ -3,7 +3,7 @@ extends Node2D
 const MAX_ZOOM = Vector2(2.0, 2.0)
 const MIN_ZOOM = Vector2(0.5, 0.5)
 
-@export var camera_speed = 500.0
+@export var camera_speed = 1000.0
 @export var scroll_speed = Vector2(0.1, 0.1)
 
 var drawing := false
@@ -11,6 +11,8 @@ var start_pos := Vector2.ZERO
 var end_pos := Vector2.ZERO
 var selection_rect: Rect2
 var width = 0
+var is_building_selected := false
+var selected_building
 
 
 func _draw():
@@ -33,23 +35,25 @@ func _process(_delta: float) -> void:
 	move_camera_right()
 	move_camera_up()
 	move_camera_down()
+	
+	if is_building_selected:
+		selected_building.position = %Ground.map_to_local(Vector2i(get_tile_pos(%Camera.get_global_mouse_position())))
+		if Input.is_action_just_pressed("mouse_left"):
+			selected_building.collision.disabled = false
+			selected_building.modulate = Color(1,1,1,1)
+			is_building_selected = false
+	else:
+		selected_building = null
+
 
 func _input(event: InputEvent) -> void:
 	zoom_camera_in(event)
 	zoom_camera_out(event)
 	
 	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			width = 2
-			drawing = true
-			start_pos = %Camera.get_global_mouse_position()
-			end_pos = %Camera.get_global_mouse_position()
-		if event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
-			width = 0
-			drawing = false
-			start_pos = Vector2.ZERO
-			end_pos = Vector2.ZERO
-			queue_redraw()
+		handle_left_click_press(event)
+		handle_left_click_release(event)
+		
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			UnitManager.move_to_position(%Ground, get_tile_pos(%Camera.get_global_mouse_position()))
 	
@@ -62,10 +66,33 @@ func _input(event: InputEvent) -> void:
 		if event.pressed and event.keycode == KEY_S:
 			for unit in UnitManager.unit_selected:
 				unit.target_pos = unit.position
+		
 		if event.pressed and event.keycode in UnitManager.control_groups:
 			UnitManager.make_group(event)
+		
 		if event.pressed and event.keycode == KEY_Q:
 			UnitManager.spawn_unit(%Camera.get_global_mouse_position())
+		
+		if event.pressed and event.keycode == KEY_W:
+			selected_building = UnitManager.select_building(%Ground,get_tile_pos(%Camera.get_global_mouse_position()))
+			is_building_selected = true
+
+
+func handle_left_click_press(event):
+	if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		width = 2
+		drawing = true
+		start_pos = %Camera.get_global_mouse_position()
+		end_pos = %Camera.get_global_mouse_position()
+
+
+func handle_left_click_release(event):
+	if event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
+		width = 0
+		drawing = false
+		start_pos = Vector2.ZERO
+		end_pos = Vector2.ZERO
+		queue_redraw()
 
 
 func get_tile_pos(global_pos):
