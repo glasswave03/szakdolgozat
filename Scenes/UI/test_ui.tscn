@@ -1,9 +1,39 @@
 [gd_scene format=3 uid="uid://d1ru5xdxgkem2"]
 
-[node name="TestUI" type="Control" unique_id=1870696154]
+[ext_resource type="Script" uid="uid://gl2cfwiwi4qr" path="res://Scripts/UI/test_ui.gd" id="1_fdkyl"]
+
+[node name="TestUI" type="Control" unique_id=1841617272]
 layout_mode = 3
-anchors_preset = 15
+anchors_preset = 0
+script = ExtResource("1_fdkyl")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2078579258]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -386.0
+offset_top = -108.0
+offset_right = 386.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(1, 1, 1, 0.39215687)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=40345049]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
-grow_vertical = 2
+grow_vertical = 0
+
+[node name="Label" type="Label" parent="HBoxContainer" unique_id=2117607459]
+layout_mode = 2
+text = "asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasd"
+
+[node name="Button" type="Button" parent="HBoxContainer" unique_id=2142557780]
+layout_mode = 2
+text = "Spawn unit"

@@ -10,18 +10,28 @@ size = Vector2(36, 36)
 y_sort_enabled = true
 collision_layer = 2
 input_pickable = true
+safe_margin = 1.0
 script = ExtResource("1_bkgmb")
-move_speed = null
 max_health = 10.0
-type = null
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1947353019]
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("2_1vmcs")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=973093022]
+[node name="Collision" type="CollisionShape2D" parent="." unique_id=973093022]
 shape = SubResource("RectangleShape2D_q5kjn")
 
-[connection signal="damaged" from="." to="." method="on_damaged"]
-[connection signal="death" from="." to="." method="on_death"]
+[node name="HealthBar" type="ProgressBar" parent="." unique_id=923963053]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -15.0
+offset_top = 20.0
+offset_right = 15.0
+offset_bottom = 24.0
+grow_horizontal = 2
+show_percentage = false
+
+[connection signal="damaged" from="." to="." method="_on_damaged"]
+[connection signal="death" from="." to="." method="_on_death"]
 [connection signal="input_event" from="." to="." method="_on_input_event"]

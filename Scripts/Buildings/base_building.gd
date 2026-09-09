@@ -4,21 +4,24 @@ class_name BaseBuilding extends BaseObject
 
 
 func _ready() -> void:
-	add_to_group("Selectable")
-	type = BaseObject.BUILDING
+	group_type = "Building"
+	add_to_group(selectable_type)
+	add_to_group(group_type)
 	max_health = 15
+	health = max_health
 	selection_radius = 100
-
-
-func _draw():
-	draw_arc(selection_indicator.position, selection_radius, 0, 360, 100, Color.GREEN, selection_width)
+	$HealthBar.max_value = max_health
+	$HealthBar.value = health
 
 
 func _on_damaged() -> void:
+	$HealthBar.value = health
 	print("building damaged: ", health, "/", max_health)
 
 
 func _on_death() -> void:
+	deselect()
+	call_deferred("queue_free")
 	print("building destroyed")
 
 
@@ -34,8 +37,10 @@ func handle_unit_select(event):
 		if event.ctrl_pressed:
 			UnitManager.unit_selected.append(self)
 		else:
+			UnitManager.clear_freed_objects()
 			for unit in UnitManager.unit_selected:
 				if unit != self:
 					unit.deselect()
 			
 			UnitManager.unit_selected = [self]
+			health -= 3

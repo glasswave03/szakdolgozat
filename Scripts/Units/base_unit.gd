@@ -5,12 +5,13 @@ var target_pos := Vector2.ZERO
 
 
 func _ready() -> void:
-	type = BaseObject.UNIT
-	add_to_group("Selectable")
-
-
-func _draw():
-	draw_arc(selection_indicator.position, selection_radius, 0, 360, 100, Color.GREEN, selection_width)
+	group_type = "Unit"
+	max_health = 10.0
+	health = max_health
+	$HealthBar.max_value = max_health
+	$HealthBar.value = health
+	add_to_group(selectable_type)
+	add_to_group(group_type)
 
 
 func _physics_process(delta):
@@ -27,14 +28,6 @@ func _physics_process(delta):
 	move_and_slide()
 
 
-func select():
-	select_mode = true
-
-
-func deselect():
-	select_mode = false
-
-
 func _on_input_event(_viewport, event, _shape_idx):
 	if event is InputEventMouseButton:
 		handle_unit_select(event)
@@ -47,14 +40,16 @@ func handle_unit_select(event):
 		if event.ctrl_pressed:
 			UnitManager.unit_selected.append(self)
 		else:
+			UnitManager.clear_freed_objects()
 			for unit in UnitManager.unit_selected:
 				if unit != self:
 					unit.deselect()
 			
 			UnitManager.unit_selected = [self]
+			health -= 3
 		
 		if event.double_click:
-			handle_double_click(get_tree().get_nodes_in_group("Selectable"))
+			handle_double_click(get_tree().get_nodes_in_group(group_type))
 
 
 func handle_double_click(group):
@@ -68,9 +63,12 @@ func move_to(pos):
 	#animation_player.play("move")
 
 
-func on_death():
-	print("Unit died :c ", self)
-
-
-func on_damaged():
+func _on_damaged():
+	$HealthBar.value = health
 	print("Unit health: ", health, "/", max_health)
+
+
+func _on_death():
+	deselect()
+	call_deferred("queue_free")
+	print("Unit died")

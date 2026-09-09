@@ -9,16 +9,18 @@ var scene_cache: Dictionary = {}
 
 func _ready() -> void:
 	Global.game_manager = self
-	current_gui = $UI/MainMenu
-	current_world = $World/MenuScreen
+	current_gui = $UI/TestUI
+	current_world = $World/TestWorld
 	
 	if current_gui and current_gui.scene_file_path:
 		scene_cache[current_gui.scene_file_path] = current_gui
+
 
 func clear_gui() -> void:
 	var scene_path = current_gui.scene_file_path
 	current_gui.queue_free() # Removes node entirely
 	scene_cache.erase(scene_path)
+
 
 func change_gui(new_scene: String, delete: bool = true) -> void:
 	if current_gui != null:
@@ -41,6 +43,7 @@ func change_gui(new_scene: String, delete: bool = true) -> void:
 		gui.add_child(new_node)
 	
 	current_gui = new_node
+
 
 func change_world(new_scene: String, delete: bool = true) -> void:
 	if current_world != null:

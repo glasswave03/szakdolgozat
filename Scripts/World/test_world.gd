@@ -31,10 +31,7 @@ func _draw():
 	draw_rect(selection_rect, rect_color, false, width)
 
 func _process(_delta: float) -> void:
-	move_camera_left()
-	move_camera_right()
-	move_camera_up()
-	move_camera_down()
+	move_camera()
 	
 	if is_building_selected:
 		selected_building.position = %Ground.map_to_local(Vector2i(get_tile_pos(%Camera.get_global_mouse_position())))
@@ -51,8 +48,7 @@ func _input(event: InputEvent) -> void:
 	zoom_camera_out(event)
 	
 	if event is InputEventMouseButton:
-		handle_left_click_press(event)
-		handle_left_click_release(event)
+		handle_left_click(event)
 		
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			UnitManager.move_to_position(%Ground, get_tile_pos(%Camera.get_global_mouse_position()))
@@ -74,19 +70,16 @@ func _input(event: InputEvent) -> void:
 			UnitManager.spawn_unit(%Camera.get_global_mouse_position())
 		
 		if event.pressed and event.keycode == KEY_W:
-			selected_building = UnitManager.select_building(%Ground,get_tile_pos(%Camera.get_global_mouse_position()))
+			selected_building = UnitManager.spawn_building(%Ground,get_tile_pos(%Camera.get_global_mouse_position()))
 			is_building_selected = true
 
 
-func handle_left_click_press(event):
+func handle_left_click(event):
 	if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		width = 2
 		drawing = true
 		start_pos = %Camera.get_global_mouse_position()
 		end_pos = %Camera.get_global_mouse_position()
-
-
-func handle_left_click_release(event):
 	if event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
 		width = 0
 		drawing = false
@@ -100,19 +93,13 @@ func get_tile_pos(global_pos):
 	var tile_pos = %Ground.local_to_map(local_pos)
 	return tile_pos
 
-func move_camera_left():
+func move_camera():
 	if Input.is_action_pressed("camera_left"):
 		%Camera.position.x -= camera_speed * get_process_delta_time()
-
-func move_camera_right():
 	if Input.is_action_pressed("camera_right"):
 		%Camera.position.x += camera_speed * get_process_delta_time()
-
-func move_camera_up():
 	if Input.is_action_pressed("camera_up"):
 		%Camera.position.y -= camera_speed * get_process_delta_time()
-
-func move_camera_down():
 	if Input.is_action_pressed("camera_down"):
 		%Camera.position.y += camera_speed * get_process_delta_time()
 

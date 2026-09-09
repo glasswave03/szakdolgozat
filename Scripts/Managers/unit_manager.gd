@@ -61,8 +61,7 @@ func check_unit():
 			unit_selected.append(unit)
 		else:
 			unit.deselect()
-	print(unit_selected)
- 
+
 
 func get_formation(tile_pos):
 	var formation = []  
@@ -77,15 +76,21 @@ func get_formation(tile_pos):
 				break
 	
 	return formation
- 
+
+
+func clear_freed_objects():
+	var new_unit_selected = []
+	for unit in unit_selected:
+		if unit != null:
+			new_unit_selected.append(unit)
+	unit_selected = new_unit_selected
+
 
 func move_to_position(layer : TileMapLayer, tile_pos):
+	clear_freed_objects()
+	
 	var formation = get_formation(tile_pos)
 	for i in range(unit_selected.size()):
-		if unit_selected[i].type == BaseObject.BUILDING:
-			unit_selected[i].deselect()
-			# TODO doesnt actually remove building from unit_selected
-			continue
 		unit_selected[i].move_to(layer.map_to_local(formation[i]))
  
 
@@ -97,7 +102,7 @@ func select_in(group):
 			unit.deselect()
 
 
-func select_building(layer: TileMapLayer, spawn_pos):
+func spawn_building(layer: TileMapLayer, spawn_pos):
 	var new_building = building_scene.instantiate()
 	
 	new_building.position = layer.map_to_local(Vector2i(spawn_pos))

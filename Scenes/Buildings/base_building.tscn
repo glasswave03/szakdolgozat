@@ -4,20 +4,35 @@
 [ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://icon.svg" id="2_fyotg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8c242"]
-size = Vector2(128, 128)
+size = Vector2(118, 118)
 
 [node name="BaseBuilding" type="CharacterBody2D" unique_id=1020716328]
-collision_layer = 3
-collision_mask = 3
+y_sort_enabled = true
+input_pickable = true
 script = ExtResource("1_6os4v")
 max_health = 15.0
-type = 1
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=173166282]
 texture = ExtResource("2_fyotg")
 
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=1676115088]
 shape = SubResource("RectangleShape2D_8c242")
+
+[node name="HealthBar" type="ProgressBar" parent="." unique_id=1768058177]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -71.0
+offset_top = 70.0
+offset_right = 71.0
+offset_bottom = 74.0
+grow_horizontal = 2
+grow_vertical = 2
+max_value = 15.0
+step = 0.1
+show_percentage = false
 
 [connection signal="damaged" from="." to="." method="_on_damaged"]
 [connection signal="death" from="." to="." method="_on_death"]
