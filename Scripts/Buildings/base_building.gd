@@ -1,6 +1,14 @@
 class_name BaseBuilding extends BaseObject
 
+signal placed
+
 @onready var collision: CollisionShape2D = $Collision
+
+var gathering_point: Vector2
+var spawn_offset = Vector2(-10, 70)
+
+# Spawnable units
+var unit_scene = preload("res://Scenes/Units/base_unit.tscn")
 
 
 func _ready() -> void:
@@ -44,3 +52,14 @@ func handle_unit_select(event):
 			
 			UnitManager.unit_selected = [self]
 			health -= 3
+
+
+func spawn_unit():
+	var new_unit = unit_scene.instantiate()
+	new_unit.position = position + spawn_offset
+	new_unit.target_pos = gathering_point + spawn_offset
+	add_sibling(new_unit)
+
+
+func _on_placed() -> void:
+	gathering_point = Vector2(position + spawn_offset)

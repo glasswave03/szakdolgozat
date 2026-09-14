@@ -34,13 +34,19 @@ func _process(_delta: float) -> void:
 	move_camera()
 	
 	if is_building_selected:
-		selected_building.position = %Ground.map_to_local(Vector2i(get_tile_pos(%Camera.get_global_mouse_position())))
+		var place_pos = %Ground.map_to_local(Vector2i(get_tile_pos(%Camera.get_global_mouse_position())))
+		selected_building.position = place_pos
 		if Input.is_action_just_pressed("mouse_left"):
-			selected_building.collision.disabled = false
+			selected_building.placed.emit()
 			selected_building.modulate = Color(1,1,1,1)
+			selected_building.collision.disabled = false
+			selected_building = null
 			is_building_selected = false
-	else:
-		selected_building = null
+		
+		if Input.is_action_just_pressed("ui_cancel"):
+			selected_building.call_deferred("queue_free")
+			selected_building = null
+			is_building_selected = false
 
 
 func _input(event: InputEvent) -> void:
@@ -48,7 +54,7 @@ func _input(event: InputEvent) -> void:
 	zoom_camera_out(event)
 	
 	if event is InputEventMouseButton:
-		handle_left_click(event)
+		handle_selection(event)
 		
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			UnitManager.move_to_position(%Ground, get_tile_pos(%Camera.get_global_mouse_position()))
@@ -74,7 +80,7 @@ func _input(event: InputEvent) -> void:
 			is_building_selected = true
 
 
-func handle_left_click(event):
+func handle_selection(event):
 	if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		width = 2
 		drawing = true

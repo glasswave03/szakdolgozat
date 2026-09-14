@@ -1,7 +1,6 @@
 extends Node
 
 var building_scene = preload("res://Scenes/Buildings/base_building.tscn")
-var unit_scene = preload("res://Scenes/Units/base_unit.tscn")
 var selected_rect : Rect2:
 	set(value):
 		selected_rect = value
@@ -45,12 +44,6 @@ func make_group(event):
 		unit_selected = control_groups.get(event.keycode)
 		print("Group id #" + str(event.keycode - KEY_OFFSET) + " selected, number of units: " 
 			+ str(unit_selected.size()))
-
-
-func spawn_unit(spawn_pos):
-	var new_unit = unit_scene.instantiate()
-	new_unit.position = spawn_pos
-	add_child(new_unit)
 
 
 func check_unit():

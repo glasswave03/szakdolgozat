@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cr22w8eaiyaup" path="res://Scripts/World/test_world.gd" id="1_1srsd"]
 [ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://icon.svg" id="2_18ja4"]
+[ext_resource type="PackedScene" uid="uid://d1ru5xdxgkem2" path="res://Scenes/UI/test_ui.tscn" id="3_7vjjh"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7vjjh"]
 texture = ExtResource("2_18ja4")
@@ -24,4 +25,7 @@ tile_set = SubResource("TileSet_18ja4")
 
 [node name="Camera" type="Camera2D" parent="." unique_id=482120012]
 unique_name_in_owner = true
-anchor_mode = 0
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1301410015]
+
+[node name="TestUI" parent="UI" unique_id=1841617272 instance=ExtResource("3_7vjjh")]

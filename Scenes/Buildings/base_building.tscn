@@ -37,3 +37,4 @@ show_percentage = false
 [connection signal="damaged" from="." to="." method="_on_damaged"]
 [connection signal="death" from="." to="." method="_on_death"]
 [connection signal="input_event" from="." to="." method="_on_input_event"]
+[connection signal="placed" from="." to="." method="_on_placed"]
