@@ -78,6 +78,11 @@ building_menu={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="Terrain"
+2d_physics/layer_2="Units"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"

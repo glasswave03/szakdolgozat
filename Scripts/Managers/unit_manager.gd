@@ -6,6 +6,7 @@ var selected_rect : Rect2:
 		selected_rect = value
 		check_unit()
 
+var used_tiles : Array
 var unit_selected : Array
 var control_group_0 : Array
 var control_group_1 : Array
@@ -57,7 +58,8 @@ func check_unit():
 
 
 func get_formation(tile_pos):
-	var formation = []  
+	var formation = []
+	unit_selected = get_units_only()
 	var formation_size = ceil(sqrt(unit_selected.size()))
 	var index = 0
 	for x in range(0, formation_size + 1):
@@ -69,6 +71,15 @@ func get_formation(tile_pos):
 				break
 	
 	return formation
+
+
+func get_units_only():
+	var new_unit_selected = []
+	
+	for unit in unit_selected:
+		if unit.group_type == "Unit":
+			new_unit_selected.append(unit)
+	return new_unit_selected
 
 
 func clear_freed_objects():
@@ -83,6 +94,7 @@ func move_to_position(layer : TileMapLayer, tile_pos):
 	clear_freed_objects()
 	
 	var formation = get_formation(tile_pos)
+	
 	for i in range(unit_selected.size()):
 		unit_selected[i].move_to(layer.map_to_local(formation[i]))
  
@@ -97,7 +109,6 @@ func select_in(group):
 
 func spawn_building(layer: TileMapLayer, spawn_pos):
 	var new_building = building_scene.instantiate()
-	
 	new_building.position = layer.map_to_local(Vector2i(spawn_pos))
 	new_building.modulate = Color(1,1,1,0.3)
 	add_child(new_building)

@@ -2,10 +2,15 @@ class_name BaseBuilding extends BaseObject
 
 signal placed
 
+const SPAWN_TIME := 1.0
+const QUEUE_LIMIT := 10
+
 @onready var collision: CollisionShape2D = $Collision
+@onready var timer: Timer = $SpawnTimer
 
 var gathering_point: Vector2
 var spawn_offset = Vector2(-10, 70)
+var spawn_queue := []
 
 # Spawnable units
 var unit_scene = preload("res://Scenes/Units/base_unit.tscn")
@@ -22,9 +27,15 @@ func _ready() -> void:
 	$HealthBar.value = health
 
 
+func _process(delta: float) -> void:
+	if not spawn_queue.is_empty() and timer.time_left == 0:
+		timer.start(SPAWN_TIME)
+		print("timer started")
+	$SpawnBar.value = timer.time_left
+
+
 func _on_damaged() -> void:
 	$HealthBar.value = health
-	print("building damaged: ", health, "/", max_health)
 
 
 func _on_death() -> void:
@@ -56,10 +67,17 @@ func handle_unit_select(event):
 
 func spawn_unit():
 	var new_unit = unit_scene.instantiate()
+	spawn_queue.push_back(new_unit)
+	print("pushed queue: ", spawn_queue)
+	await timer.timeout
 	new_unit.position = position + spawn_offset
 	new_unit.target_pos = gathering_point + spawn_offset
-	add_sibling(new_unit)
 
 
 func _on_placed() -> void:
 	gathering_point = Vector2(position + spawn_offset)
+
+
+func _on_timer_timeout() -> void:
+	add_sibling(spawn_queue.pop_front())
+	print("popped queue: ", spawn_queue)

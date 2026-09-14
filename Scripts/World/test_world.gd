@@ -50,8 +50,7 @@ func _process(_delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
-	zoom_camera_in(event)
-	zoom_camera_out(event)
+	camera_zoom(event)
 	
 	if event is InputEventMouseButton:
 		handle_selection(event)
@@ -72,12 +71,10 @@ func _input(event: InputEvent) -> void:
 		if event.pressed and event.keycode in UnitManager.control_groups:
 			UnitManager.make_group(event)
 		
-		if event.pressed and event.keycode == KEY_Q:
-			UnitManager.spawn_unit(%Camera.get_global_mouse_position())
-		
 		if event.pressed and event.keycode == KEY_W:
-			selected_building = UnitManager.spawn_building(%Ground,get_tile_pos(%Camera.get_global_mouse_position()))
-			is_building_selected = true
+			if not is_building_selected:
+				selected_building = UnitManager.spawn_building(%Ground,get_tile_pos(%Camera.get_global_mouse_position()))
+				is_building_selected = true
 
 
 func handle_selection(event):
@@ -109,10 +106,8 @@ func move_camera():
 	if Input.is_action_pressed("camera_down"):
 		%Camera.position.y += camera_speed * get_process_delta_time()
 
-func zoom_camera_in(event):
+func camera_zoom(event):
 	if event.is_action_pressed("scroll_up") and %Camera.zoom <= MAX_ZOOM:
 		%Camera.zoom += scroll_speed
-
-func zoom_camera_out(event):
 	if event.is_action_pressed("scroll_down") and %Camera.zoom >= MIN_ZOOM:
 		%Camera.zoom -= scroll_speed

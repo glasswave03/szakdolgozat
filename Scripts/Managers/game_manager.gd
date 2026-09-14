@@ -9,7 +9,7 @@ var scene_cache: Dictionary = {}
 
 func _ready() -> void:
 	Global.game_manager = self
-	current_gui = $GUI/TestUI
+	current_gui = $GUI/MenuUI
 	current_world = $World/TestWorld
 	
 	if current_gui and current_gui.scene_file_path:
