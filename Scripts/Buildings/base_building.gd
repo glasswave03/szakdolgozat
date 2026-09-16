@@ -1,16 +1,21 @@
 class_name BaseBuilding extends BaseObject
 
+@warning_ignore("unused_signal")
 signal placed
 
 const SPAWN_TIME := 1.0
 const QUEUE_LIMIT := 10
 
-@onready var collision: CollisionShape2D = $Collision
+@onready var collision: CollisionShape2D = %Collision
 @onready var timer: Timer = $SpawnTimer
+@onready var gathering_indicator: Sprite2D = $GatheringIndicator
 
-var gathering_point: Vector2
-var spawn_offset = Vector2(-10, 70)
+var spawn_offset := Vector2(-10, 70)
 var spawn_queue := []
+var is_overlapping := false
+var overlap_counter := 0
+var overlap_color := Color(1,0,0,0.3)
+var placement_color := Color(1,1,1,0.3)
 
 # Spawnable units
 var unit_scene = preload("res://Scenes/Units/base_unit.tscn")
@@ -25,13 +30,27 @@ func _ready() -> void:
 	selection_radius = 100
 	$HealthBar.max_value = max_health
 	$HealthBar.value = health
+	gathering_indicator.position += Vector2(-20, 140)
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
+	$SpawnBar.value = timer.time_left
 	if not spawn_queue.is_empty() and timer.time_left == 0:
 		timer.start(SPAWN_TIME)
-		print("timer started")
-	$SpawnBar.value = timer.time_left
+	
+	if overlap_counter > 0:
+		is_overlapping = true
+		modulate = overlap_color
+	else:
+		is_overlapping = false
+	
+	if not is_overlapping and %Overlap.monitoring:
+		modulate = placement_color
+	
+	if select_mode:
+		gathering_indicator.visible = true
+	else:
+		gathering_indicator.visible = false
 
 
 func _on_damaged() -> void:
@@ -65,19 +84,35 @@ func handle_unit_select(event):
 			health -= 3
 
 
+func move_to(pos):
+	gathering_indicator.global_position = pos
+
+
 func spawn_unit():
 	var new_unit = unit_scene.instantiate()
 	spawn_queue.push_back(new_unit)
 	print("pushed queue: ", spawn_queue)
-	await timer.timeout
 	new_unit.position = position + spawn_offset
-	new_unit.target_pos = gathering_point + spawn_offset
+	await timer.timeout
+	new_unit.target_pos = gathering_indicator.global_position
 
 
 func _on_placed() -> void:
-	gathering_point = Vector2(position + spawn_offset)
+	%Overlap.monitoring = false
+	modulate = Color.WHITE
+	gathering_indicator.visible = true
 
 
 func _on_timer_timeout() -> void:
 	add_sibling(spawn_queue.pop_front())
 	print("popped queue: ", spawn_queue)
+
+
+func _on_area_body_entered(_body: Node2D) -> void:
+	overlap_counter += 1
+	print("overlapping with: ", _body)
+
+
+func _on_area_body_exited(_body: Node2D) -> void:
+	overlap_counter -= 1
+	print("overlap exited")

@@ -3,20 +3,23 @@
 [ext_resource type="Script" uid="uid://ra6knyinp1ee" path="res://Scripts/Buildings/base_building.gd" id="1_6os4v"]
 [ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://icon.svg" id="2_fyotg"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q5kjn"]
+size = Vector2(128, 182)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8c242"]
 size = Vector2(118, 118)
 
-[node name="BaseBuilding" type="CharacterBody2D" unique_id=1020716328]
+[node name="BaseBuilding" type="CharacterBody2D" unique_id=739344030]
+top_level = true
 y_sort_enabled = true
 input_pickable = true
 script = ExtResource("1_6os4v")
 max_health = 15.0
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=173166282]
+position = Vector2(0, -1.0000057)
+scale = Vector2(1, 1.296875)
 texture = ExtResource("2_fyotg")
-
-[node name="Collision" type="CollisionShape2D" parent="." unique_id=1676115088]
-shape = SubResource("RectangleShape2D_8c242")
 
 [node name="HealthBar" type="ProgressBar" parent="." unique_id=1768058177]
 anchors_preset = 8
@@ -34,9 +37,6 @@ max_value = 15.0
 step = 0.1
 show_percentage = false
 
-[node name="SpawnTimer" type="Timer" parent="." unique_id=1463540730]
-one_shot = true
-
 [node name="SpawnBar" type="ProgressBar" parent="." unique_id=271411554]
 anchors_preset = 8
 anchor_left = 0.5
@@ -51,8 +51,30 @@ grow_horizontal = 2
 grow_vertical = 2
 max_value = 1.0
 
+[node name="SpawnTimer" type="Timer" parent="." unique_id=1463540730]
+one_shot = true
+
+[node name="Overlap" type="Area2D" parent="." unique_id=405108331]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 3
+
+[node name="Collision" type="CollisionShape2D" parent="Overlap" unique_id=714033158]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_q5kjn")
+
+[node name="Collision" type="CollisionShape2D" parent="." unique_id=1676115088]
+unique_name_in_owner = true
+shape = SubResource("RectangleShape2D_8c242")
+
+[node name="GatheringIndicator" type="Sprite2D" parent="." unique_id=2110982191]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_fyotg")
+
 [connection signal="damaged" from="." to="." method="_on_damaged"]
 [connection signal="death" from="." to="." method="_on_death"]
 [connection signal="input_event" from="." to="." method="_on_input_event"]
 [connection signal="placed" from="." to="." method="_on_placed"]
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_timer_timeout"]
+[connection signal="body_entered" from="Overlap" to="." method="_on_area_body_entered"]
+[connection signal="body_exited" from="Overlap" to="." method="_on_area_body_exited"]

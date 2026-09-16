@@ -6,7 +6,6 @@ var selected_rect : Rect2:
 		selected_rect = value
 		check_unit()
 
-var used_tiles : Array
 var unit_selected : Array
 var control_group_0 : Array
 var control_group_1 : Array
@@ -79,6 +78,8 @@ func get_units_only():
 	for unit in unit_selected:
 		if unit.group_type == "Unit":
 			new_unit_selected.append(unit)
+		else:
+			unit.deselect()
 	return new_unit_selected
 
 
@@ -90,13 +91,37 @@ func clear_freed_objects():
 	unit_selected = new_unit_selected
 
 
+func has_building_in_selection() -> bool:
+	clear_freed_objects()
+	
+	for unit in unit_selected:
+		if unit.group_type == "Building":
+			return true
+	
+	return false
+
+
+func get_buildings_in_selection() -> Array:
+	var buildings = []
+	
+	for unit in UnitManager.unit_selected:
+		if unit.group_type == "Building":
+			buildings.append(unit)
+	
+	return buildings
+
+
 func move_to_position(layer : TileMapLayer, tile_pos):
 	clear_freed_objects()
+	
+	if has_building_in_selection():
+		for building in get_buildings_in_selection():
+			building.move_to(snap_to_tile(layer, tile_pos))
 	
 	var formation = get_formation(tile_pos)
 	
 	for i in range(unit_selected.size()):
-		unit_selected[i].move_to(layer.map_to_local(formation[i]))
+		unit_selected[i].move_to(snap_to_tile(layer, formation[i]))
  
 
 func select_in(group):
@@ -109,9 +134,13 @@ func select_in(group):
 
 func spawn_building(layer: TileMapLayer, spawn_pos):
 	var new_building = building_scene.instantiate()
-	new_building.position = layer.map_to_local(Vector2i(spawn_pos))
-	new_building.modulate = Color(1,1,1,0.3)
+	new_building.position = snap_to_tile(layer, spawn_pos)
+	new_building.modulate = new_building.placement_color
 	add_child(new_building)
 	new_building.collision.disabled = true
 	
 	return new_building
+
+
+func snap_to_tile(layer: TileMapLayer, pos):
+	return layer.map_to_local(Vector2i(pos))
