@@ -31,6 +31,7 @@ func _ready() -> void:
 	$HealthBar.max_value = max_health
 	$HealthBar.value = health
 	gathering_indicator.position += Vector2(-20, 140)
+	gathering_indicator.visible = false
 
 
 func _process(_delta: float) -> void:
@@ -100,7 +101,6 @@ func spawn_unit():
 func _on_placed() -> void:
 	%Overlap.monitoring = false
 	modulate = Color.WHITE
-	gathering_indicator.visible = true
 
 
 func _on_timer_timeout() -> void:
