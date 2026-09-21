@@ -13,7 +13,12 @@ grow_horizontal = 2
 grow_vertical = 0
 script = ExtResource("1_fdkyl")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=2078579258]
+[node name="BuildingUI" type="Control" parent="." unique_id=41284623]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="BuildingUI" unique_id=196457986]
 custom_minimum_size = Vector2(700, 0)
 layout_mode = 1
 anchors_preset = 7
@@ -28,7 +33,7 @@ grow_horizontal = 2
 grow_vertical = 0
 color = Color(1, 1, 1, 0.39215687)
 
-[node name="Label" type="Label" parent="ColorRect" unique_id=2117607459]
+[node name="Label" type="Label" parent="BuildingUI/ColorRect" unique_id=1766349172]
 layout_mode = 0
 offset_left = -5.0
 offset_top = 38.0
@@ -36,7 +41,7 @@ offset_right = -4.0
 offset_bottom = 165.0
 text = "Building selected"
 
-[node name="HBox" type="HBoxContainer" parent="." unique_id=40345049]
+[node name="HBox" type="HBoxContainer" parent="BuildingUI" unique_id=674663518]
 custom_minimum_size = Vector2(100, 100)
 custom_maximum_size = Vector2(700, -1)
 layout_mode = 1
@@ -50,17 +55,17 @@ offset_right = 84.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="Grid" type="GridContainer" parent="HBox" unique_id=1611503496]
+[node name="Grid" type="GridContainer" parent="BuildingUI/HBox" unique_id=1827064798]
 layout_mode = 2
 columns = 3
 
-[node name="SpawnBtn" type="Button" parent="HBox/Grid" unique_id=2142557780]
+[node name="SpawnBtn" type="Button" parent="BuildingUI/HBox/Grid" unique_id=1982713184]
 layout_mode = 2
 text = "Spawn unit"
 
-[node name="DestroyBtn" type="Button" parent="HBox/Grid" unique_id=1909789671]
+[node name="DestroyBtn" type="Button" parent="BuildingUI/HBox/Grid" unique_id=751877373]
 layout_mode = 2
 text = "Destroy"
 
-[connection signal="pressed" from="HBox/Grid/SpawnBtn" to="." method="_on_spawn_btn_pressed"]
-[connection signal="pressed" from="HBox/Grid/DestroyBtn" to="." method="_on_destroy_btn_pressed"]
+[connection signal="pressed" from="BuildingUI/HBox/Grid/SpawnBtn" to="." method="_on_spawn_btn_pressed"]
+[connection signal="pressed" from="BuildingUI/HBox/Grid/DestroyBtn" to="." method="_on_destroy_btn_pressed"]

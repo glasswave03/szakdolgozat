@@ -1,15 +1,17 @@
 extends Control
 
+@onready var building_ui: Control = $BuildingUI
+
 
 func _ready() -> void:
-	visible = false
+	building_ui.visible = false
 
 
 func _process(_delta: float) -> void:
 	if UnitManager.has_building_in_selection():
-		visible = true
+		building_ui.visible = true
 	else:
-		visible = false
+		building_ui.visible = false
 
 
 func _on_spawn_btn_pressed() -> void:

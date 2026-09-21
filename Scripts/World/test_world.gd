@@ -1,8 +1,10 @@
 extends Node2D
 
-const MAX_ZOOM = Vector2(2.0, 2.0)
-const MIN_ZOOM = Vector2(0.5, 0.5)
-const SCROLL_SPEED = Vector2(0.1, 0.1)
+const MAX_ZOOM := Vector2(2.0, 2.0)
+const MIN_ZOOM := Vector2(0.5, 0.5)
+const SCROLL_SPEED := Vector2(0.1, 0.1)
+const TILE_SIZE := 16
+const WALL_TILE_COORD := Vector2i(5, 4)
 
 @export var camera_speed = 1000.0
 
@@ -13,6 +15,18 @@ var selection_rect: Rect2
 var width = 0
 var is_building_selected := false
 var selected_building
+var astar_grid := AStarGrid2D.new()
+
+
+func _ready() -> void:
+	astar_grid.region = %Ground.get_used_rect()
+	astar_grid.cell_size = Vector2(TILE_SIZE, TILE_SIZE)
+	astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_AT_LEAST_ONE_WALKABLE
+	astar_grid.jumping_enabled = true
+	astar_grid.update()
+	
+	for tile in %Ground.get_used_cells_by_id(0, WALL_TILE_COORD):
+		astar_grid.set_point_solid(tile, true)
 
 
 func _draw():
