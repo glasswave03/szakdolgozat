@@ -20,6 +20,7 @@ signal damaged
 		else:
 			damaged.emit()
 
+var grid: AStarGrid2D
 var group_type: String
 var selectable_type := "Selectable"
 var selection_indicator: Rect2
