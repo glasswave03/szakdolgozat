@@ -58,6 +58,7 @@ func _process(_delta: float) -> void:
 		if Input.is_action_just_pressed("mouse_left"):
 			if not selected_building.is_overlapping:
 				selected_building.placed.emit()
+				selected_building.setup(astar_grid)
 				selected_building.modulate = Color.WHITE
 				selected_building.collision.disabled = false
 				selected_building = null

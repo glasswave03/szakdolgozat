@@ -27,7 +27,8 @@ func _ready() -> void:
 	add_to_group(group_type)
 	max_health = 15
 	health = max_health
-	selection_radius = 100
+	selection_size = 160
+	selection_offset = Vector2(-80, -80)
 	$HealthBar.max_value = max_health
 	$HealthBar.value = health
 	gathering_indicator.position += Vector2(-20, 140)
@@ -82,7 +83,6 @@ func handle_unit_select(event):
 					unit.deselect()
 			
 			UnitManager.unit_selected = [self]
-			health -= 3
 
 
 func move_to(pos):
@@ -95,7 +95,8 @@ func spawn_unit():
 	print("pushed queue: ", spawn_queue)
 	new_unit.position = position + spawn_offset
 	await timer.timeout
-	new_unit.target_pos = gathering_indicator.global_position
+	new_unit.setup(grid)
+	new_unit.move_to(gathering_indicator.global_position)
 
 
 func _on_placed() -> void:

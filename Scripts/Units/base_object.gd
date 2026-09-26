@@ -23,17 +23,19 @@ signal damaged
 var grid: AStarGrid2D
 var group_type: String
 var selectable_type := "Selectable"
-var selection_indicator: Rect2
+var selection_rect: Rect2
 var selection_width: int
-var selection_radius := 25
+var selection_size := 32
+var selection_offset := Vector2(-16,-16)
+var selection_color := Color.GREEN
 var select_mode: bool = false:
 	set(value):
 		select_mode = value
 		if value:
-			selection_indicator = Rect2(Vector2(0, 0), Vector2(0, 0))
+			selection_rect = Rect2(selection_offset, Vector2(selection_size, selection_size))
 			selection_width = 2
 		else:
-			selection_indicator = Rect2(0,0,0,0)
+			selection_rect = Rect2(0,0,0,0)
 			selection_width = 0
 		
 		queue_redraw()
@@ -46,7 +48,7 @@ func _ready() -> void:
 
 
 func _draw():
-	draw_arc(selection_indicator.position, selection_radius, 0, 360, 100, Color.GREEN, selection_width)
+	draw_rect(selection_rect, selection_color, false, selection_width)
 
 
 func select():
@@ -59,3 +61,12 @@ func deselect():
 
 func move_to(pos):
 	pass
+
+
+func setup(_grid: AStarGrid2D):
+	grid = _grid
+
+
+func pos_to_cell(pos: Vector2) -> Vector2i:
+	assert(grid, "No grid set")
+	return pos / grid.cell_size

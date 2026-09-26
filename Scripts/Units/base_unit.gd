@@ -27,27 +27,30 @@ func setup(_grid: AStarGrid2D):
 
 
 func _physics_process(_delta):
-	var direction = (target_pos - global_position).normalized()
-	velocity = direction * move_speed
-	if position.distance_to(target_pos) < 5:
-		velocity = Vector2.ZERO
-	
-	#if not is_set_up: return
-	
-	#if next_cell == path.size() - 1:
+	### NO PATHFINDING ###
+	#var direction = (target_pos - global_position).normalized()
+	#velocity = direction * move_speed
+	#if position.distance_to(target_pos) < 5:
 	#	velocity = Vector2.ZERO
-	#	global_position = path[-1]
-	#	current_cell = pos_to_cell(global_position)
-	#else:
-	#	if not path.is_empty():
-	#		var direction = (path[next_cell+1] - path[next_cell]).normalized()
-	#		velocity = direction * move_speed
-	#		move_and_slide()
-			
-	#		if (path[next_cell+1] - global_position).length() < 4:
-	#			current_cell = pos_to_cell(global_position)
-	#			next_cell += 1
-	move_and_slide()
+	#move_and_slide()
+	######################
+	
+	### Pathfinding ###
+	if not is_set_up: return
+	
+	if next_cell == path.size() - 1:
+		velocity = Vector2.ZERO
+		global_position = path[-1]
+		current_cell = pos_to_cell(global_position)
+	else:
+		if not path.is_empty():
+			var direction = (path[next_cell+1] - path[next_cell]).normalized()
+			velocity = direction * move_speed
+			move_and_slide()
+	
+			if (path[next_cell+1] - global_position).length() < 4:
+				current_cell = pos_to_cell(global_position)
+				next_cell += 1
 
 
 func _on_input_event(_viewport, event, _shape_idx):
@@ -68,9 +71,10 @@ func handle_unit_select(event):
 					unit.deselect()
 			
 			UnitManager.unit_selected = [self]
-			health -= 3
 		
 		if event.double_click:
+			# TODO: make it only select on-screen units
+			# something to do with viewport rect
 			handle_double_click(get_tree().get_nodes_in_group(group_type))
 
 
@@ -81,10 +85,11 @@ func handle_double_click(group):
 
 
 func move_to(pos):
-	#if path.is_empty():
-	#	return
-	#next_cell = 0
-	target_pos = pos
+	recalculate_path(pos)
+	if path.is_empty():
+		return
+	next_cell = 0
+	#target_pos = pos
 	#animation_player.play("move")
 
 
@@ -100,10 +105,6 @@ func _on_death():
 
 
 func recalculate_path(pos: Vector2) -> void:
-	path.clear()
+	if not path.is_empty(): path.clear()
 	target_cell = pos_to_cell(pos)
 	path = grid.get_point_path(current_cell, target_cell)
-
-
-func pos_to_cell(pos: Vector2) -> Vector2i:
-	return pos / grid.cell_size
