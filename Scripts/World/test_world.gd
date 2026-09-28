@@ -22,6 +22,8 @@ var astar_grid := AStarGrid2D.new()
 func _ready() -> void:
 	astar_grid.region = %Ground.get_used_rect()
 	astar_grid.cell_size = Vector2(TILE_SIZE, TILE_SIZE)
+	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_EUCLIDEAN
+	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_EUCLIDEAN
 	astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_AT_LEAST_ONE_WALKABLE
 	astar_grid.jumping_enabled = false
 	astar_grid.update()
@@ -45,6 +47,7 @@ func _draw():
 	selection_rect = Rect2(rect_pos,rect_size)
 	draw_rect(selection_rect, rect_color, false, width)
 
+
 func _process(_delta: float) -> void:
 	#for unit in UnitManager.get_units_only():
 	#	if not unit.is_set_up:
@@ -57,6 +60,8 @@ func _process(_delta: float) -> void:
 		selected_building.position = current_tile_pos
 		if Input.is_action_just_pressed("mouse_left"):
 			if not selected_building.is_overlapping:
+				#TODO: when placing a building, it should set points solid under itself
+				
 				selected_building.placed.emit()
 				selected_building.setup(astar_grid)
 				selected_building.modulate = Color.WHITE

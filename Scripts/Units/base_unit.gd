@@ -7,7 +7,8 @@ var target_cell: Vector2i
 var path: PackedVector2Array
 
 var is_set_up := false
-var next_cell: int
+var next_cell_id: int
+var next_cell: Vector2i
 
 func _ready() -> void:
 	group_type = "Unit"
@@ -36,21 +37,29 @@ func _physics_process(_delta):
 	######################
 	
 	### Pathfinding ###
-	if not is_set_up: return
+	assert(is_set_up, "Unit is not set up")
 	
-	if next_cell == path.size() - 1:
+	#TODO: if unit cant reach the next cell in some seconds, it will stop trying
+	
+	if next_cell_id == path.size() - 1:
 		velocity = Vector2.ZERO
 		global_position = path[-1]
 		current_cell = pos_to_cell(global_position)
+		path.clear()
 	else:
 		if not path.is_empty():
-			var direction = (path[next_cell+1] - path[next_cell]).normalized()
+			var direction = (path[next_cell_id+1] - path[next_cell_id]).normalized()
 			velocity = direction * move_speed
+			if current_cell != pos_to_cell(global_position): current_cell = pos_to_cell(global_position)
 			move_and_slide()
 	
-			if (path[next_cell+1] - global_position).length() < 4:
+			if (path[next_cell_id+1] - global_position).length() < 4:
 				current_cell = pos_to_cell(global_position)
-				next_cell += 1
+				next_cell_id += 1
+				next_cell = path[next_cell_id]
+	
+	#TODO: probably another movement algo is needed for correct functionality
+	
 
 
 func _on_input_event(_viewport, event, _shape_idx):
@@ -88,7 +97,7 @@ func move_to(pos):
 	recalculate_path(pos)
 	if path.is_empty():
 		return
-	next_cell = 0
+	next_cell_id = 0
 	#target_pos = pos
 	#animation_player.play("move")
 
@@ -108,3 +117,4 @@ func recalculate_path(pos: Vector2) -> void:
 	if not path.is_empty(): path.clear()
 	target_cell = pos_to_cell(pos)
 	path = grid.get_point_path(current_cell, target_cell)
+	#path = (path as Array).map(func (p): return p + grid.cell_size / 2)
