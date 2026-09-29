@@ -3,22 +3,22 @@ class_name BaseBuilding extends BaseObject
 @warning_ignore("unused_signal")
 signal placed
 
-const SPAWN_TIME := 1.0
-const QUEUE_LIMIT := 10
+const SPAWN_TIME: float = 1.0
+const QUEUE_LIMIT: int = 10
 
 @onready var collision: CollisionShape2D = %Collision
 @onready var timer: Timer = $SpawnTimer
 @onready var gathering_indicator: Sprite2D = $GatheringIndicator
 
-var spawn_offset := Vector2(-10, 70)
-var spawn_queue := []
-var is_overlapping := false
-var overlap_counter := 0
-var overlap_color := Color(1,0,0,0.3)
-var placement_color := Color(1,1,1,0.3)
+var spawn_offset: Vector2 = Vector2(-10, 70)
+var spawn_queue: Array[Node] = []
+var is_overlapping: bool = false
+var overlap_counter: int = 0
+var overlap_color: Color = Color(1,0,0,0.3)
+var placement_color: Color = Color(1,1,1,0.3)
 
 # Spawnable units
-var unit_scene = preload("res://Features/Objects/Units/base_unit.tscn")
+var unit_scene: Resource = preload("res://Features/Objects/Units/base_unit.tscn")
 
 
 func _ready() -> void:
@@ -65,12 +65,12 @@ func _on_death() -> void:
 	print("building destroyed")
 
 
-func _on_input_event(_viewport, event, _shape_idx):
+func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton:
 		handle_unit_select(event)
 
 
-func handle_unit_select(event):
+func handle_unit_select(event: InputEvent) -> void:
 	if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		select_mode = true
 		
@@ -78,19 +78,19 @@ func handle_unit_select(event):
 			UnitManager.unit_selected.append(self)
 		else:
 			UnitManager.clear_freed_objects()
-			for unit in UnitManager.unit_selected:
+			for unit: Node in UnitManager.unit_selected:
 				if unit != self:
 					unit.deselect()
 			
 			UnitManager.unit_selected = [self]
 
 
-func move_to(pos):
+func move_to(pos: Vector2) -> void:
 	gathering_indicator.global_position = pos
 
 
-func spawn_unit():
-	var new_unit = unit_scene.instantiate()
+func spawn_unit() -> void:
+	var new_unit: BaseUnit = unit_scene.instantiate()
 	spawn_queue.push_back(new_unit)
 	print("pushed queue: ", spawn_queue)
 	new_unit.position = position + spawn_offset
@@ -105,7 +105,8 @@ func _on_placed() -> void:
 
 
 func _on_timer_timeout() -> void:
-	add_sibling(spawn_queue.pop_front())
+	var created_unit: Node = spawn_queue.pop_front()
+	add_sibling(created_unit)
 	print("popped queue: ", spawn_queue)
 
 

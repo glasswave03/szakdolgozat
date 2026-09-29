@@ -1,26 +1,26 @@
 extends Node2D
 
-const MAX_ZOOM := Vector2(2.0, 2.0)
-const MIN_ZOOM := Vector2(0.5, 0.5)
-const SCROLL_SPEED := Vector2(0.1, 0.1)
-const TILE_SIZE := 16
-const WALL_TILE_COORD := Vector2i(5, 4)
+const MAX_ZOOM: Vector2 = Vector2(2.0, 2.0)
+const MIN_ZOOM: Vector2 = Vector2(0.5, 0.5)
+const SCROLL_SPEED: Vector2 = Vector2(0.1, 0.1)
+const TILE_SIZE: int = 16
+const WALL_TILE_COORD: Vector2i = Vector2i(2, 2)
 
 @export var tilemap: TileMapLayer
 
-var camera_speed = 1000.0
-var drawing := false
-var start_pos := Vector2.ZERO
-var end_pos := Vector2.ZERO
+var camera_speed: float = 1000.0
+var drawing: bool = false
+var start_pos: Vector2 = Vector2.ZERO
+var end_pos: Vector2 = Vector2.ZERO
 var selection_rect: Rect2
-var width = 0
-var is_building_selected := false
-var selected_building
-var astar_grid := AStarGrid2D.new()
+var selection_width: int = 0
+var is_building_selected: bool = false
+var selected_building: BaseBuilding
+var astar_grid: AStarGrid2D = AStarGrid2D.new()
 
 
 func _ready() -> void:
-	astar_grid.region = %Ground.get_used_rect()
+	astar_grid.region = tilemap.get_used_rect()
 	astar_grid.cell_size = Vector2(TILE_SIZE, TILE_SIZE)
 	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_EUCLIDEAN
 	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_EUCLIDEAN
@@ -28,14 +28,14 @@ func _ready() -> void:
 	astar_grid.jumping_enabled = false
 	astar_grid.update()
 	
-	for tile in %Ground.get_used_cells_by_id(0, WALL_TILE_COORD):
+	for tile: Vector2i in tilemap.get_used_cells_by_id(0, WALL_TILE_COORD):
 		astar_grid.set_point_solid(tile, true)
 
 
-func _draw():
-	var rect_pos = start_pos
-	var rect_size = end_pos - start_pos
-	var rect_color = Color.GREEN
+func _draw() -> void:
+	var rect_pos: Vector2 = start_pos
+	var rect_size: Vector2 = end_pos - start_pos
+	var rect_color: Color = Color.GREEN
 	
 	if rect_size.x < 0:
 		rect_pos.x += rect_size.x
@@ -45,7 +45,7 @@ func _draw():
 		rect_size.y = abs(rect_size.y)
 	
 	selection_rect = Rect2(rect_pos,rect_size)
-	draw_rect(selection_rect, rect_color, false, width)
+	draw_rect(selection_rect, rect_color, false, selection_width)
 
 
 func _process(_delta: float) -> void:
@@ -56,7 +56,9 @@ func _process(_delta: float) -> void:
 	move_camera()
 	
 	if is_building_selected:
-		var current_tile_pos = %Ground.map_to_local(Vector2i(get_tile_pos(%Camera.get_global_mouse_position())))
+		var mouse_pos: Vector2 = %Camera.get_global_mouse_position()
+		var mouse_to_tile: Vector2i = Vector2i(get_tile_pos(mouse_pos))
+		var current_tile_pos: Vector2i = tilemap.map_to_local(mouse_to_tile)
 		selected_building.position = current_tile_pos
 		if Input.is_action_just_pressed("mouse_left"):
 			if not selected_building.is_overlapping:
@@ -78,13 +80,12 @@ func _process(_delta: float) -> void:
 func _input(event: InputEvent) -> void:
 	camera_zoom(event)
 	
+	var mouse_pos: Vector2 = %Camera.get_global_mouse_position()
 	if event is InputEventMouseButton:
 		handle_selection(event)
 		
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-			#for unit in UnitManager.unit_selected:
-			#	unit.recalculate_path(%Ground.map_to_local(Vector2i(get_tile_pos(%Camera.get_global_mouse_position()))))
-			UnitManager.move_to_position(%Ground, get_tile_pos(%Camera.get_global_mouse_position()))
+			UnitManager.move_to_position(tilemap, get_tile_pos(mouse_pos))
 	
 	if event is InputEventMouseMotion and drawing:
 		end_pos = %Camera.get_global_mouse_position()
@@ -93,46 +94,56 @@ func _input(event: InputEvent) -> void:
 	
 	if event is InputEventKey:
 		if event.pressed and event.keycode == KEY_S:
-			for unit in UnitManager.unit_selected:
+			for unit: Node in UnitManager.unit_selected:
 				unit.target_pos = unit.position
 		
 		if event.pressed and event.keycode in UnitManager.control_groups:
 			UnitManager.make_group(event)
 		
+		if event.pressed and event.keycode == KEY_Q:
+			var unit_scene := load("res://Features/Objects/Units/base_unit.tscn")
+			var new_unit: BaseUnit = unit_scene.instantiate()
+			new_unit.setup(astar_grid)
+			new_unit.position = get_tile_pos(mouse_pos)
+			add_child(new_unit)
+			print("unit spawned: ", new_unit)
+		
 		if event.pressed and event.keycode == KEY_W:
 			if not is_building_selected:
-				selected_building = UnitManager.spawn_building(%Ground,get_tile_pos(%Camera.get_global_mouse_position()))
+				
+				var mouse_to_tile: Vector2i = get_tile_pos(mouse_pos)
+				selected_building = UnitManager.spawn_building(tilemap, mouse_to_tile)
 				is_building_selected = true
 
 
-func handle_selection(event):
+func handle_selection(event: InputEvent) -> void:
 	if is_building_selected:
-		for unit in UnitManager.unit_selected:
+		for unit: Node in UnitManager.unit_selected:
 			unit.deselect()
 		
 		UnitManager.unit_selected.clear()
 		return
 	
 	if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		width = 2
+		selection_width = 2
 		drawing = true
 		start_pos = %Camera.get_global_mouse_position()
 		end_pos = %Camera.get_global_mouse_position()
 	
 	if event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
-		width = 0
+		selection_width = 0
 		drawing = false
 		start_pos = Vector2.ZERO
 		end_pos = Vector2.ZERO
 		queue_redraw()
 
 
-func get_tile_pos(global_pos):
-	var local_pos = %Ground.to_local(global_pos)
-	var tile_pos = %Ground.local_to_map(local_pos)
+func get_tile_pos(global_pos: Vector2) -> Vector2i:
+	var local_pos: Vector2 = tilemap.to_local(global_pos)
+	var tile_pos: Vector2i = tilemap.local_to_map(local_pos)
 	return tile_pos
 
-func move_camera():
+func move_camera() -> void:
 	if Input.is_action_pressed("camera_left"):
 		%Camera.position.x -= camera_speed * get_process_delta_time()
 	if Input.is_action_pressed("camera_right"):
@@ -142,7 +153,7 @@ func move_camera():
 	if Input.is_action_pressed("camera_down"):
 		%Camera.position.y += camera_speed * get_process_delta_time()
 
-func camera_zoom(event):
+func camera_zoom(event: InputEvent) -> void:
 	if event.is_action_pressed("scroll_up") and %Camera.zoom <= MAX_ZOOM:
 		%Camera.zoom += SCROLL_SPEED
 	if event.is_action_pressed("scroll_down") and %Camera.zoom >= MIN_ZOOM:

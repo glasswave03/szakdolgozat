@@ -1,74 +1,73 @@
-class_name StateMachine
-extends Node
+class_name StateMachine extends Node
 ## Hierarchical State machine for the player.
 ##
 ## Initializes states and delegates engine callbacks ([method Node._physics_process],
 ## [method Node._unhandled_input]) to the state.
 
-signal state_changed(previous, new)
+signal state_changed(previous: State, new: State)
 
 @export var initial_state: Node
-var is_active = true:
+var is_active := true:
 	set = set_is_active
 
-@onready var _state = initial_state:
+@onready var _state: Node = initial_state:
 	set = set_state
-@onready var _state_name = _state.name
+@onready var _state_name: StringName = _state.name
 
 
-func _init():
+func _init() -> void:
 	add_to_group("state_machine")
 
 
-func _enter_tree():
+func _enter_tree() -> void:
 	print("this happens before the ready method!")
 
 
-func _ready():
+func _ready() -> void:
 	state_changed.connect(_on_state_changed)
 	_state.enter()
 
 
-func _unhandled_input(event):
+func _unhandled_input(event: InputEvent) -> void:
 	_state.unhandled_input(event)
 
 
-func _physics_process(delta):
+func _physics_process(delta: float) -> void:
 	_state.physics_process(delta)
 
 
-func transition_to(target_state_path, msg={}):
+func transition_to(target_state_path: NodePath, message: Dictionary[String, Variant] = {}) -> void:
 	if not has_node(target_state_path):
 		return
 
-	var target_state = get_node(target_state_path)
+	var target_state: Node = get_node(target_state_path)
 	assert(target_state.is_composite == false)
 
 	_state.exit()
 	self._state = target_state
-	_state.enter(msg)
+	_state.enter(message)
 	#Events.player_state_changed.emit(_state.name)
 
 
-func set_is_active(value):
+func set_is_active(value: bool) -> void:
 	is_active = value
 	set_physics_process(value)
 	set_process_unhandled_input(value)
 	set_block_signals(not value)
 
 
-func set_state(value):
+func set_state(value: Node) -> void:
 	_state = value
 	_state_name = _state.name
 
 
-func _on_state_changed(previous, new):
+func _on_state_changed(_previous: State, _new: State) -> void:
 	print("state changed")
 	state_changed.emit()
 
 
 class State:
-	var foo = 0
+	var foo := 0
 
-	func _init():
+	func _init() -> void:
 		print("Hello!")

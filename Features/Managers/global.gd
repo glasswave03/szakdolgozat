@@ -11,15 +11,15 @@ var contents_to_save: Dictionary = {
 func _ready() -> void:
 	pass
 
-func _save():
-	var file = FileAccess.open(save_location, FileAccess.WRITE)
+func _save() -> void:
+	var file := FileAccess.open(save_location, FileAccess.WRITE)
 	file.store_var(contents_to_save.duplicate())
 	file.close()
 
-func _load():
-	var file = FileAccess.open(save_location, FileAccess.READ)
-	var data = file.get_var()
+func _load() -> void:
+	var file := FileAccess.open(save_location, FileAccess.READ)
+	var data: Variant = file.get_var()
 	file.close()
 	
-	var save_data = data.duplicate()
+	var save_data: Variant = data.duplicate()
 	contents_to_save.highscore = save_data.highscore

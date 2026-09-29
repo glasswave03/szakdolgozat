@@ -4,9 +4,9 @@ signal death
 signal damaged
 
 @export var max_health: float
-@export var health := max_health:
+@export var health: float = max_health:
 	set(value):
-		var health_before := health
+		var health_before: float = health
 		health = value
 		
 		if health <= 0:
@@ -22,12 +22,12 @@ signal damaged
 
 var grid: AStarGrid2D
 var group_type: String
-var selectable_type := "Selectable"
+var selectable_type: String = "Selectable"
 var selection_rect: Rect2
 var selection_width: int
-var selection_size := 32
-var selection_offset := Vector2(-16,-16)
-var selection_color := Color.GREEN
+var selection_size: int = 32
+var selection_offset: Vector2 = Vector2(-16,-16)
+var selection_color: Color = Color.GREEN
 var select_mode: bool = false:
 	set(value):
 		select_mode = value
@@ -47,23 +47,23 @@ func _ready() -> void:
 	add_to_group(selectable_type)
 
 
-func _draw():
+func _draw() -> void:
 	draw_rect(selection_rect, selection_color, false, selection_width)
 
 
-func select():
+func select() -> void:
 	select_mode = true
 
 
-func deselect():
+func deselect() -> void:
 	select_mode = false
 
 
-func move_to(pos):
+func move_to(_pos: Vector2) -> void:
 	pass
 
 
-func setup(_grid: AStarGrid2D):
+func setup(_grid: AStarGrid2D) -> void:
 	grid = _grid
 
 
