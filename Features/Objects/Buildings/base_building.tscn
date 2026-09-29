@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ddjnhb1rxr3sa"]
 
-[ext_resource type="Script" uid="uid://ra6knyinp1ee" path="res://Scripts/Buildings/base_building.gd" id="1_6os4v"]
-[ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://icon.svg" id="2_fyotg"]
+[ext_resource type="Script" uid="uid://ra6knyinp1ee" path="res://Features/Objects/Buildings/base_building.gd" id="1_43s4h"]
+[ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://Assets/icon.svg" id="2_50br4"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q5kjn"]
 size = Vector2(128, 182)
@@ -13,13 +13,13 @@ size = Vector2(118, 118)
 top_level = true
 y_sort_enabled = true
 input_pickable = true
-script = ExtResource("1_6os4v")
+script = ExtResource("1_43s4h")
 max_health = 15.0
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=173166282]
 position = Vector2(0, -1.0000057)
 scale = Vector2(1, 1.296875)
-texture = ExtResource("2_fyotg")
+texture = ExtResource("2_50br4")
 
 [node name="HealthBar" type="ProgressBar" parent="." unique_id=1768058177]
 anchors_preset = 8
@@ -69,7 +69,7 @@ shape = SubResource("RectangleShape2D_8c242")
 
 [node name="GatheringIndicator" type="Sprite2D" parent="." unique_id=2110982191]
 scale = Vector2(0.2, 0.2)
-texture = ExtResource("2_fyotg")
+texture = ExtResource("2_50br4")
 
 [connection signal="damaged" from="." to="." method="_on_damaged"]
 [connection signal="death" from="." to="." method="_on_death"]

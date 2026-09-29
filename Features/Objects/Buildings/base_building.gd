@@ -18,7 +18,7 @@ var overlap_color := Color(1,0,0,0.3)
 var placement_color := Color(1,1,1,0.3)
 
 # Spawnable units
-var unit_scene = preload("res://Scenes/Units/base_unit.tscn")
+var unit_scene = preload("res://Features/Objects/Units/base_unit.tscn")
 
 
 func _ready() -> void:

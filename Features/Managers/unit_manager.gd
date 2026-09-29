@@ -1,6 +1,6 @@
 extends Node
 
-var building_scene = preload("res://Scenes/Buildings/base_building.tscn")
+var building_scene = preload("res://Features/Objects/Buildings/base_building.tscn")
 var selected_rect : Rect2:
 	set(value):
 		selected_rect = value
