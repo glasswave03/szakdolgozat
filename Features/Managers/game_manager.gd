@@ -1,6 +1,7 @@
 class_name GameManager extends Node
 
 const FPS_TIMER_LIMIT: float = 1.0
+const DEBUG_UI = preload("res://Features/UI/debug_ui.tscn")
 
 @export var world: Node2D
 
@@ -15,7 +16,8 @@ func _ready() -> void:
 	Global.game_manager = self
 	current_world = $World/TestWorld
 	ui = $UserInterface
-	fps_label = $UserInterface/MenuUI/FPSCounter
+	ui.add_child(DEBUG_UI.instantiate())
+	fps_label = $UserInterface/DebugUI/FPSCounter
 
 
 func _process(delta: float) -> void:

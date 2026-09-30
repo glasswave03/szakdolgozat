@@ -3,7 +3,7 @@ extends Node2D
 const MAX_ZOOM: Vector2 = Vector2(2.0, 2.0)
 const MIN_ZOOM: Vector2 = Vector2(0.5, 0.5)
 const SCROLL_SPEED: Vector2 = Vector2(0.1, 0.1)
-const TILE_SIZE: int = 16
+const TILE_SIZE: int = 32
 const WALL_TILE_COORD: Vector2i = Vector2i(2, 2)
 
 @export var tilemap: TileMapLayer
@@ -20,16 +20,26 @@ var astar_grid: AStarGrid2D = AStarGrid2D.new()
 
 
 func _ready() -> void:
+	var offset := TILE_SIZE / 2
 	astar_grid.region = tilemap.get_used_rect()
 	astar_grid.cell_size = Vector2(TILE_SIZE, TILE_SIZE)
 	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_EUCLIDEAN
 	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_EUCLIDEAN
-	astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_AT_LEAST_ONE_WALKABLE
+	astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
 	astar_grid.jumping_enabled = false
+	astar_grid.offset = Vector2(offset, offset)
 	astar_grid.update()
 	
-	for tile: Vector2i in tilemap.get_used_cells_by_id(0, WALL_TILE_COORD):
-		astar_grid.set_point_solid(tile, true)
+	for x in tilemap.get_used_rect().size.x:
+		for y in tilemap.get_used_rect().size.y:
+			var tile_pos := Vector2i(
+				x + tilemap.get_used_rect().position.x, 
+				y + tilemap.get_used_rect().position.y
+			)
+			var tile_data := tilemap.get_cell_tile_data(tile_pos)
+			
+			if tile_data == null or not tile_data.get_custom_data("walkable"):
+				astar_grid.set_point_solid(tile_pos, true)
 
 
 func _draw() -> void:
@@ -46,12 +56,15 @@ func _draw() -> void:
 	
 	selection_rect = Rect2(rect_pos,rect_size)
 	draw_rect(selection_rect, rect_color, false, selection_width)
+	
+	for unit: Node in UnitManager.get_units_from_selection():
+		draw_polyline(unit.debug_path, Color.RED)
 
 
 func _process(_delta: float) -> void:
-	#for unit in UnitManager.get_units_only():
-	#	if not unit.is_set_up:
-	#		unit.setup(astar_grid)
+	for unit: Node in UnitManager.unit_selected:
+		if unit.is_in_group("Unit") and not unit.current_id_path.is_empty() and unit.current_id_path.size() > 2:
+			queue_redraw()
 	
 	move_camera()
 	
@@ -63,9 +76,8 @@ func _process(_delta: float) -> void:
 		if Input.is_action_just_pressed("mouse_left"):
 			if not selected_building.is_overlapping:
 				#TODO: when placing a building, it should set points solid under itself
-				
 				selected_building.placed.emit()
-				selected_building.setup(astar_grid)
+				selected_building.setup(astar_grid, tilemap)
 				selected_building.modulate = Color.WHITE
 				selected_building.collision.disabled = false
 				selected_building = null
@@ -81,11 +93,12 @@ func _input(event: InputEvent) -> void:
 	camera_zoom(event)
 	
 	var mouse_pos: Vector2 = %Camera.get_global_mouse_position()
+	var mouse_to_tile: Vector2i = get_tile_pos(mouse_pos)
 	if event is InputEventMouseButton:
 		handle_selection(event)
 		
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-			UnitManager.move_to_position(tilemap, get_tile_pos(mouse_pos))
+			UnitManager.move_to_position(tilemap, mouse_to_tile)
 	
 	if event is InputEventMouseMotion and drawing:
 		end_pos = %Camera.get_global_mouse_position()
@@ -103,15 +116,13 @@ func _input(event: InputEvent) -> void:
 		if event.pressed and event.keycode == KEY_Q:
 			var unit_scene := load("res://Features/Objects/Units/base_unit.tscn")
 			var new_unit: BaseUnit = unit_scene.instantiate()
-			new_unit.setup(astar_grid)
-			new_unit.position = get_tile_pos(mouse_pos)
+			new_unit.setup(astar_grid, tilemap)
+			new_unit.position = mouse_pos
 			add_child(new_unit)
 			print("unit spawned: ", new_unit)
 		
 		if event.pressed and event.keycode == KEY_W:
 			if not is_building_selected:
-				
-				var mouse_to_tile: Vector2i = get_tile_pos(mouse_pos)
 				selected_building = UnitManager.spawn_building(tilemap, mouse_to_tile)
 				is_building_selected = true
 

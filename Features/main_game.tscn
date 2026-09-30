@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://c548m78w3ittv" path="res://Features/Managers/game_manager.gd" id="1_l756w"]
 [ext_resource type="PackedScene" uid="uid://b5000y3t10rg7" path="res://Features/Worlds/test_world.tscn" id="2_0e3vx"]
-[ext_resource type="PackedScene" uid="uid://yisl65elbd4" path="res://Features/UI/menu_ui.tscn" id="3_0e3vx"]
 
 [node name="MainGame" type="Node" unique_id=606005864 node_paths=PackedStringArray("world")]
 script = ExtResource("1_l756w")
@@ -13,5 +12,3 @@ world = NodePath("World")
 [node name="TestWorld" parent="World" unique_id=485076051 instance=ExtResource("2_0e3vx")]
 
 [node name="UserInterface" type="CanvasLayer" parent="." unique_id=529392270]
-
-[node name="MenuUI" parent="UserInterface" unique_id=30374163 instance=ExtResource("3_0e3vx")]

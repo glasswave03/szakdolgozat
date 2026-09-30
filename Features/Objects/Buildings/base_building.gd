@@ -95,7 +95,7 @@ func spawn_unit() -> void:
 	print("pushed queue: ", spawn_queue)
 	new_unit.position = position + spawn_offset
 	await timer.timeout
-	new_unit.setup(grid)
+	new_unit.setup(grid, tilemap)
 	new_unit.move_to(gathering_indicator.global_position)
 
 

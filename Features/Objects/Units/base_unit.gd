@@ -1,14 +1,15 @@
 class_name BaseUnit extends BaseObject
 
+@onready var sprite: Sprite2D = $Sprite
+
 @export var move_speed := 250.0
-var target_pos := Vector2.ZERO
 var current_cell: Vector2i
 var target_cell: Vector2i
-var path: PackedVector2Array
-
+var next_cell: Vector2
 var is_set_up := false
-var next_cell_id: int
-var next_cell: Vector2i
+var current_id_path: Array[Vector2i]
+var debug_path: PackedVector2Array
+
 
 func _ready() -> void:
 	group_type = "Unit"
@@ -20,52 +21,31 @@ func _ready() -> void:
 	add_to_group(group_type)
 
 
-func setup(_grid: AStarGrid2D) -> void:
+func setup(_grid: AStarGrid2D, _tilemap: TileMapLayer) -> void:
 	grid = _grid
-	current_cell = pos_to_cell(global_position)
+	tilemap = _tilemap
+	current_cell = tilemap.local_to_map(global_position)
 	target_cell = current_cell
 	is_set_up = true
 
 
-func _physics_process(_delta: float) -> void:
-	### NO PATHFINDING ###
-	#var direction = (target_pos - global_position).normalized()
-	#velocity = direction * move_speed
-	#if position.distance_to(target_pos) < 5:
-	#	velocity = Vector2.ZERO
-	#move_and_slide()
-	######################
-	
-	### Pathfinding ###
+func _physics_process(delta: float) -> void:
 	assert(is_set_up, "Unit is not set up")
-	
 	#TODO: if unit cant reach the next cell in some seconds, it will stop trying
 	
-	if next_cell_id == path.size() - 1:
-		velocity = Vector2.ZERO
-		global_position = path[-1]
-		current_cell = pos_to_cell(global_position)
-		path.clear()
-	else:
-		if not path.is_empty():
-			var direction: Vector2 = (path[next_cell_id+1] - path[next_cell_id]).normalized()
-			velocity = direction * move_speed
-			if current_cell != pos_to_cell(global_position): 
-				current_cell = pos_to_cell(global_position)
-				print(current_cell)
-			move_and_slide()
+	if current_id_path.is_empty(): return
 	
-			if (path[next_cell_id+1] - global_position).length() < 4:
-				current_cell = pos_to_cell(global_position)
-				next_cell_id += 1
-				next_cell = path[next_cell_id]
+	next_cell = tilemap.map_to_local(current_id_path.front())
+	global_position = global_position.move_toward(next_cell, move_speed * delta)
 	
-	#TODO: probably another movement algo is needed for correct functionality
-	
+	if global_position == next_cell:
+		current_cell = current_id_path.pop_front()
+		print(current_cell)
 
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton:
+		print("detected input on unit")
 		handle_unit_select(event)
 
 
@@ -82,9 +62,11 @@ func handle_unit_select(event: InputEvent) -> void:
 					unit.deselect()
 			
 			UnitManager.unit_selected = [self]
+			health -= 3
+			print("unit selected!")
 		
 		if event.double_click:
-			# TODO: make it only select on-screen units
+			#TODO: make it only select on-screen units
 			# something to do with viewport rect
 			handle_double_click(get_tree().get_nodes_in_group(group_type))
 
@@ -96,12 +78,19 @@ func handle_double_click(group: Array[Node]) -> void:
 
 
 func move_to(pos: Vector2) -> void:
-	recalculate_path(pos)
-	if path.is_empty():
-		return
-	next_cell_id = 0
-	#target_pos = pos
-	#animation_player.play("move")
+	var id_path := grid.get_id_path(
+		tilemap.local_to_map(global_position), 
+		tilemap.local_to_map(pos)
+		).slice(1)
+	
+	if not id_path.is_empty():
+		current_id_path = id_path
+		debug_path = grid.get_point_path(
+			tilemap.local_to_map(global_position), 
+			tilemap.local_to_map(pos)
+			)
+	
+	#TODO: animations
 
 
 func _on_damaged() -> void:
@@ -113,10 +102,3 @@ func _on_death() -> void:
 	deselect()
 	call_deferred("queue_free")
 	print("Unit died")
-
-
-func recalculate_path(pos: Vector2) -> void:
-	if not path.is_empty(): path.clear()
-	target_cell = pos_to_cell(pos)
-	path = grid.get_point_path(current_cell, target_cell)
-	#path = (path as Array).map(func (p): return p + grid.cell_size / 2)

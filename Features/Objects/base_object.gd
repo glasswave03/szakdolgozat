@@ -21,12 +21,13 @@ signal damaged
 			damaged.emit()
 
 var grid: AStarGrid2D
+var tilemap: TileMapLayer
 var group_type: String
 var selectable_type: String = "Selectable"
 var selection_rect: Rect2
 var selection_width: int
-var selection_size: int = 32
-var selection_offset: Vector2 = Vector2(-16,-16)
+var selection_size: float = 40.0
+var selection_offset: Vector2 = Vector2(-selection_size/2, -selection_size/2)
 var selection_color: Color = Color.GREEN
 var select_mode: bool = false:
 	set(value):
@@ -59,14 +60,6 @@ func deselect() -> void:
 	select_mode = false
 
 
-func move_to(_pos: Vector2) -> void:
-	pass
-
-
-func setup(_grid: AStarGrid2D) -> void:
+func setup(_grid: AStarGrid2D, _tilemap: TileMapLayer) -> void:
 	grid = _grid
-
-
-func pos_to_cell(pos: Vector2) -> Vector2i:
-	assert(grid, "No grid set")
-	return pos / grid.cell_size
+	tilemap = _tilemap

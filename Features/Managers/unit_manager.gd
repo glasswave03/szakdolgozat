@@ -61,7 +61,7 @@ func check_unit() -> void:
 
 func get_formation(tile_pos: Vector2i) -> Array[Vector2i]:
 	var formation: Array[Vector2i] = []
-	unit_selected = get_units_only()
+	unit_selected = get_units_from_selection()
 	var formation_size: float = ceil(sqrt(unit_selected.size()))
 	var index: int = 0
 	for x in range(0, formation_size + 1):
@@ -75,7 +75,7 @@ func get_formation(tile_pos: Vector2i) -> Array[Vector2i]:
 	return formation
 
 
-func get_units_only() -> Array[Node]:
+func get_units_from_selection() -> Array[Node]:
 	var new_unit_selected: Array[Node] = []
 	
 	for unit: Node in unit_selected:
