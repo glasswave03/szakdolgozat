@@ -14,7 +14,7 @@ var start_pos: Vector2 = Vector2.ZERO
 var end_pos: Vector2 = Vector2.ZERO
 var selection_rect: Rect2
 var selection_width: int = 0
-var is_building_selected: bool = false
+var placing_building: bool = false
 var selected_building: BaseBuilding
 var astar_grid: AStarGrid2D = AStarGrid2D.new()
 
@@ -57,22 +57,24 @@ func _draw() -> void:
 	selection_rect = Rect2(rect_pos,rect_size)
 	draw_rect(selection_rect, rect_color, false, selection_width)
 	
-	for unit: Node in UnitManager.get_units_from_selection():
+	for unit: BaseUnit in UnitManager.get_units_from_selection():
 		draw_polyline(unit.debug_path, Color.RED)
 
 
 func _process(_delta: float) -> void:
-	for unit: Node in UnitManager.unit_selected:
-		if unit.is_in_group("Unit") and not unit.current_id_path.is_empty() and unit.current_id_path.size() > 2:
-			queue_redraw()
+	for unit: Node in UnitManager.get_units_from_selection():
+		if unit.is_set_up:
+			if unit.is_in_group("Unit") and not unit.current_id_path.is_empty() and unit.current_id_path.size() > 2:
+				queue_redraw()
 	
 	move_camera()
 	
-	if is_building_selected:
+	if placing_building:
 		var mouse_pos: Vector2 = %Camera.get_global_mouse_position()
 		var mouse_to_tile: Vector2i = Vector2i(get_tile_pos(mouse_pos))
 		var current_tile_pos: Vector2i = tilemap.map_to_local(mouse_to_tile)
 		selected_building.position = current_tile_pos
+		
 		if Input.is_action_just_pressed("mouse_left"):
 			if not selected_building.is_overlapping:
 				#TODO: when placing a building, it should set points solid under itself
@@ -81,12 +83,12 @@ func _process(_delta: float) -> void:
 				selected_building.modulate = Color.WHITE
 				selected_building.collision.disabled = false
 				selected_building = null
-				is_building_selected = false
+				placing_building = false
 		
 		if Input.is_action_just_pressed("ui_cancel"):
 			selected_building.call_deferred("queue_free")
 			selected_building = null
-			is_building_selected = false
+			placing_building = false
 
 
 func _input(event: InputEvent) -> void:
@@ -95,7 +97,7 @@ func _input(event: InputEvent) -> void:
 	var mouse_pos: Vector2 = %Camera.get_global_mouse_position()
 	var mouse_to_tile: Vector2i = get_tile_pos(mouse_pos)
 	if event is InputEventMouseButton:
-		handle_selection(event)
+		handle_selection_box(event)
 		
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			UnitManager.move_to_position(tilemap, mouse_to_tile)
@@ -115,37 +117,42 @@ func _input(event: InputEvent) -> void:
 		
 		if event.pressed and event.keycode == KEY_Q:
 			var unit_scene := load("res://Features/Objects/Units/base_unit.tscn")
-			var new_unit: BaseUnit = unit_scene.instantiate()
+			var new_unit: CharacterBody2D = unit_scene.instantiate()
 			new_unit.setup(astar_grid, tilemap)
 			new_unit.position = mouse_pos
 			add_child(new_unit)
 			print("unit spawned: ", new_unit)
 		
 		if event.pressed and event.keycode == KEY_W:
-			if not is_building_selected:
+			if not placing_building:
 				selected_building = UnitManager.spawn_building(tilemap, mouse_to_tile)
-				is_building_selected = true
+				placing_building = true
+				UnitManager.deselect_units()
 
 
-func handle_selection(event: InputEvent) -> void:
-	if is_building_selected:
-		for unit: Node in UnitManager.unit_selected:
-			unit.deselect()
-		
-		UnitManager.unit_selected.clear()
-		return
-	
+func selection_box_drag() -> void:
+	selection_width = 2
+	drawing = true
+	start_pos = %Camera.get_global_mouse_position()
+	end_pos = %Camera.get_global_mouse_position()
+
+func selection_box_release() -> void:
+	selection_width = 0
+	drawing = false
+	start_pos = Vector2.ZERO
+	end_pos = Vector2.ZERO
+
+
+func handle_selection_box(event: InputEvent) -> void:
 	if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		selection_width = 2
-		drawing = true
-		start_pos = %Camera.get_global_mouse_position()
-		end_pos = %Camera.get_global_mouse_position()
+		selection_box_drag()
 	
 	if event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
-		selection_width = 0
-		drawing = false
-		start_pos = Vector2.ZERO
-		end_pos = Vector2.ZERO
+		selection_box_release()
+		
+		for unit: CharacterBody2D in get_tree().get_nodes_in_group("Selectable"):
+			if unit.select_mode == true:
+				UnitManager.unit_selected.append(unit)
 		queue_redraw()
 
 

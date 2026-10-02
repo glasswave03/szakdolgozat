@@ -8,10 +8,10 @@ const QUEUE_LIMIT: int = 10
 
 @onready var collision: CollisionShape2D = %Collision
 @onready var timer: Timer = $SpawnTimer
-@onready var gathering_indicator: Sprite2D = $GatheringIndicator
+@onready var rally_point: Sprite2D = $GatheringIndicator
 
 var spawn_offset: Vector2 = Vector2(-10, 70)
-var spawn_queue: Array[Node] = []
+var spawn_queue: Array[CharacterBody2D] = []
 var is_overlapping: bool = false
 var overlap_counter: int = 0
 var overlap_color: Color = Color(1,0,0,0.3)
@@ -23,7 +23,6 @@ var unit_scene: Resource = preload("res://Features/Objects/Units/base_unit.tscn"
 
 func _ready() -> void:
 	group_type = "Building"
-	add_to_group(selectable_type)
 	add_to_group(group_type)
 	max_health = 15
 	health = max_health
@@ -31,8 +30,8 @@ func _ready() -> void:
 	selection_offset = Vector2(-80, -80)
 	$HealthBar.max_value = max_health
 	$HealthBar.value = health
-	gathering_indicator.position += Vector2(-20, 140)
-	gathering_indicator.visible = false
+	rally_point.position += Vector2(-20, 140)
+	rally_point.visible = false
 
 
 func _process(_delta: float) -> void:
@@ -50,9 +49,9 @@ func _process(_delta: float) -> void:
 		modulate = placement_color
 	
 	if select_mode:
-		gathering_indicator.visible = true
+		rally_point.visible = true
 	else:
-		gathering_indicator.visible = false
+		rally_point.visible = false
 
 
 func _on_damaged() -> void:
@@ -67,26 +66,23 @@ func _on_death() -> void:
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton:
-		handle_unit_select(event)
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			handle_selection(event)
 
 
-func handle_unit_select(event: InputEvent) -> void:
-	if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		select_mode = true
+func handle_selection(event: InputEvent) -> void:
+	select_mode = true
+	
+	UnitManager.clear_freed_objects()
+	for unit: CharacterBody2D in UnitManager.unit_selected:
+		if unit != self:
+			unit.deselect()
 		
-		if event.ctrl_pressed:
-			UnitManager.unit_selected.append(self)
-		else:
-			UnitManager.clear_freed_objects()
-			for unit: Node in UnitManager.unit_selected:
-				if unit != self:
-					unit.deselect()
-			
-			UnitManager.unit_selected = [self]
+		UnitManager.unit_selected = [self]
 
 
 func move_to(pos: Vector2) -> void:
-	gathering_indicator.global_position = pos
+	rally_point.global_position = pos
 
 
 func spawn_unit() -> void:
@@ -94,9 +90,8 @@ func spawn_unit() -> void:
 	spawn_queue.push_back(new_unit)
 	print("pushed queue: ", spawn_queue)
 	new_unit.position = position + spawn_offset
-	await timer.timeout
 	new_unit.setup(grid, tilemap)
-	new_unit.move_to(gathering_indicator.global_position)
+	await timer.timeout
 
 
 func _on_placed() -> void:
@@ -105,9 +100,10 @@ func _on_placed() -> void:
 
 
 func _on_timer_timeout() -> void:
-	var created_unit: Node = spawn_queue.pop_front()
+	var created_unit: CharacterBody2D = spawn_queue.pop_front()
 	add_sibling(created_unit)
-	print("popped queue: ", spawn_queue)
+	created_unit.move_to(rally_point.global_position)
+	print("popped queue, remaining: ", spawn_queue)
 
 
 func _on_area_body_entered(_body: Node2D) -> void:

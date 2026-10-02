@@ -1,7 +1,5 @@
 class_name BaseUnit extends BaseObject
 
-@onready var sprite: Sprite2D = $Sprite
-
 @export var move_speed := 250.0
 var current_cell: Vector2i
 var target_cell: Vector2i
@@ -30,7 +28,7 @@ func setup(_grid: AStarGrid2D, _tilemap: TileMapLayer) -> void:
 
 
 func _physics_process(delta: float) -> void:
-	assert(is_set_up, "Unit is not set up")
+	#assert(is_set_up, "Unit is not set up")
 	#TODO: if unit cant reach the next cell in some seconds, it will stop trying
 	
 	if current_id_path.is_empty(): return
@@ -40,38 +38,37 @@ func _physics_process(delta: float) -> void:
 	
 	if global_position == next_cell:
 		current_cell = current_id_path.pop_front()
-		print(current_cell)
 
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton:
-		print("detected input on unit")
-		handle_unit_select(event)
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			handle_unit_select(event)
 
 
 func handle_unit_select(event: InputEvent) -> void:
-	if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		select_mode = true
-		
-		if event.ctrl_pressed:
+	select_mode = true
+	
+	if event.ctrl_pressed:
+		if not UnitManager.unit_selected.has(self):
 			UnitManager.unit_selected.append(self)
-		else:
-			UnitManager.clear_freed_objects()
-			for unit: Node in UnitManager.unit_selected:
-				if unit != self:
-					unit.deselect()
-			
-			UnitManager.unit_selected = [self]
-			health -= 3
-			print("unit selected!")
+	else:
+		UnitManager.clear_freed_objects()
+		for unit: CharacterBody2D in UnitManager.unit_selected:
+			if unit != self:
+				unit.deselect()
 		
-		if event.double_click:
-			#TODO: make it only select on-screen units
-			# something to do with viewport rect
-			handle_double_click(get_tree().get_nodes_in_group(group_type))
-
+		UnitManager.unit_selected = [self]
+	
+	if event.double_click:
+		#TODO: make it only select on-screen units
+		# something to do with viewport rect
+		handle_double_click(get_tree().get_nodes_in_group(group_type))
+	print("Units currently selected: ", UnitManager.unit_selected)
+	print("Formation: ", UnitManager.get_formation(get_global_mouse_position()))
 
 func handle_double_click(group: Array[Node]) -> void:
+	UnitManager.deselect_units()
 	for unit in group:
 		unit.select()
 		UnitManager.unit_selected.append(unit)

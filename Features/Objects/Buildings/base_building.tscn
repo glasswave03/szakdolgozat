@@ -12,7 +12,9 @@ size = Vector2(118, 118)
 [node name="BaseBuilding" type="CharacterBody2D" unique_id=739344030]
 top_level = true
 y_sort_enabled = true
+collision_layer = 3
 input_pickable = true
+motion_mode = 1
 script = ExtResource("1_43s4h")
 max_health = 15.0
 

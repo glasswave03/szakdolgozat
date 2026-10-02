@@ -6,17 +6,17 @@ var selected_rect : Rect2:
 		selected_rect = value
 		check_unit()
 
-var unit_selected : Array[Node]
-var control_group_0 : Array[Node]
-var control_group_1 : Array[Node]
-var control_group_2 : Array[Node]
-var control_group_3 : Array[Node]
-var control_group_4 : Array[Node]
-var control_group_5 : Array[Node]
-var control_group_6 : Array[Node]
-var control_group_7 : Array[Node]
-var control_group_8 : Array[Node]
-var control_group_9 : Array[Node]
+var unit_selected : Array[CharacterBody2D]
+var control_group_0 : Array[CharacterBody2D]
+var control_group_1 : Array[CharacterBody2D]
+var control_group_2 : Array[CharacterBody2D]
+var control_group_3 : Array[CharacterBody2D]
+var control_group_4 : Array[CharacterBody2D]
+var control_group_5 : Array[CharacterBody2D]
+var control_group_6 : Array[CharacterBody2D]
+var control_group_7 : Array[CharacterBody2D]
+var control_group_8 : Array[CharacterBody2D]
+var control_group_9 : Array[CharacterBody2D]
 var control_groups: Dictionary[int, Array] = {
 	KEY_0: control_group_0,
 	KEY_1: control_group_1,
@@ -40,7 +40,7 @@ func make_group(event: InputEvent) -> void:
 		print("Group made #" + str(event.keycode - KEY_OFFSET) + " with " 
 			+ str(unit_selected.size()) + " units")
 	else:
-		var group_selection: Array[Node] = control_groups.get(event.keycode)
+		var group_selection: Array[CharacterBody2D] = control_groups.get(event.keycode)
 		select_in(group_selection)
 		unit_selected = control_groups.get(event.keycode)
 		print("Group id #" + str(event.keycode - KEY_OFFSET) + " selected, number of units: " 
@@ -49,12 +49,11 @@ func make_group(event: InputEvent) -> void:
 
 func check_unit() -> void:
 	unit_selected = []
-	for unit: Node in get_tree().get_nodes_in_group("Selectable"):
+	for unit: CharacterBody2D in get_tree().get_nodes_in_group("Selectable"):
 		var unit_pos: Vector2 = unit.global_position
 		#TODO: check for an area instead of a point
 		if selected_rect.has_point(unit_pos):
 			unit.select()
-			unit_selected.append(unit)
 		else:
 			unit.deselect()
 
@@ -71,14 +70,15 @@ func get_formation(tile_pos: Vector2i) -> Array[Vector2i]:
 				index += 1
 			else:
 				break
-	
+	print(formation)
 	return formation
 
 
-func get_units_from_selection() -> Array[Node]:
-	var new_unit_selected: Array[Node] = []
+func get_units_from_selection() -> Array:
+	var new_unit_selected: Array[CharacterBody2D] = []
+	clear_freed_objects()
 	
-	for unit: Node in unit_selected:
+	for unit: CharacterBody2D in unit_selected:
 		if unit.group_type == "Unit":
 			new_unit_selected.append(unit)
 		else:
@@ -87,8 +87,8 @@ func get_units_from_selection() -> Array[Node]:
 
 
 func clear_freed_objects() -> void:
-	var new_unit_selected: Array[Node] = []
-	for unit in unit_selected:
+	var new_unit_selected: Array[CharacterBody2D] = []
+	for unit: CharacterBody2D in unit_selected:
 		if unit != null:
 			new_unit_selected.append(unit)
 	unit_selected = new_unit_selected
@@ -97,17 +97,17 @@ func clear_freed_objects() -> void:
 func has_building_in_selection() -> bool:
 	clear_freed_objects()
 	
-	for unit in unit_selected:
+	for unit: CharacterBody2D in unit_selected:
 		if unit.group_type == "Building":
 			return true
 	
 	return false
 
 
-func get_buildings_in_selection() -> Array[Node]:
-	var buildings: Array[Node] = []
+func get_buildings_in_selection() -> Array:
+	var buildings: Array[CharacterBody2D] = []
 	
-	for unit: Node in UnitManager.unit_selected:
+	for unit: CharacterBody2D in UnitManager.unit_selected:
 		if unit.group_type == "Building":
 			buildings.append(unit)
 	
@@ -118,24 +118,25 @@ func move_to_position(layer: TileMapLayer, tile_pos: Vector2i) -> void:
 	clear_freed_objects()
 	
 	if has_building_in_selection():
-		for building: Node in get_buildings_in_selection():
+		for building: CharacterBody2D in get_buildings_in_selection():
 			building.move_to(snap_to_tile(layer, tile_pos))
 	
 	var formation := get_formation(tile_pos)
+	print(formation)
 	
 	for i in range(unit_selected.size()):
 		unit_selected[i].move_to(snap_to_tile(layer, formation[i]))
  
 
-func select_in(group: Array[Node]) -> void:
-	for unit in get_tree().get_nodes_in_group("Selectable"):
+func select_in(group: Array[CharacterBody2D]) -> void:
+	for unit: CharacterBody2D in get_tree().get_nodes_in_group("Selectable"):
 		if unit in group:
 			unit.select()
 		else:
 			unit.deselect()
 
 
-func spawn_building(layer: TileMapLayer, spawn_pos: Vector2) -> Node:
+func spawn_building(layer: TileMapLayer, spawn_pos: Vector2) -> BaseBuilding:
 	var new_building: BaseBuilding = building_scene.instantiate()
 	new_building.position = snap_to_tile(layer, spawn_pos)
 	new_building.modulate = new_building.placement_color
@@ -147,3 +148,9 @@ func spawn_building(layer: TileMapLayer, spawn_pos: Vector2) -> Node:
 
 func snap_to_tile(layer: TileMapLayer, pos: Vector2) -> Vector2i:
 	return layer.map_to_local(Vector2i(pos))
+
+
+func deselect_units() -> void:
+	for unit: CharacterBody2D in unit_selected:
+		unit.deselect()
+	unit_selected.clear()

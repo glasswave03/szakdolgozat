@@ -6,8 +6,8 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8c242"]
 
 [node name="BaseObject" type="CharacterBody2D" unique_id=2106545881]
-collision_layer = 2
 input_pickable = true
+motion_mode = 1
 script = ExtResource("1_56qmi")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1888014837]
