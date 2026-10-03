@@ -11,7 +11,6 @@ signal damaged
 		
 		if health <= 0:
 			health = 0
-			death.emit()
 			return
 		elif health_before <= health:
 			if health > max_health:

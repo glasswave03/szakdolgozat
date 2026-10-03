@@ -64,10 +64,3 @@ func set_state(value: Node) -> void:
 func _on_state_changed(_previous: State, _new: State) -> void:
 	print("state changed")
 	state_changed.emit()
-
-
-class State:
-	var foo := 0
-
-	func _init() -> void:
-		print("Hello!")

@@ -1,13 +1,25 @@
 class_name BaseUnit extends BaseObject
 
+signal attack(enemy: Node)
+
+enum States {
+	STATE_IDLE,
+	STATE_MOVE,
+	STATE_ATTACK,
+	STATE_DEAD,
+	STATE_MAX,
+}
+
+@export var state_machine: UnitStateMachine
 @export var move_speed := 250.0
+
+var state: States = States.STATE_IDLE: set = set_state
 var current_cell: Vector2i
 var target_cell: Vector2i
 var next_cell: Vector2
 var is_set_up := false
 var current_id_path: Array[Vector2i]
 var debug_path: PackedVector2Array
-
 
 func _ready() -> void:
 	group_type = "Unit"
@@ -31,7 +43,13 @@ func _physics_process(delta: float) -> void:
 	#assert(is_set_up, "Unit is not set up")
 	#TODO: if unit cant reach the next cell in some seconds, it will stop trying
 	
-	if current_id_path.is_empty(): return
+	if health == 0:
+		state = States.STATE_DEAD
+		return
+	
+	if current_id_path.is_empty() and not state in [States.STATE_DEAD, States.STATE_ATTACK]:
+		state = States.STATE_IDLE
+		return
 	
 	next_cell = tilemap.map_to_local(current_id_path.front())
 	global_position = global_position.move_toward(next_cell, move_speed * delta)
@@ -59,6 +77,7 @@ func handle_unit_select(event: InputEvent) -> void:
 				unit.deselect()
 		
 		UnitManager.unit_selected = [self]
+		health -= 3
 	
 	if event.double_click:
 		#TODO: make it only select on-screen units
@@ -87,15 +106,37 @@ func move_to(pos: Vector2) -> void:
 			tilemap.local_to_map(pos)
 			)
 	
+	state = States.STATE_MOVE
 	#TODO: animations
 
 
 func _on_damaged() -> void:
 	$HealthBar.value = health
-	print("Unit health: ", health, "/", max_health)
+	print("Unit damaged!")
 
 
 func _on_death() -> void:
+	#TODO: instead of queue_free, state should be set to dead,
+	# play death animation, after a timer it disappears and then queue_free
 	deselect()
 	call_deferred("queue_free")
 	print("Unit died")
+
+
+func set_state(new_state: States) -> void:
+	var previous_state := state
+	state = new_state
+	
+	match state:
+		States.STATE_IDLE:
+			print("State changed to idle")
+		States.STATE_MOVE:
+			print("State changed to move")
+		States.STATE_ATTACK:
+			print("State changed to attack")
+			attack.emit()
+		States.STATE_DEAD:
+			print("State changed to dead")
+			death.emit()
+		_:
+			printerr("Incorrect state set!")

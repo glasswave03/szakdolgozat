@@ -12,13 +12,14 @@ bg_color = Color(1, 0, 0, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tpjtd"]
 bg_color = Color(0, 1, 0, 1)
 
-[node name="BaseUnit" type="CharacterBody2D" unique_id=274065641]
+[node name="BaseUnit" type="CharacterBody2D" unique_id=274065641 node_paths=PackedStringArray("state_machine")]
 y_sort_enabled = true
 collision_layer = 2
 input_pickable = true
 motion_mode = 1
 safe_margin = 1.0
 script = ExtResource("1_bkgmb")
+state_machine = NodePath("")
 max_health = 10.0
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1947353019]
