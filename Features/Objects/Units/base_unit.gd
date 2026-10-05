@@ -10,18 +10,23 @@ enum States {
 	STATE_MAX,
 }
 
-@export var state_machine: UnitStateMachine
-@export var move_speed := 250.0
+@export var move_speed: float = 250.0
+@export var attack_damage: float = 3.0
+@export var attack_rate: float = 1.0
+@export var attack_range: float = 10.0
+var attack_target: BaseObject
 
 var state: States = States.STATE_IDLE: set = set_state
 var current_cell: Vector2i
 var target_cell: Vector2i
 var next_cell: Vector2
-var is_set_up := false
+var is_set_up: bool = false
 var current_id_path: Array[Vector2i]
 var debug_path: PackedVector2Array
+var team: UnitManager.Teams
 
 func _ready() -> void:
+	team = UnitManager.Teams.TEAM_ZERO
 	group_type = "Unit"
 	max_health = 10.0
 	health = max_health
@@ -39,13 +44,17 @@ func setup(_grid: AStarGrid2D, _tilemap: TileMapLayer) -> void:
 	is_set_up = true
 
 
-func _physics_process(delta: float) -> void:
-	#assert(is_set_up, "Unit is not set up")
-	#TODO: if unit cant reach the next cell in some seconds, it will stop trying
-	
+func _process(delta: float) -> void:
 	if health == 0:
 		state = States.STATE_DEAD
 		return
+	
+	target_check()
+
+
+func _physics_process(delta: float) -> void:
+	#assert(is_set_up, "Unit is not set up")
+	#TODO: if unit cant reach the next cell in some seconds, it will stop trying
 	
 	if current_id_path.is_empty() and not state in [States.STATE_DEAD, States.STATE_ATTACK]:
 		state = States.STATE_IDLE
@@ -110,6 +119,17 @@ func move_to(pos: Vector2) -> void:
 	#TODO: animations
 
 
+func target_check() -> void:
+	if global_position.distance_to(attack_target.position) < attack_range:
+		move_to(attack_target.position)
+	else:
+		attack.emit(attack_target)
+
+
+func on_attack() -> void:
+	attack_target.take_damage()
+
+
 func _on_damaged() -> void:
 	$HealthBar.value = health
 	print("Unit damaged!")
@@ -124,7 +144,7 @@ func _on_death() -> void:
 
 
 func set_state(new_state: States) -> void:
-	var previous_state := state
+	#var previous_state := state
 	state = new_state
 	
 	match state:

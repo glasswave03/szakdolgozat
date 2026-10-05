@@ -1,5 +1,16 @@
 extends Node
 
+enum Teams {
+	TEAM_ZERO, # team zero is neutral
+	TEAM_ONE,
+	TEAM_TWO,
+	TEAM_THREE,
+	TEAM_FOUR,
+	TEAM_FIVE,
+	TEAM_SIX,
+	TEAM_MAX,
+}
+
 var building_scene: Resource = preload("res://Features/Objects/Buildings/base_building.tscn")
 var selected_rect : Rect2:
 	set(value):
