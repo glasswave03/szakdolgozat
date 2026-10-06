@@ -24,6 +24,8 @@ var unit_scene: Resource = preload("res://Features/Objects/Units/base_unit.tscn"
 func _ready() -> void:
 	group_type = "Building"
 	add_to_group(group_type)
+	# something should be done about this idk
+	add_to_group(selectable_type)
 	max_health = 15
 	health = max_health
 	selection_size = 160

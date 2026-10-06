@@ -78,17 +78,21 @@ func _process(_delta: float) -> void:
 		if Input.is_action_just_pressed("mouse_left"):
 			if not selected_building.is_overlapping:
 				#TODO: when placing a building, it should set points solid under itself
-				selected_building.placed.emit()
-				selected_building.setup(astar_grid, tilemap)
-				selected_building.modulate = Color.WHITE
-				selected_building.collision.disabled = false
-				selected_building = null
-				placing_building = false
+				place_building()
 		
 		if Input.is_action_just_pressed("ui_cancel"):
 			selected_building.call_deferred("queue_free")
 			selected_building = null
 			placing_building = false
+
+
+func place_building() -> void:
+	selected_building.placed.emit()
+	selected_building.setup(astar_grid, tilemap)
+	selected_building.modulate = Color.WHITE
+	selected_building.collision.disabled = false
+	selected_building = null
+	placing_building = false
 
 
 func _input(event: InputEvent) -> void:
@@ -97,7 +101,11 @@ func _input(event: InputEvent) -> void:
 	var mouse_pos: Vector2 = %Camera.get_global_mouse_position()
 	var mouse_to_tile: Vector2i = get_tile_pos(mouse_pos)
 	if event is InputEventMouseButton:
-		handle_selection_box(event)
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			selection_box_drag()
+		
+		if event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
+			selection_box_release()
 		
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			UnitManager.move_to_position(tilemap, mouse_to_tile)
@@ -141,19 +149,11 @@ func selection_box_release() -> void:
 	drawing = false
 	start_pos = Vector2.ZERO
 	end_pos = Vector2.ZERO
-
-
-func handle_selection_box(event: InputEvent) -> void:
-	if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		selection_box_drag()
 	
-	if event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
-		selection_box_release()
-		
-		for unit: CharacterBody2D in get_tree().get_nodes_in_group("Selectable"):
-			if unit.select_mode == true:
-				UnitManager.unit_selected.append(unit)
-		queue_redraw()
+	for unit: CharacterBody2D in get_tree().get_nodes_in_group("Selectable"):
+		if unit.select_mode == true:
+			UnitManager.unit_selected.append(unit)
+	queue_redraw()
 
 
 func get_tile_pos(global_pos: Vector2) -> Vector2i:

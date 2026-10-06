@@ -5,6 +5,7 @@ signal attack(enemy: Node)
 enum States {
 	STATE_IDLE,
 	STATE_MOVE,
+	STATE_FOLLOW,
 	STATE_ATTACK,
 	STATE_DEAD,
 	STATE_MAX,
@@ -14,7 +15,7 @@ enum States {
 @export var attack_damage: float = 3.0
 @export var attack_rate: float = 1.0
 @export var attack_range: float = 10.0
-var attack_target: BaseObject
+@export var attack_target: BaseObject
 
 var state: States = States.STATE_IDLE: set = set_state
 var current_cell: Vector2i
@@ -23,7 +24,7 @@ var next_cell: Vector2
 var is_set_up: bool = false
 var current_id_path: Array[Vector2i]
 var debug_path: PackedVector2Array
-var team: UnitManager.Teams
+@export var team: UnitManager.Teams
 
 func _ready() -> void:
 	team = UnitManager.Teams.TEAM_ZERO
@@ -44,17 +45,13 @@ func setup(_grid: AStarGrid2D, _tilemap: TileMapLayer) -> void:
 	is_set_up = true
 
 
-func _process(delta: float) -> void:
-	if health == 0:
-		state = States.STATE_DEAD
-		return
-	
-	target_check()
-
-
 func _physics_process(delta: float) -> void:
 	#assert(is_set_up, "Unit is not set up")
 	#TODO: if unit cant reach the next cell in some seconds, it will stop trying
+	if state == States.STATE_DEAD:
+		return
+	if attack_target:
+		target_check()
 	
 	if current_id_path.is_empty() and not state in [States.STATE_DEAD, States.STATE_ATTACK]:
 		state = States.STATE_IDLE
@@ -93,7 +90,6 @@ func handle_unit_select(event: InputEvent) -> void:
 		# something to do with viewport rect
 		handle_double_click(get_tree().get_nodes_in_group(group_type))
 	print("Units currently selected: ", UnitManager.unit_selected)
-	print("Formation: ", UnitManager.get_formation(get_global_mouse_position()))
 
 func handle_double_click(group: Array[Node]) -> void:
 	UnitManager.deselect_units()
@@ -120,14 +116,22 @@ func move_to(pos: Vector2) -> void:
 
 
 func target_check() -> void:
-	if global_position.distance_to(attack_target.position) < attack_range:
+	if global_position.distance_to(attack_target.global_position) < attack_range:
 		move_to(attack_target.position)
 	else:
-		attack.emit(attack_target)
+		if attack_target.team != team:
+			attack.emit(attack_target)
 
 
 func on_attack() -> void:
-	attack_target.take_damage()
+	attack_target.take_damage(attack_damage)
+
+
+func take_damage(amount: float) -> void:
+	var armor := 5.0
+	var dmg_reduction := armor / (armor + 100.0)
+	var damage := amount * (1.0 - dmg_reduction)
+	health -= damage
 
 
 func _on_damaged() -> void:
@@ -138,6 +142,7 @@ func _on_damaged() -> void:
 func _on_death() -> void:
 	#TODO: instead of queue_free, state should be set to dead,
 	# play death animation, after a timer it disappears and then queue_free
+	state = States.STATE_DEAD
 	deselect()
 	call_deferred("queue_free")
 	print("Unit died")
@@ -149,14 +154,16 @@ func set_state(new_state: States) -> void:
 	
 	match state:
 		States.STATE_IDLE:
-			print("State changed to idle")
+			pass
 		States.STATE_MOVE:
 			print("State changed to move")
+		States.STATE_FOLLOW:
+			print("State changed to follow")
+			target_check()
 		States.STATE_ATTACK:
 			print("State changed to attack")
 			attack.emit()
 		States.STATE_DEAD:
 			print("State changed to dead")
-			death.emit()
 		_:
 			printerr("Incorrect state set!")

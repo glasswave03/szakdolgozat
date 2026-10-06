@@ -5,9 +5,6 @@ enum Teams {
 	TEAM_ONE,
 	TEAM_TWO,
 	TEAM_THREE,
-	TEAM_FOUR,
-	TEAM_FIVE,
-	TEAM_SIX,
 	TEAM_MAX,
 }
 
@@ -133,7 +130,6 @@ func move_to_position(layer: TileMapLayer, tile_pos: Vector2i) -> void:
 			building.move_to(snap_to_tile(layer, tile_pos))
 	
 	var formation := get_formation(tile_pos)
-	print(formation)
 	
 	for i in range(unit_selected.size()):
 		unit_selected[i].move_to(snap_to_tile(layer, formation[i]))
