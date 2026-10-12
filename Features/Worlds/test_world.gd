@@ -18,8 +18,11 @@ var placing_building: bool = false
 var selected_building: BaseBuilding
 var astar_grid: AStarGrid2D = AStarGrid2D.new()
 
+var units := []
 
 func _ready() -> void:
+	$BaseUnit.setup(astar_grid, tilemap)
+	$BaseUnit2.setup(astar_grid, tilemap)
 	var offset := TILE_SIZE / 2
 	astar_grid.region = tilemap.get_used_rect()
 	astar_grid.cell_size = Vector2(TILE_SIZE, TILE_SIZE)
@@ -56,17 +59,9 @@ func _draw() -> void:
 	
 	selection_rect = Rect2(rect_pos,rect_size)
 	draw_rect(selection_rect, rect_color, false, selection_width)
-	
-	for unit: BaseUnit in UnitManager.get_units_from_selection():
-		draw_polyline(unit.debug_path, Color.RED)
 
 
 func _process(_delta: float) -> void:
-	for unit: Node in UnitManager.get_units_from_selection():
-		if unit.is_set_up:
-			if unit.is_in_group("Unit") and not unit.current_id_path.is_empty() and unit.current_id_path.size() > 2:
-				queue_redraw()
-	
 	move_camera()
 	
 	if placing_building:
@@ -109,6 +104,7 @@ func _input(event: InputEvent) -> void:
 		
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			UnitManager.move_to_position(tilemap, mouse_to_tile)
+			
 	
 	if event is InputEventMouseMotion and drawing:
 		end_pos = %Camera.get_global_mouse_position()
@@ -116,15 +112,11 @@ func _input(event: InputEvent) -> void:
 		UnitManager.selected_rect = selection_rect
 	
 	if event is InputEventKey:
-		if event.pressed and event.keycode == KEY_S:
-			for unit: Node in UnitManager.unit_selected:
-				unit.target_pos = unit.position
-		
 		if event.pressed and event.keycode in UnitManager.control_groups:
 			UnitManager.make_group(event)
 		
 		if event.pressed and event.keycode == KEY_Q:
-			var unit_scene := load("res://Features/Objects/Units/base_unit.tscn")
+			var unit_scene := load("res://Features/Objects/base_unit.tscn")
 			var new_unit: CharacterBody2D = unit_scene.instantiate()
 			new_unit.setup(astar_grid, tilemap)
 			new_unit.position = mouse_pos

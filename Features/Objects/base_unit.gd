@@ -1,6 +1,6 @@
 class_name BaseUnit extends BaseObject
 
-signal attack(enemy: Node)
+signal attack
 
 enum States {
 	STATE_IDLE,
@@ -12,10 +12,11 @@ enum States {
 }
 
 @export var move_speed: float = 250.0
-@export var attack_damage: float = 3.0
+@export var attack_damage: float = 1.0
 @export var attack_rate: float = 1.0
 @export var attack_range: float = 10.0
 @export var attack_target: BaseObject
+@export var armor: float = 5.0
 
 var state: States = States.STATE_IDLE: set = set_state
 var current_cell: Vector2i
@@ -24,10 +25,11 @@ var next_cell: Vector2
 var is_set_up: bool = false
 var current_id_path: Array[Vector2i]
 var debug_path: PackedVector2Array
+
 @export var team: UnitManager.Teams
 
 func _ready() -> void:
-	team = UnitManager.Teams.TEAM_ZERO
+	#team = UnitManager.Teams.TEAM_ZERO
 	group_type = "Unit"
 	max_health = 10.0
 	health = max_health
@@ -45,12 +47,17 @@ func setup(_grid: AStarGrid2D, _tilemap: TileMapLayer) -> void:
 	is_set_up = true
 
 
+func _draw() -> void:
+	draw_rect(selection_rect, selection_color, false, selection_width)
+
+
 func _physics_process(delta: float) -> void:
 	#assert(is_set_up, "Unit is not set up")
 	#TODO: if unit cant reach the next cell in some seconds, it will stop trying
+	
 	if state == States.STATE_DEAD:
 		return
-	if attack_target:
+	if attack_target != null:
 		target_check()
 	
 	if current_id_path.is_empty() and not state in [States.STATE_DEAD, States.STATE_ATTACK]:
@@ -67,10 +74,9 @@ func _physics_process(delta: float) -> void:
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			handle_unit_select(event)
+			handle_selection(event)
 
-
-func handle_unit_select(event: InputEvent) -> void:
+func handle_selection(event: InputEvent) -> void:
 	select_mode = true
 	
 	if event.ctrl_pressed:
@@ -120,15 +126,16 @@ func target_check() -> void:
 		move_to(attack_target.position)
 	else:
 		if attack_target.team != team:
-			attack.emit(attack_target)
+			attack.emit()
 
 
-func on_attack() -> void:
+func _on_attack() -> void:
 	attack_target.take_damage(attack_damage)
+	state = States.STATE_ATTACK
+	#TODO: wait for attack_rate timer to go off
 
 
 func take_damage(amount: float) -> void:
-	var armor := 5.0
 	var dmg_reduction := armor / (armor + 100.0)
 	var damage := amount * (1.0 - dmg_reduction)
 	health -= damage
@@ -136,7 +143,7 @@ func take_damage(amount: float) -> void:
 
 func _on_damaged() -> void:
 	$HealthBar.value = health
-	print("Unit damaged!")
+	print("Unit damaged: ", health)
 
 
 func _on_death() -> void:
@@ -162,7 +169,7 @@ func set_state(new_state: States) -> void:
 			target_check()
 		States.STATE_ATTACK:
 			print("State changed to attack")
-			attack.emit()
+			
 		States.STATE_DEAD:
 			print("State changed to dead")
 		_:

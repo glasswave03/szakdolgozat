@@ -8,7 +8,7 @@ enum Teams {
 	TEAM_MAX,
 }
 
-var building_scene: Resource = preload("res://Features/Objects/Buildings/base_building.tscn")
+var building_scene: Resource = preload("res://Features/Objects/base_building.tscn")
 var selected_rect : Rect2:
 	set(value):
 		selected_rect = value
@@ -67,6 +67,7 @@ func check_unit() -> void:
 
 
 func get_formation(tile_pos: Vector2i) -> Array[Vector2i]:
+	#TODO: check terrain when creating formation
 	var formation: Array[Vector2i] = []
 	unit_selected = get_units_from_selection()
 	var formation_size: float = ceil(sqrt(unit_selected.size()))

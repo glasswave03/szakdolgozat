@@ -18,7 +18,7 @@ var overlap_color: Color = Color(1,0,0,0.3)
 var placement_color: Color = Color(1,1,1,0.3)
 
 # Spawnable units
-var unit_scene: Resource = preload("res://Features/Objects/Units/base_unit.tscn")
+var unit_scene: Resource = preload("res://Features/Objects/base_unit.tscn")
 
 
 func _ready() -> void:
@@ -69,10 +69,10 @@ func _on_death() -> void:
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			handle_selection(event)
+			handle_selection()
 
 
-func handle_selection(event: InputEvent) -> void:
+func handle_selection() -> void:
 	select_mode = true
 	
 	UnitManager.clear_freed_objects()
