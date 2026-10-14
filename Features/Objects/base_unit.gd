@@ -54,7 +54,7 @@ func _draw() -> void:
 func _physics_process(delta: float) -> void:
 	#assert(is_set_up, "Unit is not set up")
 	#TODO: if unit cant reach the next cell in some seconds, it will stop trying
-	
+	target_check()
 	if state == States.STATE_DEAD:
 		return
 	if attack_target != null:
@@ -164,9 +164,10 @@ func set_state(new_state: States) -> void:
 			pass
 		States.STATE_MOVE:
 			print("State changed to move")
+			
 		States.STATE_FOLLOW:
 			print("State changed to follow")
-			target_check()
+			
 		States.STATE_ATTACK:
 			print("State changed to attack")
 			

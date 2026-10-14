@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://d1ru5xdxgkem2"]
 
-[ext_resource type="Script" uid="uid://gl2cfwiwi4qr" path="res://Features/UI/test_ui.gd" id="1_fdkyl"]
+[ext_resource type="Script" uid="uid://gl2cfwiwi4qr" path="res://Features/UI/selection_ui.gd" id="1_ekg4c"]
 
-[node name="TestUI" type="Control" unique_id=1841617272]
+[node name="SelectionUI" type="Control" unique_id=1841617272]
 process_mode = 3
 layout_mode = 3
 anchors_preset = 7
@@ -15,7 +15,7 @@ offset_top = -100.0
 offset_right = 350.0
 grow_horizontal = 2
 grow_vertical = 0
-script = ExtResource("1_fdkyl")
+script = ExtResource("1_ekg4c")
 
 [node name="BuildingUI" type="Control" parent="." unique_id=41284623]
 process_mode = 3

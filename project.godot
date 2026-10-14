@@ -18,7 +18,6 @@ config/icon="res://Assets/icon.svg"
 [autoload]
 
 Global="*uid://bqu18lsa8fojj"
-UnitManager="*uid://cvtymdtqtvi7q"
 DialogueManager="*uid://c3rodes2l3gxb"
 
 [debug]

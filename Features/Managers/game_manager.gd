@@ -12,7 +12,11 @@ var fps_timer: float = 0.0
 var fps_label: Label
 
 
+
 func _ready() -> void:
+	player_manager = PlayerManager.new()
+	group_manager = GroupManager.new()
+	building_factory = BuildingFactory.new()
 	Global.game_manager = self
 	current_world = $World/TestWorld
 	ui = $UserInterface
@@ -25,6 +29,13 @@ func _process(delta: float) -> void:
 	if fps_timer > FPS_TIMER_LIMIT:
 		fps_timer = 0.0
 		fps_label.text = "FPS: " + str(Engine.get_frames_per_second())
+
+
+func _start_match(players: Array) -> bool:
+	# for each player, give them a team number?
+	if players.size() > 1:
+		return true
+	return false
 
 
 func change_world(new_scene: String, delete: bool = true) -> void:

@@ -2,12 +2,14 @@
 
 [ext_resource type="Script" uid="uid://ra6knyinp1ee" path="res://Features/Objects/base_building.gd" id="1_4lrng"]
 [ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://Assets/icon.svg" id="2_f4sdt"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_q5kjn"]
-size = Vector2(128, 182)
+[ext_resource type="Script" uid="uid://cuaj5llxcswvs" path="res://Features/Objects/building_placement.gd" id="3_xifwt"]
+[ext_resource type="Script" uid="uid://0oviid6tptnx" path="res://Features/Objects/unit_production.gd" id="4_undlo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8c242"]
 size = Vector2(118, 118)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q5kjn"]
+size = Vector2(128, 182)
 
 [node name="BaseBuilding" type="CharacterBody2D" unique_id=739344030]
 top_level = true
@@ -39,7 +41,32 @@ max_value = 15.0
 step = 0.1
 show_percentage = false
 
-[node name="SpawnBar" type="ProgressBar" parent="." unique_id=271411554]
+[node name="Collision" type="CollisionShape2D" parent="." unique_id=1676115088]
+unique_name_in_owner = true
+shape = SubResource("RectangleShape2D_8c242")
+
+[node name="RallyPoint" type="Sprite2D" parent="." unique_id=2110982191]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_f4sdt")
+
+[node name="Placement" type="Node2D" parent="." unique_id=1141183029]
+script = ExtResource("3_xifwt")
+
+[node name="Overlap" type="Area2D" parent="Placement" unique_id=405108331]
+collision_layer = 0
+collision_mask = 3
+
+[node name="Collision" type="CollisionShape2D" parent="Placement/Overlap" unique_id=714033158]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_q5kjn")
+
+[node name="UnitProduction" type="Node2D" parent="." unique_id=2015189474]
+script = ExtResource("4_undlo")
+
+[node name="SpawnTimer" type="Timer" parent="UnitProduction" unique_id=1463540730]
+one_shot = true
+
+[node name="SpawnBar" type="ProgressBar" parent="UnitProduction" unique_id=271411554]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -53,30 +80,10 @@ grow_horizontal = 2
 grow_vertical = 2
 max_value = 1.0
 
-[node name="SpawnTimer" type="Timer" parent="." unique_id=1463540730]
-one_shot = true
-
-[node name="Overlap" type="Area2D" parent="." unique_id=405108331]
-unique_name_in_owner = true
-collision_layer = 0
-collision_mask = 3
-
-[node name="Collision" type="CollisionShape2D" parent="Overlap" unique_id=714033158]
-position = Vector2(0, 3)
-shape = SubResource("RectangleShape2D_q5kjn")
-
-[node name="Collision" type="CollisionShape2D" parent="." unique_id=1676115088]
-unique_name_in_owner = true
-shape = SubResource("RectangleShape2D_8c242")
-
-[node name="GatheringIndicator" type="Sprite2D" parent="." unique_id=2110982191]
-scale = Vector2(0.2, 0.2)
-texture = ExtResource("2_f4sdt")
-
 [connection signal="damaged" from="." to="." method="_on_damaged"]
 [connection signal="death" from="." to="." method="_on_death"]
 [connection signal="input_event" from="." to="." method="_on_input_event"]
-[connection signal="placed" from="." to="." method="_on_placed"]
-[connection signal="timeout" from="SpawnTimer" to="." method="_on_timer_timeout"]
-[connection signal="body_entered" from="Overlap" to="." method="_on_area_body_entered"]
-[connection signal="body_exited" from="Overlap" to="." method="_on_area_body_exited"]
+[connection signal="placed" from="Placement" to="Placement" method="_on_placed"]
+[connection signal="body_entered" from="Placement/Overlap" to="Placement" method="_on_body_entered"]
+[connection signal="body_exited" from="Placement/Overlap" to="Placement" method="_on_body_exited"]
+[connection signal="timeout" from="UnitProduction/SpawnTimer" to="UnitProduction" method="_on_spawn_timer_timeout"]

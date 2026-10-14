@@ -1,14 +1,21 @@
 [gd_scene format=3 uid="uid://c76mxvgur7bfd"]
 
 [ext_resource type="Script" uid="uid://c548m78w3ittv" path="res://Features/Managers/game_manager.gd" id="1_l756w"]
-[ext_resource type="PackedScene" uid="uid://b5000y3t10rg7" path="res://Features/Worlds/test_world.tscn" id="2_0e3vx"]
+[ext_resource type="PackedScene" uid="uid://b5000y3t10rg7" path="res://Features/Worlds/map1.tscn" id="2_0e3vx"]
+[ext_resource type="Script" uid="uid://bwl02iq4pugnv" path="res://Features/Managers/match_controller.gd" id="2_301ul"]
+[ext_resource type="PackedScene" uid="uid://yisl65elbd4" path="res://Features/UI/debug_ui.tscn" id="4_mkl18"]
 
 [node name="MainGame" type="Node" unique_id=606005864 node_paths=PackedStringArray("world")]
 script = ExtResource("1_l756w")
-world = NodePath("World")
+world = NodePath("MatchCoordinator/World")
 
-[node name="World" type="Node2D" parent="." unique_id=589015152]
+[node name="MatchCoordinator" type="Node" parent="." unique_id=942870765]
+script = ExtResource("2_301ul")
 
-[node name="TestWorld" parent="World" unique_id=485076051 instance=ExtResource("2_0e3vx")]
+[node name="World" type="Node2D" parent="MatchCoordinator" unique_id=589015152]
+
+[node name="Map" parent="MatchCoordinator/World" unique_id=849731125 instance=ExtResource("2_0e3vx")]
 
 [node name="UserInterface" type="CanvasLayer" parent="." unique_id=529392270]
+
+[node name="DebugUI" parent="UserInterface" unique_id=30374163 instance=ExtResource("4_mkl18")]
