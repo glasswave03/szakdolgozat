@@ -5,9 +5,7 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8c242"]
 
-[node name="BaseObject" type="CharacterBody2D" unique_id=2106545881]
-input_pickable = true
-motion_mode = 1
+[node name="BaseObject" type="Area2D" unique_id=981971802]
 script = ExtResource("1_56qmi")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1888014837]
@@ -15,6 +13,3 @@ texture = ExtResource("2_kceyn")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1618076086]
 shape = SubResource("RectangleShape2D_8c242")
-
-[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

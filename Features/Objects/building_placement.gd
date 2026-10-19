@@ -2,7 +2,6 @@ extends Node2D
 
 signal placed
 
-@onready var collision: CollisionShape2D = $Collision
 @onready var overlap_area: Area2D = $Overlap
 
 var is_overlapping: bool = false

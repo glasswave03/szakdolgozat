@@ -19,17 +19,15 @@ enum States {
 @export var armor: float = 5.0
 
 var state: States = States.STATE_IDLE: set = set_state
-var current_cell: Vector2i
-var target_cell: Vector2i
+var current_cell: Vector2
 var next_cell: Vector2
 var is_set_up: bool = false
-var current_id_path: Array[Vector2i]
-var debug_path: PackedVector2Array
+var current_path: PackedVector2Array
+var current_path_index: int
 
-@export var team: UnitManager.Teams
+@export var team: PlayerManager.Teams
 
 func _ready() -> void:
-	#team = UnitManager.Teams.TEAM_ZERO
 	group_type = "Unit"
 	max_health = 10.0
 	health = max_health
@@ -39,11 +37,10 @@ func _ready() -> void:
 	add_to_group(group_type)
 
 
-func setup(_grid: AStarGrid2D, _tilemap: TileMapLayer) -> void:
-	grid = _grid
-	tilemap = _tilemap
-	current_cell = tilemap.local_to_map(global_position)
-	target_cell = current_cell
+func setup(cell_pos: Vector2i) -> void:
+	#TODO: remove coupling
+	team = PlayerManager.Teams.TEAM_NEUTRAL
+	current_cell = cell_pos
 	is_set_up = true
 
 
@@ -52,78 +49,52 @@ func _draw() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	#assert(is_set_up, "Unit is not set up")
-	#TODO: if unit cant reach the next cell in some seconds, it will stop trying
-	target_check()
+	assert(is_set_up, "Unit is not set up")
+	
 	if state == States.STATE_DEAD:
+		#TODO: play death animation
 		return
+	
 	if attack_target != null:
 		target_check()
 	
-	if current_id_path.is_empty() and not state in [States.STATE_DEAD, States.STATE_ATTACK]:
+	if current_path.is_empty() and not state in [States.STATE_DEAD, States.STATE_ATTACK] \
+	or current_path_index >= current_path.size():
 		state = States.STATE_IDLE
 		return
 	
-	next_cell = tilemap.map_to_local(current_id_path.front())
-	global_position = global_position.move_toward(next_cell, move_speed * delta)
+	next_cell = current_path[current_path_index]
 	
-	if global_position == next_cell:
-		current_cell = current_id_path.pop_front()
+	global_position = global_position.move_toward(next_cell,move_speed * delta)
+	
+	if global_position.is_equal_approx(next_cell):
+		current_path_index += 1
+		current_cell = next_cell
 
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			handle_selection(event)
-
-func handle_selection(event: InputEvent) -> void:
-	select_mode = true
-	
-	if event.ctrl_pressed:
-		if not UnitManager.unit_selected.has(self):
-			UnitManager.unit_selected.append(self)
-	else:
-		UnitManager.clear_freed_objects()
-		for unit: CharacterBody2D in UnitManager.unit_selected:
-			if unit != self:
-				unit.deselect()
-		
-		UnitManager.unit_selected = [self]
-		health -= 3
-	
-	if event.double_click:
-		#TODO: make it only select on-screen units
-		# something to do with viewport rect
-		handle_double_click(get_tree().get_nodes_in_group(group_type))
-	print("Units currently selected: ", UnitManager.unit_selected)
-
-func handle_double_click(group: Array[Node]) -> void:
-	UnitManager.deselect_units()
-	for unit in group:
-		unit.select()
-		UnitManager.unit_selected.append(unit)
+			clicked.emit(self, event)
+			print("unit clicked")
+		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+			#TODO: maybe this isnt how this should be done?
+			targeted.emit(self)
+			print("unit targeted")
 
 
-func move_to(pos: Vector2) -> void:
-	var id_path := grid.get_id_path(
-		tilemap.local_to_map(global_position), 
-		tilemap.local_to_map(pos)
-		).slice(1)
-	
-	if not id_path.is_empty():
-		current_id_path = id_path
-		debug_path = grid.get_point_path(
-			tilemap.local_to_map(global_position), 
-			tilemap.local_to_map(pos)
-			)
-	
+func set_path(path: PackedVector2Array) -> void:
+	current_path = path
+	current_path_index = 0
 	state = States.STATE_MOVE
 	#TODO: animations
 
 
 func target_check() -> void:
 	if global_position.distance_to(attack_target.global_position) < attack_range:
-		move_to(attack_target.position)
+		#TODO: move in range
+		printerr("out of range!")
+		#move_to(attack_target.position)
 	else:
 		if attack_target.team != team:
 			attack.emit()
@@ -161,10 +132,12 @@ func set_state(new_state: States) -> void:
 	
 	match state:
 		States.STATE_IDLE:
+			#current_path.clear()
+			#current_path_index = 0
 			pass
 		States.STATE_MOVE:
-			print("State changed to move")
-			
+			#print("State changed to move")
+			pass
 		States.STATE_FOLLOW:
 			print("State changed to follow")
 			

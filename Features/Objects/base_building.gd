@@ -1,12 +1,12 @@
 class_name BaseBuilding extends BaseObject
 
-@onready var rally_point: Sprite2D = $GatheringIndicator
+@onready var rally_point: Sprite2D = $RallyPoint
 
 
 func _ready() -> void:
 	group_type = "Building"
+	#TODO: string group types should be declared using enums and added on setup
 	add_to_group(group_type)
-	# something should be done about this idk
 	add_to_group(selectable_type)
 	max_health = 15
 	health = max_health
@@ -35,5 +35,5 @@ func _on_death() -> void:
 	print("building destroyed")
 
 
-func move_to(pos: Vector2) -> void:
-	rally_point.global_position = tilemap.local_to_map(pos)
+func set_rally_point(global_pos: Vector2) -> void:
+	rally_point.global_position = global_pos

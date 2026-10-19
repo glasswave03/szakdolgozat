@@ -1,5 +1,7 @@
 class_name SelectionManager extends Node
 
+signal changed
+
 var selected_rect : Rect2:
 	set(value):
 		selected_rect = value
@@ -10,31 +12,42 @@ var selected_objects : Array[BaseObject]
 
 func check_unit() -> void:
 	selected_objects = []
-	for unit: CharacterBody2D in get_tree().get_nodes_in_group("Selectable"):
-		var unit_pos: Vector2 = unit.global_position
+	for object: BaseObject in get_tree().get_nodes_in_group("Selectable"):
+		var object_pos: Vector2 = object.global_position
 		#TODO: check for an area instead of a point
-		if selected_rect.has_point(unit_pos):
-			unit.select()
+		if selected_rect.has_point(object_pos):
+			object.select()
 		else:
-			unit.deselect()
+			object.deselect()
 
 
 func get_units() -> Array[BaseUnit]:
 	var new_selected_objects: Array[BaseUnit] = []
 	clear_freed_objects()
 	
-	for unit: CharacterBody2D in selected_objects:
+	for unit: BaseUnit in selected_objects:
 		if unit.group_type == "Unit":
 			new_selected_objects.append(unit)
 		else:
 			unit.deselect()
+	
 	return new_selected_objects
+
+
+func get_buildings() -> Array[BaseBuilding]:
+	var buildings: Array[BaseBuilding] = []
+	
+	for unit: BaseBuilding in selected_objects:
+		if unit.group_type == "Building":
+			buildings.append(unit)
+	
+	return buildings
 
 
 func clear_freed_objects() -> void:
 	var new_selected_objects: Array[BaseObject] = []
 	for unit: BaseObject in selected_objects:
-		if unit != null:
+		if unit != null and is_instance_valid(unit):
 			new_selected_objects.append(unit)
 	selected_objects = new_selected_objects
 
@@ -49,15 +62,50 @@ func has_building_in_selection() -> bool:
 	return false
 
 
-func get_buildings() -> Array[BaseBuilding]:
-	var buildings: Array[BaseBuilding] = []
+func clear_selection() -> void:
+	for object: BaseObject in selected_objects:
+		object.deselect()
 	
-	for unit: BaseBuilding in selected_objects:
-		if unit.group_type == "Building":
-			buildings.append(unit)
+	selected_objects.clear()
+	changed.emit(selected_objects)
+
+
+func _on_object_clicked(object: BaseObject, event: InputEventMouseButton) -> void:
+	if event.double_click:
+		select_group(get_tree().get_nodes_in_group(object.group_type))
+	else:
+		if event.ctrl_pressed:
+			add_to_selection(object)
+		else:
+			select_single(object)
 	
-	return buildings
+	changed.emit(selected_objects)
+	print("object clicked!")
+
+
+func add_to_selection(object: BaseObject) -> void:
+	object.select()
+	selected_objects.append(object)
+
+
+func select_group(group: Array[Node]) -> void:
+	clear_selection()
+	for object: BaseObject in group:
+		add_to_selection(object)
+
+
+func select_single(object: BaseObject) -> void:
+	clear_selection()
+	
+	add_to_selection(object)
+	
+	print("single object selected: ", selected_objects)
 
 
 func select_objects(objects: Array[BaseObject]) -> void:
-	pass
+	clear_selection()
+	
+	for object: BaseObject in objects:
+		add_to_selection(object)
+	
+	print("objects selected")

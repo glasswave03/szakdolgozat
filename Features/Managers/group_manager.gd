@@ -1,4 +1,4 @@
-class_name GroupManager extends RefCounted
+class_name GroupManager extends Node
 
 const MIN_GROUP := KEY_0
 const MAX_GROUP := KEY_9
@@ -6,7 +6,7 @@ const MAX_GROUP := KEY_9
 var groups: Dictionary[int, Array] = {}
 
 
-func _ready() -> void:
+func _init() -> void:
 	for key in range(MIN_GROUP, MAX_GROUP + 1):
 		groups[key] = []
 
@@ -22,7 +22,7 @@ func assign_group(keycode: int, objects: Array[BaseObject]) -> void:
 
 
 func get_group(keycode: int) -> Array[BaseObject]:
-	if not groups.has(keycode):
+	if not groups.has(keycode) or groups[keycode].is_empty():
 		return []
 	
 	return groups[keycode].filter(
@@ -41,6 +41,6 @@ func handle_group_input(event: InputEventKey, selection: SelectionManager) -> vo
 		return
 	
 	if event.ctrl_pressed:
-		assign_group(event.keycode, selection.unit_selected)
+		assign_group(event.keycode, selection.selected_objects)
 	else:
 		selection.select_objects(get_group(event.keycode))

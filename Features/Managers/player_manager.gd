@@ -1,9 +1,12 @@
 class_name PlayerManager extends RefCounted
 
 enum Teams {
-	TEAM_ZERO, # team zero is neutral
+	TEAM_NEUTRAL,
 	TEAM_ONE,
 	TEAM_TWO,
 	TEAM_THREE,
+	TEAM_FOUR,
+	TEAM_FIVE,
+	TEAM_SIX,
 	TEAM_MAX,
 }

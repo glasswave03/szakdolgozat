@@ -8,9 +8,6 @@ var contents_to_save: Dictionary = {
 }
 
 
-func _ready() -> void:
-	pass
-
 func _save() -> void:
 	var file := FileAccess.open(save_location, FileAccess.WRITE)
 	file.store_var(contents_to_save.duplicate())

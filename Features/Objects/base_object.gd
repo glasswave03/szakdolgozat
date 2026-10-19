@@ -1,7 +1,9 @@
-class_name BaseObject extends CharacterBody2D
+class_name BaseObject extends Area2D
 
 signal death
 signal damaged
+signal clicked(object: BaseObject, event: InputEventMouseButton)
+signal targeted(object: BaseObject)
 
 @export var max_health: float
 @export var health: float = max_health:
@@ -20,8 +22,6 @@ signal damaged
 		else:
 			damaged.emit()
 
-var grid: AStarGrid2D
-var tilemap: TileMapLayer
 var group_type: String
 var selectable_type: String = "Selectable"
 var selection_rect: Rect2
@@ -58,8 +58,3 @@ func select() -> void:
 
 func deselect() -> void:
 	select_mode = false
-
-
-func setup(_grid: AStarGrid2D, _tilemap: TileMapLayer) -> void:
-	grid = _grid
-	tilemap = _tilemap

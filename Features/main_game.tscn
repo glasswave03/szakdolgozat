@@ -7,15 +7,16 @@
 
 [node name="MainGame" type="Node" unique_id=606005864 node_paths=PackedStringArray("world")]
 script = ExtResource("1_l756w")
-world = NodePath("MatchCoordinator/World")
+world = NodePath("MatchController/World")
 
-[node name="MatchCoordinator" type="Node" parent="." unique_id=942870765]
+[node name="MatchController" type="Node" parent="." unique_id=942870765 node_paths=PackedStringArray("map")]
 script = ExtResource("2_301ul")
+map = NodePath("World/Map")
 
-[node name="World" type="Node2D" parent="MatchCoordinator" unique_id=589015152]
+[node name="World" type="Node2D" parent="MatchController" unique_id=589015152]
 
-[node name="Map" parent="MatchCoordinator/World" unique_id=849731125 instance=ExtResource("2_0e3vx")]
+[node name="Map" parent="MatchController/World" unique_id=849731125 instance=ExtResource("2_0e3vx")]
 
-[node name="UserInterface" type="CanvasLayer" parent="." unique_id=529392270]
+[node name="UserInterface" type="CanvasLayer" parent="MatchController" unique_id=529392270]
 
-[node name="DebugUI" parent="UserInterface" unique_id=30374163 instance=ExtResource("4_mkl18")]
+[node name="DebugUI" parent="MatchController/UserInterface" unique_id=30374163 instance=ExtResource("4_mkl18")]

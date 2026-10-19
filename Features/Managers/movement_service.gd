@@ -1,30 +1,23 @@
 class_name MovementService extends RefCounted
 
 var formation_service: FormationService
+var grid: AStarGrid2D
+var tilemap: TileMapLayer
 
 
-func _init(service: FormationService) -> void:
-	formation_service = service
+func _init(_formation_service: FormationService,
+		_grid: AStarGrid2D,
+		_tilemap: TileMapLayer
+	) -> void:
+	formation_service = _formation_service
+	grid = _grid
+	tilemap = _tilemap
 
 
-func move_selected(objects: Array[BaseObject], clicked_tile: Vector2i) -> void:
-	#selection_manager.clear_freed_objects()
-	#
-	#if selection_manager.has_building_in_selection():
-		#for building: BaseObject in selection_manager.get_buildings_in_selection():
-			#building.move_to(clicked_tile)
-	#
-	#var formation := formation_service.create_formation(selection_manager.get_units().size(), clicked_tile)
-	#
-	#for i in range(selection_manager.get_units().size()):
-		#selection_manager.unit_selected[i].move_to(formation[i])
-	
-	########################################################################
-	#TODO: check correctness of code below
-	# AI code:
-	
+func move_selected(objects: Array[BaseObject], global_pos: Vector2) -> void:
 	var units: Array[BaseUnit] = []
 	var buildings: Array[BaseBuilding] = []
+	var target_cell := tilemap.local_to_map(tilemap.to_local(global_pos))
 	
 	for object: BaseObject in objects:
 		if object is BaseUnit:
@@ -32,13 +25,22 @@ func move_selected(objects: Array[BaseObject], clicked_tile: Vector2i) -> void:
 		elif object is BaseBuilding:
 			buildings.append(object)
 	
-	for building: BaseBuilding in buildings:
-		building.move_to(clicked_tile)
+	if not buildings.is_empty():
+		for building: BaseBuilding in buildings:
+			building.set_rally_point(global_pos)
+	
+	if units.is_empty(): return
 	
 	var positions := formation_service.create_formation(
-		units.size(),
-		clicked_tile
+		objects.size(),
+		target_cell
 	)
 	
-	for index in range(min(units.size(), positions.size())):
-		units[index].move_to(positions[index])
+	for i in range(min(units.size(), positions.size())):
+		var path := grid.get_point_path(
+			tilemap.local_to_map(units[i].global_position),
+			positions[i]
+		)
+		
+		if not path.is_empty():
+			units[i].set_path(path)

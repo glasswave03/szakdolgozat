@@ -1,19 +1,22 @@
-class_name MatchController extends Node
+class_name MatchController 
+extends Node
+## Holds all instances of managers and controllers
+##
+## Doesn't actually do anything with them, just holds them. 
+## When player is not in a match, these are deleted for performance.
 
-var players := PlayerManager.new()
-var selection := SelectionManager.new()
-var groups := GroupManager.new()
-var building_factory := BuildingFactory.new()
-var formations := FormationService.new()
-var movement := MovementService.new(formations)
+@export var map: MapController
 
-func move_selected(target_tile: Vector2i) -> void:
-	movement.move_selected(selection.selected_objects, target_tile)
-
-
-func select_single(object: BaseObject) -> void:
-	selection.select_single(object)
+@onready var players := PlayerManager.new()
+@onready var selection := SelectionManager.new()
+@onready var groups := GroupManager.new()
+@onready var building_factory := BuildingFactory.new()
+@onready var formations := FormationService.new()
+@onready var movement := MovementService.new(formations, map.astar_grid, map.tilemap)
+@onready var inputs := InputHandler.new()
 
 
-func clear_selection() -> void:
-	selection.clear_selection()
+func _ready() -> void:
+	add_child(selection)
+	add_child(groups)
+	map.setup(self)
