@@ -6,7 +6,6 @@ const FPS_TIMER_LIMIT: float = 1.0
 
 @export var world: Node2D
 
-var ui: CanvasLayer
 var current_world: Node2D
 var scene_cache: Dictionary = {}
 var fps_timer: float = 0.0
@@ -16,7 +15,6 @@ var fps_label: Label
 func _ready() -> void:
 	Global.game_manager = self
 	current_world = $MatchController/World/Map
-	ui = $MatchController/UserInterface
 	fps_label = $MatchController/UserInterface/DebugUI/FPSCounter
 	
 	var player1 := Player.new()
@@ -42,6 +40,7 @@ func _start_match(players: Array[Player]) -> bool:
 	
 	for i in range(players.size()):
 		players[i].team = i+1
+		match_controller.player_manager.players.append(players[i])
 	
 	return true
 

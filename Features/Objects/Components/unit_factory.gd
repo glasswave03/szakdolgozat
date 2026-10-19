@@ -15,24 +15,22 @@ var spawn_queue: Array[BaseUnit] = []
 
 func _process(_delta: float) -> void:
 	spawn_bar.value = timer.time_left
-	if not spawn_queue.is_empty() and timer.time_left == 0:
+	if not spawn_queue.is_empty() and timer.is_stopped():
 		timer.start(SPAWN_TIME)
 
 
-func spawn_unit() -> bool:
+func spawn_unit(scene: PackedScene) -> void:
 	if spawn_queue.size() >= QUEUE_LIMIT:
 		printerr("reached max amount of units in queue!")
-		return false
+		return
 	
-	var unit: BaseUnit = unit_scene.instantiate()
+	var unit: BaseUnit = scene.instantiate()
 	
 	spawn_queue.push_back(unit)
 	print("pushed queue: ", spawn_queue)
 	
 	if timer.is_stopped():
 		timer.start(SPAWN_TIME)
-	
-	return true
 
 
 func _on_spawn_timer_timeout() -> void:
@@ -46,7 +44,7 @@ func _on_spawn_timer_timeout() -> void:
 	#TODO: change this
 	# maybe the buildings should know about the map?
 	unit.setup(Vector2i(unit.global_position))
-	unit.move_to(building.rally_point.global_position)
+	#unit.move_to(building.rally_point.global_position)
 	print("remaining: ", spawn_queue)
 	
 	if not spawn_queue.is_empty():

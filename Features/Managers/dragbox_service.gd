@@ -28,6 +28,7 @@ func _draw() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	#TODO: get mouse pos wired in
 	var mouse_pos: Vector2 = Vector2.ZERO#camera.get_global_mouse_position()
 	
 	if event is InputEventMouseButton:
@@ -38,8 +39,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			selection_box_release()
 	
 	if event is InputEventMouseMotion and drawing:
-		end_pos = mouse_pos
+		end_pos = mouse_pos + Vector2(10, 10)
 		queue_redraw()
+		#TODO: signal selection about the rect?
 		#selection.selected_rect = selection_rect
 
 
@@ -58,6 +60,7 @@ func selection_box_release() -> void:
 	end_pos = Vector2.ZERO
 	
 	queue_redraw()
+	print("using dragbox service")
 	
 	#TODO: this should be put in an _on_dragbox_released
 	#var objects: Array[BaseObject] = []

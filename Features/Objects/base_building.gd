@@ -1,6 +1,6 @@
 class_name BaseBuilding extends BaseObject
 
-@onready var rally_point: Sprite2D = $RallyPoint
+@onready var rally_point: Sprite2D = $Placement/RallyPoint
 
 
 func _ready() -> void:
@@ -27,6 +27,11 @@ func _process(_delta: float) -> void:
 
 func _on_damaged() -> void:
 	$HealthBar.value = health
+
+
+func destroy() -> void:
+	#TODO: await animations
+	death.emit()
 
 
 func _on_death() -> void:

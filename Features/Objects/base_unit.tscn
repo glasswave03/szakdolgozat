@@ -1,10 +1,14 @@
 [gd_scene format=3 uid="uid://dckh32rd78p2d"]
 
 [ext_resource type="Script" uid="uid://bn2vaamhphpjd" path="res://Features/Objects/base_unit.gd" id="1_4jhad"]
-[ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://Assets/icon.svg" id="2_gtde7"]
+[ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="2_4jhad"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jfiep"]
+atlas = ExtResource("2_4jhad")
+region = Rect2(0, 32, 32, 32)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q5kjn"]
-size = Vector2(16, 16)
+size = Vector2(31, 39)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_50br4"]
 bg_color = Color(1, 0, 0, 1)
@@ -19,10 +23,10 @@ script = ExtResource("1_4jhad")
 max_health = 10.0
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1947353019]
-scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_gtde7")
+texture = SubResource("AtlasTexture_jfiep")
 
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=973093022]
+position = Vector2(-1.5, 2.5)
 shape = SubResource("RectangleShape2D_q5kjn")
 
 [node name="HealthBar" type="ProgressBar" parent="." unique_id=923963053]

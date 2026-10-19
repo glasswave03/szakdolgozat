@@ -77,7 +77,6 @@ func _draw() -> void:
 	
 	selection_rect = Rect2(rect_pos, rect_size)
 	draw_rect(selection_rect, rect_color, false, selection_width)
-	print("not yet using dragbox_service")
 
 
 func _process(_delta: float) -> void:

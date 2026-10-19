@@ -10,3 +10,5 @@ enum Teams {
 	TEAM_SIX,
 	TEAM_MAX,
 }
+
+var players: Array[Player]

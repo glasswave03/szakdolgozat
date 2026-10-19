@@ -1,6 +1,6 @@
 class_name SelectionManager extends Node
 
-signal changed
+signal changed(objects: Array[BaseObject])
 
 var selected_rect : Rect2:
 	set(value):
@@ -67,7 +67,6 @@ func clear_selection() -> void:
 		object.deselect()
 	
 	selected_objects.clear()
-	changed.emit(selected_objects)
 
 
 func _on_object_clicked(object: BaseObject, event: InputEventMouseButton) -> void:

@@ -2,13 +2,25 @@
 
 [ext_resource type="Script" uid="uid://ra6knyinp1ee" path="res://Features/Objects/base_building.gd" id="1_4lrng"]
 [ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://Assets/icon.svg" id="2_f4sdt"]
+[ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="2_undlo"]
 [ext_resource type="Script" uid="uid://cuaj5llxcswvs" path="res://Features/Objects/building_placement.gd" id="3_xifwt"]
 [ext_resource type="PackedScene" uid="uid://bea0p3lgsruqh" path="res://Features/Objects/Components/unit_factory.tscn" id="4_xifwt"]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_gtde7"]
+atlas = ExtResource("2_undlo")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cjm8d"]
+bg_color = Color(1, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aun05"]
+bg_color = Color(0, 1, 0, 1)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q5kjn"]
-size = Vector2(128, 182)
+size = Vector2(66, 91)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tm8qk"]
+size = Vector2(64, 64)
 
 [node name="BaseBuilding" type="Area2D" unique_id=1903074667]
 top_level = true
@@ -18,9 +30,7 @@ script = ExtResource("1_4lrng")
 max_health = 15.0
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=173166282]
-position = Vector2(0, -1.0000057)
-scale = Vector2(1, 1.296875)
-texture = ExtResource("2_f4sdt")
+texture = SubResource("AtlasTexture_gtde7")
 
 [node name="HealthBar" type="ProgressBar" parent="." unique_id=1768058177]
 anchors_preset = 8
@@ -34,8 +44,11 @@ offset_right = 65.0
 offset_bottom = 74.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_cjm8d")
+theme_override_styles/fill = SubResource("StyleBoxFlat_aun05")
 max_value = 15.0
 step = 0.1
+value = 15.0
 show_percentage = false
 
 [node name="Placement" type="Node2D" parent="." unique_id=1141183029]
@@ -46,7 +59,7 @@ collision_layer = 0
 collision_mask = 3
 
 [node name="Detector" type="CollisionShape2D" parent="Placement/Overlap" unique_id=714033158]
-position = Vector2(0, 3)
+position = Vector2(0, -1.5)
 shape = SubResource("RectangleShape2D_q5kjn")
 
 [node name="RallyPoint" type="Sprite2D" parent="Placement" unique_id=2110982191]
