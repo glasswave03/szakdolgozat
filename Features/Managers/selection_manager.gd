@@ -107,4 +107,16 @@ func select_objects(objects: Array[BaseObject]) -> void:
 	for object: BaseObject in objects:
 		add_to_selection(object)
 	
-	print("objects selected")
+	#print("objects selected: ", selected_objects)
+
+
+func _on_dragbox_released(rect: Rect2) -> void:
+	var objects: Array[BaseObject] = []
+	
+	selected_rect = rect
+	
+	for object: BaseObject in get_tree().get_nodes_in_group("Selectable"):
+		if object.select_mode == true:
+			objects.append(object)
+	
+	select_objects(objects)

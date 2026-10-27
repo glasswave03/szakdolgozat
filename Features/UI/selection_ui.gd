@@ -13,8 +13,8 @@ var has_unit := false
 
 
 func _ready() -> void:
-	building_ui.visible = false
-	unit_ui.visible = false
+	building_ui.visible = has_building
+	unit_ui.visible = has_unit
 
 
 func setup(_selection: SelectionManager) -> void:
@@ -32,7 +32,12 @@ func _on_destroy_btn_pressed() -> void:
 
 
 func _on_selection_changed(objects: Array[BaseObject]) -> void:
+	has_unit = false
+	has_building = false
 	var units: Array[BaseUnit] = []
+	
+	for button in unit_grid.get_children():
+		button.queue_free()
 	
 	for object: BaseObject in objects:
 		if object is BaseBuilding:

@@ -3,21 +3,24 @@
 [ext_resource type="Script" uid="uid://c548m78w3ittv" path="res://Features/Managers/game_manager.gd" id="1_l756w"]
 [ext_resource type="PackedScene" uid="uid://b5000y3t10rg7" path="res://Features/Worlds/map1.tscn" id="2_0e3vx"]
 [ext_resource type="Script" uid="uid://bwl02iq4pugnv" path="res://Features/Managers/match_controller.gd" id="2_301ul"]
+[ext_resource type="Script" uid="uid://cr22w8eaiyaup" path="res://Features/Worlds/map_controller.gd" id="3_xbj3v"]
 [ext_resource type="PackedScene" uid="uid://yisl65elbd4" path="res://Features/UI/debug_ui.tscn" id="4_mkl18"]
 [ext_resource type="PackedScene" uid="uid://d1ru5xdxgkem2" path="res://Features/UI/selection_ui.tscn" id="5_3hfp1"]
 
-[node name="MainGame" type="Node" unique_id=606005864 node_paths=PackedStringArray("world")]
+[node name="MainGame" type="Node" unique_id=606005864]
 script = ExtResource("1_l756w")
-world = NodePath("MatchController/World")
 
-[node name="MatchController" type="Node" parent="." unique_id=942870765 node_paths=PackedStringArray("map", "ui")]
+[node name="MatchController" type="Node" parent="." unique_id=942870765 node_paths=PackedStringArray("map_controller", "ui", "map")]
 script = ExtResource("2_301ul")
-map = NodePath("World/Map")
+map_controller = NodePath("MapController")
 ui = NodePath("UserInterface/SelectionUI")
+map = NodePath("MapController/map1")
 
-[node name="World" type="Node2D" parent="MatchController" unique_id=589015152]
+[node name="MapController" type="Node2D" parent="MatchController" unique_id=589015152]
+script = ExtResource("3_xbj3v")
 
-[node name="Map" parent="MatchController/World" unique_id=849731125 instance=ExtResource("2_0e3vx")]
+[node name="map1" parent="MatchController/MapController" unique_id=849731125 instance=ExtResource("2_0e3vx")]
+map_settings = null
 
 [node name="UserInterface" type="CanvasLayer" parent="MatchController" unique_id=529392270]
 

@@ -4,9 +4,11 @@ const FPS_TIMER_LIMIT: float = 1.0
 
 @onready var match_controller: MatchController = $MatchController
 
-@export var world: Node2D
+#TODO: game_manager should not know about the map, it should only care about switching between
+# menu scenes and handling game start/end
+@export var scene: Node2D
 
-var current_world: Node2D
+var current_scene: Node2D
 var scene_cache: Dictionary = {}
 var fps_timer: float = 0.0
 var fps_label: Label
@@ -14,7 +16,7 @@ var fps_label: Label
 
 func _ready() -> void:
 	Global.game_manager = self
-	current_world = $MatchController/World/Map
+	current_scene = $MatchController/MapController/map1
 	fps_label = $MatchController/UserInterface/DebugUI/FPSCounter
 	
 	var player1 := Player.new()
@@ -39,30 +41,30 @@ func _start_match(players: Array[Player]) -> bool:
 		return false
 	
 	for i in range(players.size()):
-		players[i].team = i+1
+		players[i].team = i+1 as PlayerManager.Teams
 		match_controller.player_manager.players.append(players[i])
 	
 	return true
 
 
-func change_world(new_scene: String, delete: bool = true) -> void:
-	if current_world != null:
+func change_scene(new_scene: String, delete: bool = true) -> void:
+	if current_scene != null:
 		if delete:
-			var scene_path: String = current_world.scene_file_path
-			current_world.queue_free()
+			var scene_path: String = current_scene.scene_file_path
+			current_scene.queue_free()
 			scene_cache.erase(scene_path)
 		else:
-			world.remove_child(current_world)
+			scene.remove_child(current_scene)
 	
 	var new_node: Node
 	if scene_cache.has(new_scene):
 		new_node = scene_cache[new_scene]
 		if new_node.get_parent() == null:
-			world.add_child(new_node)
+			scene.add_child(new_node)
 		new_node.visible = true
 	else:
 		new_node = load(new_scene).instantiate()
 		scene_cache[new_scene] = new_node
-		world.add_child(new_node)
+		scene.add_child(new_node)
 	
-	current_world = new_node
+	current_scene = new_node
