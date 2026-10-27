@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://croy4b040a8s1"]
+
+[ext_resource type="Script" uid="uid://cuaj5llxcswvs" path="res://Features/Objects/Components/building_placement_component.gd" id="1_hfqrd"]
+[ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://Assets/icon.svg" id="2_u1kyf"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q5kjn"]
+size = Vector2(66, 91)
+
+[node name="Placement" type="Node2D" unique_id=1880575235]
+script = ExtResource("1_hfqrd")
+
+[node name="Overlap" type="Area2D" parent="." unique_id=1345893184]
+collision_layer = 0
+collision_mask = 3
+
+[node name="Detector" type="CollisionShape2D" parent="Overlap" unique_id=1442691895]
+position = Vector2(0, -1.5)
+shape = SubResource("RectangleShape2D_q5kjn")
+
+[node name="RallyPoint" type="Sprite2D" parent="." unique_id=1471858034]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_u1kyf")
+
+[connection signal="placed" from="." to="." method="_on_placed"]
+[connection signal="body_entered" from="Overlap" to="." method="_on_body_entered"]
+[connection signal="body_exited" from="Overlap" to="." method="_on_body_exited"]

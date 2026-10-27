@@ -1,4 +1,4 @@
-## Orchestrates the map while players are in a match.
+## Controls every map-related object while players are in a match.
 class_name MapController extends Node2D
 
 var tile_size: int = 32
@@ -14,6 +14,7 @@ var groups: GroupManager
 var formations: FormationService
 var movement: MovementService
 var dragbox: DragboxService
+var placement: BuildingPlacement
 
 
 func map_setup() -> void:
@@ -34,8 +35,11 @@ func setup(_map: MapScene) -> void:
 	
 	selection = SelectionManager.new()
 	groups = GroupManager.new()
+	placement = BuildingPlacement.new()
+	placement.setup(map_scene)
 	add_child(selection)
 	add_child(groups)
+	add_child(placement)
 	
 	dragbox.released.connect(selection._on_dragbox_released)
 	
@@ -68,37 +72,6 @@ func astar_grid_setup() -> void:
 				astar_grid.set_point_solid(tile_pos, true)
 
 
-var placing_building: bool = false
-var building_preview: BaseBuilding
-
-
-func _process(_delta: float) -> void:
-	if placing_building:
-		var mouse_pos: Vector2 = camera.get_global_mouse_position()
-		var mouse_to_tile: Vector2i = Vector2i(get_tile_pos(mouse_pos))
-		var cell_pos: Vector2i = tilemap.map_to_local(mouse_to_tile)
-		building_preview.position = cell_pos
-		
-		if Input.is_action_just_pressed("mouse_left"):
-			if not building_preview.is_overlapping:
-				#TODO: when placing a building, it should set points solid under itself
-				place_building()
-		
-		if Input.is_action_just_pressed("ui_cancel"):
-			building_preview.call_deferred("queue_free")
-			building_preview = null
-			placing_building = false
-
-
-func place_building() -> void:
-	building_preview.placed.emit()
-	building_preview.setup(self)
-	building_preview.modulate = Color.WHITE
-	building_preview.collision.disabled = false
-	building_preview = null
-	placing_building = false
-
-
 func _unhandled_input(event: InputEvent) -> void:
 	var mouse_pos: Vector2 = camera.get_global_mouse_position()
 	
@@ -119,15 +92,3 @@ func _unhandled_input(event: InputEvent) -> void:
 			map_scene.add_child(new_unit)
 			new_unit.clicked.connect(selection._on_object_clicked)
 			print("unit spawned: ", new_unit)
-		
-		if event.pressed and event.keycode == KEY_W:
-			if not placing_building:
-				#building_preview = match_controller.building_factory.spawn_building(tilemap, mouse_to_tile)
-				placing_building = true
-				selection.clear_selection()
-
-
-func get_tile_pos(global_pos: Vector2) -> Vector2i:
-	var local_pos: Vector2 = tilemap.to_local(global_pos)
-	var tile_pos: Vector2i = tilemap.local_to_map(local_pos)
-	return tile_pos

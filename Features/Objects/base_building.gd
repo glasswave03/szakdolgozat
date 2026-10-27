@@ -1,6 +1,7 @@
 class_name BaseBuilding extends BaseObject
 
 @onready var rally_point: Sprite2D = $Placement/RallyPoint
+@onready var placement: Node2D = $Placement
 
 
 func _ready() -> void:
@@ -41,4 +42,5 @@ func _on_death() -> void:
 
 
 func set_rally_point(global_pos: Vector2) -> void:
+	#TODO: somehow check if the tile is valid and snap to tile_pos
 	rally_point.global_position = global_pos

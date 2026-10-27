@@ -22,7 +22,7 @@ func _process(_delta: float) -> void:
 
 
 func _on_placed() -> void:
-	%Overlap.monitoring = false
+	overlap_area.monitoring = false
 	modulate = Color.WHITE
 
 

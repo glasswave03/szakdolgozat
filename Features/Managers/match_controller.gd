@@ -11,7 +11,6 @@ extends Node
 
 @onready var player_manager := PlayerManager.new()
 @onready var building_factory := BuildingFactory.new()
-@onready var inputs := InputHandler.new()
 @onready var ui_actions := UIActionService.new()
 
 
