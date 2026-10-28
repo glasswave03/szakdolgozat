@@ -19,18 +19,3 @@ func _process(_delta: float) -> void:
 	
 	if not is_overlapping and overlap_area.monitoring:
 		modulate = placement_color
-
-
-func _on_placed() -> void:
-	overlap_area.monitoring = false
-	modulate = Color.WHITE
-
-
-func _on_body_entered(body: Node2D) -> void:
-	overlap_counter += 1
-	print("overlapping with: ", body)
-
-
-func _on_body_exited(body: Node2D) -> void:
-	overlap_counter -= 1
-	print("overlap exited: ", body)

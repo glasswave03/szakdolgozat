@@ -1,6 +1,6 @@
 class_name BaseBuilding extends BaseObject
 
-@onready var rally_point: Sprite2D = $Placement/RallyPoint
+@onready var rally_point: Sprite2D = $RallyPoint
 @onready var placement: Node2D = $Placement
 
 
@@ -31,7 +31,7 @@ func _on_damaged() -> void:
 
 
 func destroy() -> void:
-	#TODO: await animations
+	#TODO: disable interaction and await animations
 	death.emit()
 
 
@@ -44,3 +44,18 @@ func _on_death() -> void:
 func set_rally_point(global_pos: Vector2) -> void:
 	#TODO: somehow check if the tile is valid and snap to tile_pos
 	rally_point.global_position = global_pos
+
+
+func _on_placed() -> void:
+	placement.overlap_area.monitoring = false
+	modulate = Color.WHITE
+
+
+func _on_overlap_body_entered(body: Node2D) -> void:
+	placement.overlap_counter += 1
+	print("overlapping with: ", body)
+
+
+func _on_overlap_body_exited(body: Node2D) -> void:
+	placement.overlap_counter -= 1
+	print("overlap exited: ", body)

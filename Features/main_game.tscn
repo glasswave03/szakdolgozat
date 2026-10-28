@@ -3,27 +3,29 @@
 [ext_resource type="Script" uid="uid://c548m78w3ittv" path="res://Features/Managers/game_manager.gd" id="1_l756w"]
 [ext_resource type="PackedScene" uid="uid://b5000y3t10rg7" path="res://Features/Worlds/map1.tscn" id="2_0e3vx"]
 [ext_resource type="Script" uid="uid://bwl02iq4pugnv" path="res://Features/Managers/match_controller.gd" id="2_301ul"]
-[ext_resource type="Script" uid="uid://cr22w8eaiyaup" path="res://Features/Worlds/map_controller.gd" id="3_xbj3v"]
+[ext_resource type="Script" uid="uid://cr22w8eaiyaup" path="res://Features/Managers/map_controller.gd" id="3_xbj3v"]
 [ext_resource type="PackedScene" uid="uid://yisl65elbd4" path="res://Features/UI/debug_ui.tscn" id="4_mkl18"]
 [ext_resource type="PackedScene" uid="uid://d1ru5xdxgkem2" path="res://Features/UI/selection_ui.tscn" id="5_3hfp1"]
+[ext_resource type="Resource" uid="uid://bq6v6dhgnf86e" path="res://Settings/map_settings.tres" id="5_xbj3v"]
 
 [node name="MainGame" type="Node" unique_id=606005864]
 script = ExtResource("1_l756w")
 
-[node name="MatchController" type="Node" parent="." unique_id=942870765 node_paths=PackedStringArray("map_controller", "ui", "map")]
+[node name="MatchController" type="Node" parent="." unique_id=942870765 node_paths=PackedStringArray("map_controller", "map")]
 script = ExtResource("2_301ul")
 map_controller = NodePath("MapController")
-ui = NodePath("UserInterface/SelectionUI")
 map = NodePath("MapController/map1")
 
 [node name="MapController" type="Node2D" parent="MatchController" unique_id=589015152]
 script = ExtResource("3_xbj3v")
 
 [node name="map1" parent="MatchController/MapController" unique_id=849731125 instance=ExtResource("2_0e3vx")]
-map_settings = null
+map_settings = ExtResource("5_xbj3v")
 
-[node name="UserInterface" type="CanvasLayer" parent="MatchController" unique_id=529392270]
+[node name="UserInterface" type="CanvasLayer" parent="MatchController/MapController" unique_id=529392270]
 
-[node name="DebugUI" parent="MatchController/UserInterface" unique_id=30374163 instance=ExtResource("4_mkl18")]
+[node name="SelectionUI" parent="MatchController/MapController/UserInterface" unique_id=1841617272 instance=ExtResource("5_3hfp1")]
 
-[node name="SelectionUI" parent="MatchController/UserInterface" unique_id=1841617272 instance=ExtResource("5_3hfp1")]
+[node name="Debug" type="CanvasLayer" parent="MatchController" unique_id=521639533]
+
+[node name="UI" parent="MatchController/Debug" unique_id=30374163 instance=ExtResource("4_mkl18")]

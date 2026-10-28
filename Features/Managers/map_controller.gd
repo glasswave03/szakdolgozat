@@ -1,4 +1,6 @@
 ## Controls every map-related object while players are in a match.
+##
+## Initiates everything required by the player to play.
 class_name MapController extends Node2D
 
 var tile_size: int = 32
@@ -15,6 +17,8 @@ var formations: FormationService
 var movement: MovementService
 var dragbox: DragboxService
 var placement: BuildingPlacement
+var ui: Control
+var ui_actions: UIActionService
 
 
 func map_setup() -> void:
@@ -27,6 +31,7 @@ func setup(_map: MapScene) -> void:
 	camera = map_scene.camera
 	
 	camera_controller = CameraController.new(camera)
+	add_child(camera_controller)
 	
 	formations = FormationService.new()
 	movement = MovementService.new(formations, astar_grid, tilemap)
@@ -45,7 +50,12 @@ func setup(_map: MapScene) -> void:
 	
 	astar_grid_setup()
 	
-	add_child(camera_controller)
+	ui = $UserInterface/SelectionUI
+	ui.setup(selection)
+	ui_actions = UIActionService.new()
+	
+	ui.spawn_requested.connect(ui_actions.spawn_units_at_selected_buildings)
+	ui.destroy_requested.connect(ui_actions.destroy_selected_buildings)
 
 
 func astar_grid_setup() -> void:
@@ -54,7 +64,7 @@ func astar_grid_setup() -> void:
 	astar_grid.region = tilemap.get_used_rect()
 	astar_grid.cell_size = Vector2(tile_size, tile_size)
 	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_EUCLIDEAN
-	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_EUCLIDEAN
+	astar_grid.default_estimate_heuristic = AStarGrid2D.HEURISTIC_EUCLIDEAN
 	astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
 	astar_grid.jumping_enabled = false
 	astar_grid.offset = Vector2(offset, offset)

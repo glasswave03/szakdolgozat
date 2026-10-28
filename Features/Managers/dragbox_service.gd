@@ -30,7 +30,7 @@ func _draw() -> void:
 	draw_rect(selection_rect, rect_color, false, selection_width)
 
 
-func _input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	var mouse_pos: Vector2 = camera.get_global_mouse_position()
 	
 	if event is InputEventMouseButton:

@@ -120,3 +120,4 @@ func _on_dragbox_released(rect: Rect2) -> void:
 			objects.append(object)
 	
 	select_objects(objects)
+	changed.emit(selected_objects)

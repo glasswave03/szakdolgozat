@@ -35,6 +35,7 @@ func _on_selection_changed(objects: Array[BaseObject]) -> void:
 	has_unit = false
 	has_building = false
 	var units: Array[BaseUnit] = []
+	var buildings: Array[BaseBuilding] = []
 	
 	for button in unit_grid.get_children():
 		button.queue_free()
@@ -42,6 +43,7 @@ func _on_selection_changed(objects: Array[BaseObject]) -> void:
 	for object: BaseObject in objects:
 		if object is BaseBuilding:
 			has_building = true
+			buildings.append(object)
 			
 		elif object is BaseUnit:
 			has_unit = true
@@ -52,7 +54,6 @@ func _on_selection_changed(objects: Array[BaseObject]) -> void:
 	
 	unit_ui.visible = has_unit
 	building_ui.visible = has_building
-	print("selection changed!")
 
 
 func make_unit_button(unit: BaseUnit) -> Button:

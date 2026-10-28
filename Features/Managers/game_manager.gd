@@ -17,7 +17,7 @@ var fps_label: Label
 func _ready() -> void:
 	Global.game_manager = self
 	current_scene = $MatchController/MapController/map1
-	fps_label = $MatchController/UserInterface/DebugUI/FPSCounter
+	fps_label = $MatchController/Debug/UI/FPSCounter
 	
 	var player1 := Player.new()
 	var player2 := Player.new()
