@@ -38,7 +38,6 @@ func _ready() -> void:
 
 
 func setup(cell_pos: Vector2i) -> void:
-	#TODO: remove coupling
 	team = PlayerManager.Teams.TEAM_NEUTRAL
 	current_cell = cell_pos
 	is_set_up = true

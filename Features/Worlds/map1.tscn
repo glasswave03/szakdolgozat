@@ -2,12 +2,16 @@
 
 [ext_resource type="Script" uid="uid://ds8e3dbhiujb4" path="res://Features/Worlds/map_scene.gd" id="1_jfiep"]
 [ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://Assets/icon.svg" id="2_18ja4"]
-[ext_resource type="Script" uid="uid://cr8eex4p7h431" path="res://Settings/map_settings.gd" id="2_jfiep"]
+[ext_resource type="Script" uid="uid://cr8eex4p7h431" path="res://Features/Resources/map_settings.gd" id="2_jfiep"]
 [ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="3_k145m"]
 [ext_resource type="PackedScene" uid="uid://ddjnhb1rxr3sa" path="res://Features/Objects/base_building.tscn" id="4_wh76p"]
 
 [sub_resource type="Resource" id="Resource_8c242"]
 script = ExtResource("2_jfiep")
+max_players = 4
+starting_gold = 50
+starting_wood = 20
+starting_peasants = 5
 metadata/_custom_type_script = "uid://cr8eex4p7h431"
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7vjjh"]
@@ -50,8 +54,6 @@ tile_map_data = PackedByteArray("AADr//X/AQAAAAAAAADr//b/AQAAAAAAAADr//f/AQAAAAA
 tile_set = SubResource("TileSet_18ja4")
 
 [node name="Camera" type="Camera2D" parent="." unique_id=482120012]
-
-[node name="UI" type="CanvasLayer" parent="." unique_id=1301410015]
 
 [node name="BaseBuilding" parent="." unique_id=1903074667 instance=ExtResource("4_wh76p")]
 position = Vector2(-378, -122)

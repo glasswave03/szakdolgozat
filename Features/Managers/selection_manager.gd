@@ -83,6 +83,7 @@ func _on_object_clicked(object: BaseObject, event: InputEventMouseButton) -> voi
 
 
 func add_to_selection(object: BaseObject) -> void:
+	clear_freed_objects()
 	object.select()
 	selected_objects.append(object)
 
@@ -121,3 +122,18 @@ func _on_dragbox_released(rect: Rect2) -> void:
 	
 	select_objects(objects)
 	changed.emit(selected_objects)
+
+
+func _on_click(event: InputEventMouseButton) -> void:
+	for object: BaseObject in get_tree().get_nodes_in_group("Selectable"):
+		if object.global_position.distance_to(event.global_position) < 20:
+			if event.double_click:
+				select_group(get_tree().get_nodes_in_group("Selectable"))
+			else:
+				if event.ctrl_pressed:
+					add_to_selection(object)
+				else:
+					select_single(object)
+	
+	changed.emit(selected_objects)
+	print("object clicked!")

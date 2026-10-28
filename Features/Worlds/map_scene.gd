@@ -6,6 +6,6 @@
 ## and configured through there. A TileMapLayer must be configured and a Camera2D must be added.
 class_name MapScene extends Node2D
 
-@export var map_settings: MapSettings
+@export var map_settings: Resource
 @export var tilemap: TileMapLayer
 @export var camera: Camera2D

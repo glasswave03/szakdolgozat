@@ -2,6 +2,7 @@ class_name CameraController extends Node
 
 const MAX_ZOOM: Vector2 = Vector2(2.0, 2.0)
 const MIN_ZOOM: Vector2 = Vector2(0.5, 0.5)
+#TODO: set scroll speed so that it doesn't make pixels look awful
 const SCROLL_SPEED: Vector2 = Vector2(0.1, 0.1)
 
 var camera: Camera2D

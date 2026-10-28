@@ -2,6 +2,7 @@ class_name BaseBuilding extends BaseObject
 
 @onready var rally_point: Sprite2D = $RallyPoint
 @onready var placement: Node2D = $Placement
+@onready var unit_factory: Node2D = $UnitFactory
 
 
 func _ready() -> void:
@@ -59,3 +60,8 @@ func _on_overlap_body_entered(body: Node2D) -> void:
 func _on_overlap_body_exited(body: Node2D) -> void:
 	placement.overlap_counter -= 1
 	print("overlap exited: ", body)
+
+
+func _on_spawn_requested() -> void:
+	if unit_factory:
+		unit_factory.queue_unit(unit_factory.unit_scene)

@@ -14,6 +14,7 @@ func _process(_delta: float) -> void:
 	if overlap_counter > 0:
 		is_overlapping = true
 		modulate = overlap_color
+		print("fuck you!")
 	else:
 		is_overlapping = false
 	

@@ -1,15 +1,16 @@
 extends Control
 
-signal spawn_requested
-signal destroy_requested
+signal spawn_requested(buildings: Array[BaseBuilding])
+signal destroy_requested(buildings: Array[BaseBuilding])
 
 @onready var building_ui: Control = $Layout/BuildingUI
 @onready var unit_ui: Control = $Layout/UnitUI
 @onready var unit_grid: GridContainer = $Layout/UnitUI/Grid
 
-var selection: SelectionManager
 var has_building := false
 var has_unit := false
+var units: Array[BaseUnit] = []
+var buildings: Array[BaseBuilding] = []
 
 
 func _ready() -> void:
@@ -17,25 +18,19 @@ func _ready() -> void:
 	unit_ui.visible = has_unit
 
 
-func setup(_selection: SelectionManager) -> void:
-	selection = _selection
-	
-	selection.changed.connect(_on_selection_changed)
-
-
 func _on_spawn_btn_pressed() -> void:
-	spawn_requested.emit()
+	spawn_requested.emit(buildings)
 
 
 func _on_destroy_btn_pressed() -> void:
-	destroy_requested.emit()
+	destroy_requested.emit(buildings)
 
 
 func _on_selection_changed(objects: Array[BaseObject]) -> void:
 	has_unit = false
 	has_building = false
-	var units: Array[BaseUnit] = []
-	var buildings: Array[BaseBuilding] = []
+	units = []
+	buildings = []
 	
 	for button in unit_grid.get_children():
 		button.queue_free()
@@ -55,7 +50,7 @@ func _on_selection_changed(objects: Array[BaseObject]) -> void:
 	unit_ui.visible = has_unit
 	building_ui.visible = has_building
 
-
+#TODO: on unit_button clicked: focuses on that single unit
 func make_unit_button(unit: BaseUnit) -> Button:
 	var button: Button = Button.new()
 	button.text = unit.name

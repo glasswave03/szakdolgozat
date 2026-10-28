@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://cr22w8eaiyaup" path="res://Features/Managers/map_controller.gd" id="3_xbj3v"]
 [ext_resource type="PackedScene" uid="uid://yisl65elbd4" path="res://Features/UI/debug_ui.tscn" id="4_mkl18"]
 [ext_resource type="PackedScene" uid="uid://d1ru5xdxgkem2" path="res://Features/UI/selection_ui.tscn" id="5_3hfp1"]
-[ext_resource type="Resource" uid="uid://bq6v6dhgnf86e" path="res://Settings/map_settings.tres" id="5_xbj3v"]
+[ext_resource type="Resource" uid="uid://bq6v6dhgnf86e" path="res://Features/Resources/map_settings.tres" id="5_xbj3v"]
 
 [node name="MainGame" type="Node" unique_id=606005864]
 script = ExtResource("1_l756w")

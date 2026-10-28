@@ -1,6 +1,7 @@
 class_name DragboxService extends Node2D
 
 signal released(rect: Rect2)
+signal clicked(event: InputEventMouseButton)
 
 var camera: Camera2D
 var drawing: bool = false
@@ -39,7 +40,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		
 		if event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
 			selection_box_release()
-	
+		
 	if event is InputEventMouseMotion and drawing:
 		end_pos = mouse_pos
 		queue_redraw()

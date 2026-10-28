@@ -1,5 +1,7 @@
 extends Node2D
 
+signal spawned(unit: BaseUnit)
+
 const SPAWN_TIME: float = 1.0
 const QUEUE_LIMIT: int = 10
 
@@ -19,15 +21,15 @@ func _process(_delta: float) -> void:
 		timer.start(SPAWN_TIME)
 
 
-func spawn_unit(scene: PackedScene) -> void:
+func queue_unit() -> void:
 	if spawn_queue.size() >= QUEUE_LIMIT:
 		printerr("reached max amount of units in queue!")
 		return
 	
-	var unit: BaseUnit = scene.instantiate()
+	var unit: BaseUnit = unit_scene.instantiate()
 	
 	spawn_queue.push_back(unit)
-	print("pushed queue: ", spawn_queue)
+	print("queued unit")
 	
 	if timer.is_stopped():
 		timer.start(SPAWN_TIME)
@@ -38,12 +40,12 @@ func _on_spawn_timer_timeout() -> void:
 		return
 	
 	var unit: BaseUnit = spawn_queue.pop_front()
+	spawned.emit(unit)
 	
-	get_parent().add_sibling(unit)
-	unit.global_position += spawn_offset
-	#TODO: change this
-	# maybe the buildings should know about the map?
+	building.add_sibling(unit, true)
+	unit.global_position += building.global_position + spawn_offset
 	unit.setup(Vector2i(unit.global_position))
+	#TODO: make the unit do something like below
 	#unit.move_to(building.rally_point.global_position)
 	print("remaining: ", spawn_queue)
 	

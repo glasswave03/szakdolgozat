@@ -47,11 +47,12 @@ func setup(_map: MapScene) -> void:
 	add_child(placement)
 	
 	dragbox.released.connect(selection._on_dragbox_released)
+	dragbox.clicked.connect(selection._on_click)
 	
 	astar_grid_setup()
 	
 	ui = $UserInterface/SelectionUI
-	ui.setup(selection)
+	selection.changed.connect(ui._on_selection_changed)
 	ui_actions = UIActionService.new()
 	
 	ui.spawn_requested.connect(ui_actions.spawn_units_at_selected_buildings)
