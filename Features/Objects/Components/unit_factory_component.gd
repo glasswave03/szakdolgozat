@@ -10,15 +10,25 @@ const QUEUE_LIMIT: int = 10
 @onready var timer: Timer = $SpawnTimer
 @onready var spawn_bar: ProgressBar = $SpawnBar
 @onready var building: BaseBuilding = get_parent()
+@onready var rally_point: Sprite2D = $RallyPoint
 
 var spawn_offset: Vector2 = Vector2(-10, 70)
 var spawn_queue: Array[BaseUnit] = []
+
+
+func _ready() -> void:
+	rally_point.position += Vector2(-20, 140)
+	rally_point.visible = false
 
 
 func _process(_delta: float) -> void:
 	spawn_bar.value = timer.time_left
 	if not spawn_queue.is_empty() and timer.is_stopped():
 		timer.start(SPAWN_TIME)
+	if building.select_mode:
+		rally_point.visible = true
+	else:
+		rally_point.visible = false
 
 
 func queue_unit() -> void:
@@ -51,3 +61,8 @@ func _on_spawn_timer_timeout() -> void:
 	
 	if not spawn_queue.is_empty():
 		timer.start(SPAWN_TIME)
+
+
+func set_rally_point(global_pos: Vector2) -> void:
+	#TODO: somehow check if the tile is valid and snap to tile_pos
+	rally_point.global_position = global_pos

@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="3_k145m"]
 [ext_resource type="PackedScene" uid="uid://ddjnhb1rxr3sa" path="res://Features/Objects/base_building.tscn" id="4_wh76p"]
 
-[sub_resource type="Resource" id="Resource_8c242"]
+[sub_resource type="Resource" id="Resource_q5kjn"]
 script = ExtResource("2_jfiep")
 max_players = 4
 starting_gold = 50
@@ -40,9 +40,9 @@ custom_data_layer_0/type = 1
 sources/0 = SubResource("TileSetAtlasSource_7vjjh")
 sources/1 = SubResource("TileSetAtlasSource_wh76p")
 
-[node name="Map" type="Node2D" unique_id=339783630 node_paths=PackedStringArray("tilemap", "camera")]
+[node name="Map" type="Node2D" unique_id=1757636507 node_paths=PackedStringArray("tilemap", "camera")]
 script = ExtResource("1_jfiep")
-map_settings = SubResource("Resource_8c242")
+map_settings = SubResource("Resource_q5kjn")
 tilemap = NodePath("TileMapLayer")
 camera = NodePath("Camera")
 metadata/_custom_type_script = "uid://ds8e3dbhiujb4"

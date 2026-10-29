@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://c76mxvgur7bfd"]
 
-[ext_resource type="Script" uid="uid://c548m78w3ittv" path="res://Features/Managers/game_manager.gd" id="1_l756w"]
+[ext_resource type="Script" uid="uid://c548m78w3ittv" path="res://Features/Managers/Root/game_manager.gd" id="1_l756w"]
 [ext_resource type="PackedScene" uid="uid://b5000y3t10rg7" path="res://Features/Worlds/map1.tscn" id="2_0e3vx"]
-[ext_resource type="Script" uid="uid://bwl02iq4pugnv" path="res://Features/Managers/match_controller.gd" id="2_301ul"]
-[ext_resource type="Script" uid="uid://cr22w8eaiyaup" path="res://Features/Managers/map_controller.gd" id="3_xbj3v"]
+[ext_resource type="Script" uid="uid://bwl02iq4pugnv" path="res://Features/Managers/Root/match_controller.gd" id="2_301ul"]
+[ext_resource type="Script" uid="uid://cr22w8eaiyaup" path="res://Features/Managers/Map/map_controller.gd" id="3_xbj3v"]
 [ext_resource type="PackedScene" uid="uid://yisl65elbd4" path="res://Features/UI/debug_ui.tscn" id="4_mkl18"]
 [ext_resource type="PackedScene" uid="uid://d1ru5xdxgkem2" path="res://Features/UI/selection_ui.tscn" id="5_3hfp1"]
-[ext_resource type="Resource" uid="uid://bq6v6dhgnf86e" path="res://Features/Resources/map_settings.tres" id="5_xbj3v"]
+[ext_resource type="Resource" uid="uid://bq6v6dhgnf86e" path="res://Features/Resources/default_map_settings.tres" id="5_xbj3v"]
 
 [node name="MainGame" type="Node" unique_id=606005864]
 script = ExtResource("1_l756w")

@@ -3,10 +3,7 @@
 ## Initiates everything required by the player to play.
 class_name MapController extends Node2D
 
-var tile_size: int = 32
-
-@onready var astar_grid: AStarGrid2D = AStarGrid2D.new()
-
+var tile_size: int
 var camera_controller: CameraController
 var map_scene: MapScene
 var camera: Camera2D
@@ -20,13 +17,12 @@ var placement: BuildingPlacement
 var ui: Control
 var ui_actions: UIActionService
 
-
-func map_setup() -> void:
-	tile_size = map_scene.map_settings.TILE_SIZE
+@onready var astar_grid: AStarGrid2D = AStarGrid2D.new()
 
 
 func setup(_map: MapScene) -> void:
 	map_scene = _map
+	tile_size = map_scene.map_settings.tile_size
 	tilemap = map_scene.tilemap
 	camera = map_scene.camera
 	

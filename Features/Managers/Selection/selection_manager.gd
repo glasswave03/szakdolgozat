@@ -108,7 +108,7 @@ func select_objects(objects: Array[BaseObject]) -> void:
 	for object: BaseObject in objects:
 		add_to_selection(object)
 	
-	#print("objects selected: ", selected_objects)
+	changed.emit(selected_objects)
 
 
 func _on_dragbox_released(rect: Rect2) -> void:
@@ -121,7 +121,6 @@ func _on_dragbox_released(rect: Rect2) -> void:
 			objects.append(object)
 	
 	select_objects(objects)
-	changed.emit(selected_objects)
 
 
 func _on_click(event: InputEventMouseButton) -> void:

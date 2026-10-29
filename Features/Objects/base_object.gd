@@ -1,3 +1,4 @@
+@abstract
 class_name BaseObject extends Area2D
 
 signal death
@@ -5,47 +6,52 @@ signal damaged
 signal clicked(object: BaseObject, event: InputEventMouseButton)
 signal targeted(object: BaseObject)
 
-@export var max_health: float
-@export var health: float = max_health:
-	set(value):
-		var health_before: float = health
-		health = value
-		
-		if health <= 0:
-			health = 0
-			death.emit()
-			return
-		elif health_before <= health:
-			if health > max_health:
-				health = max_health
-		
-		else:
-			damaged.emit()
+@export var object: Resource
+var health: float:
+	set = set_health
 
-var group_type: String
-var selectable_type: String = "Selectable"
 var selection_rect: Rect2
 var selection_width: int
-var selection_size: float = 40.0
-var selection_offset: Vector2 = Vector2(-selection_size/2, -selection_size/2)
 var selection_color: Color = Color.GREEN
-var select_mode: bool = false:
-	set(value):
-		select_mode = value
-		if value:
-			selection_rect = Rect2(selection_offset, Vector2(selection_size, selection_size))
-			selection_width = 2
-		else:
-			selection_rect = Rect2(0,0,0,0)
-			selection_width = 0
-		
-		queue_redraw()
+
+@onready var selection_size: float = object.selection_size
+@onready var selection_offset: Vector2 = Vector2(-selection_size/2, -selection_size/2)
+@onready var select_mode: bool = object.select_mode:
+	set = set_select_mode
+
+
+func set_health(value: float) -> void:
+	var health_before: float = health
+	health = value
+	
+	if health <= 0:
+		health = 0
+		death.emit()
+		return
+	elif health_before <= health:
+		if health > object.max_health:
+			health = object.max_health
+	
+	else:
+		damaged.emit()
+
+
+func set_select_mode(value: bool) -> void:
+	select_mode = value
+	if value:
+		selection_rect = Rect2(selection_offset, Vector2(selection_size, selection_size))
+		selection_width = 2
+	else:
+		selection_rect = Rect2(0,0,0,0)
+		selection_width = 0
+	
+	queue_redraw()
 
 
 func _ready() -> void:
-	max_health = 10.0
-	health = max_health
-	add_to_group(selectable_type)
+	health = object.max_health
+	if object.selectable:
+		add_to_group("Selectable", true)
 
 
 func _draw() -> void:

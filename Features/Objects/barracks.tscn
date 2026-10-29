@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://cmbxi6wkfm7sn"]
+
+[ext_resource type="Script" uid="uid://fdiwilntht0h" path="res://Features/Objects/barracks.gd" id="1_172cc"]
+[ext_resource type="Script" uid="uid://cewmlxh0qog2d" path="res://Features/Resources/object.gd" id="2_vln8c"]
+[ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="3_vln8c"]
+
+[sub_resource type="Resource" id="Resource_pcj3k"]
+script = ExtResource("2_vln8c")
+name = "Barracks"
+max_health = 30.0
+group = 2
+selection_size = 120.0
+metadata/_custom_type_script = "uid://cewmlxh0qog2d"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q5kjn"]
+atlas = ExtResource("3_vln8c")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8c242"]
+size = Vector2(70, 70)
+
+[node name="Barracks" type="Area2D" unique_id=1966122901]
+script = ExtResource("1_172cc")
+gold_cost = 150
+object = SubResource("Resource_pcj3k")
+metadata/_custom_type_script = "uid://ra6knyinp1ee"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1404205777]
+texture = SubResource("AtlasTexture_q5kjn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=217764417]
+shape = SubResource("RectangleShape2D_8c242")

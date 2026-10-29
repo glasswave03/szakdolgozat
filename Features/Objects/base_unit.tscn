@@ -1,7 +1,26 @@
 [gd_scene format=3 uid="uid://dckh32rd78p2d"]
 
 [ext_resource type="Script" uid="uid://bn2vaamhphpjd" path="res://Features/Objects/base_unit.gd" id="1_4jhad"]
+[ext_resource type="Script" uid="uid://cbl8iqefwvy8x" path="res://Features/Resources/unit.gd" id="2_3cgxv"]
 [ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="2_4jhad"]
+[ext_resource type="Script" uid="uid://cewmlxh0qog2d" path="res://Features/Resources/object.gd" id="2_gtde7"]
+
+[sub_resource type="Resource" id="Resource_3cgxv"]
+script = ExtResource("2_3cgxv")
+gold_cost = 50
+move_speed = 250.0
+attack_damage = 10.0
+attack_rate = 1.0
+attack_range = 20.0
+armor = 5.0
+metadata/_custom_type_script = "uid://cbl8iqefwvy8x"
+
+[sub_resource type="Resource" id="Resource_gtde7"]
+script = ExtResource("2_gtde7")
+name = "BaseUnit"
+max_health = 10.0
+selection_size = 32.0
+metadata/_custom_type_script = "uid://cewmlxh0qog2d"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jfiep"]
 atlas = ExtResource("2_4jhad")
@@ -20,7 +39,8 @@ bg_color = Color(0, 1, 0, 1)
 y_sort_enabled = true
 collision_layer = 2
 script = ExtResource("1_4jhad")
-max_health = 10.0
+unit = SubResource("Resource_3cgxv")
+object = SubResource("Resource_gtde7")
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1947353019]
 texture = SubResource("AtlasTexture_jfiep")

@@ -27,7 +27,8 @@ func move_selected(objects: Array[BaseObject], global_pos: Vector2) -> void:
 	
 	if not buildings.is_empty():
 		for building: BaseBuilding in buildings:
-			building.set_rally_point(global_pos)
+			if building.unit_factory:
+				building.unit_factory.set_rally_point(global_pos)
 	
 	if units.is_empty(): return
 	

@@ -1,10 +1,17 @@
 [gd_scene format=3 uid="uid://ddjnhb1rxr3sa"]
 
 [ext_resource type="Script" uid="uid://ra6knyinp1ee" path="res://Features/Objects/base_building.gd" id="1_4lrng"]
+[ext_resource type="Script" uid="uid://cewmlxh0qog2d" path="res://Features/Resources/object.gd" id="2_pcj3k"]
 [ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="2_undlo"]
 [ext_resource type="PackedScene" uid="uid://croy4b040a8s1" path="res://Features/Objects/Components/placement_component.tscn" id="3_xifwt"]
 [ext_resource type="PackedScene" uid="uid://bea0p3lgsruqh" path="res://Features/Objects/Components/unit_factory_component.tscn" id="4_xifwt"]
-[ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://Assets/icon.svg" id="5_undlo"]
+
+[sub_resource type="Resource" id="Resource_cjm8d"]
+script = ExtResource("2_pcj3k")
+name = "BaseBuilding"
+max_health = 10.0
+selection_size = 160.0
+metadata/_custom_type_script = "uid://cewmlxh0qog2d"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gtde7"]
 atlas = ExtResource("2_undlo")
@@ -24,7 +31,7 @@ top_level = true
 y_sort_enabled = true
 collision_layer = 3
 script = ExtResource("1_4lrng")
-max_health = 15.0
+object = SubResource("Resource_cjm8d")
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=173166282]
 texture = SubResource("AtlasTexture_gtde7")
@@ -55,14 +62,6 @@ show_percentage = false
 [node name="Shape" type="CollisionShape2D" parent="." unique_id=450010517]
 shape = SubResource("RectangleShape2D_tm8qk")
 
-[node name="RallyPoint" type="Sprite2D" parent="." unique_id=618449590]
-scale = Vector2(0.2, 0.2)
-texture = ExtResource("5_undlo")
-
 [connection signal="damaged" from="." to="." method="_on_damaged"]
 [connection signal="death" from="." to="." method="_on_death"]
 [connection signal="placed" from="Placement" to="." method="_on_placed"]
-[connection signal="body_entered" from="Placement/Overlap" to="." method="_on_overlap_body_entered"]
-[connection signal="body_exited" from="Placement/Overlap" to="." method="_on_overlap_body_exited"]
-
-[editable path="Placement"]

@@ -96,6 +96,7 @@ anchor_bottom = 1.0
 grow_vertical = 0
 
 [node name="Grid" type="GridContainer" parent="Layout/UnitUI" unique_id=1895486166]
+custom_maximum_size = Vector2(455, 100)
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0

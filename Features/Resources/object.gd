@@ -2,11 +2,25 @@ class_name ObjectResource extends Resource
 
 @export var name: String
 @export var max_health: float
-@export var group_type: String
-@export var selectable_type: String = "Selectable"
-@export var selection_rect: Rect2
-@export var selection_width: int
+@export var group: Groups
+@export var selectable: bool = true
 @export var selection_size: float
-@export var selection_offset: Vector2
-@export var selection_color: Color
-@export var select_mode: bool
+@export var select_mode: bool = false
+
+enum Groups {
+	OBJECT,
+	UNIT,
+	BUILDING,
+	
+}
+
+func get_group_name() -> StringName:
+	match group:
+		0:
+			return StringName("Object")
+		1:
+			return StringName("Unit")
+		2:
+			return StringName("Building")
+		_:
+			return StringName("Unknown")
