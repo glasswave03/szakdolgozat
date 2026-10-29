@@ -65,3 +65,7 @@ shape = SubResource("RectangleShape2D_tm8qk")
 [connection signal="damaged" from="." to="." method="_on_damaged"]
 [connection signal="death" from="." to="." method="_on_death"]
 [connection signal="placed" from="Placement" to="." method="_on_placed"]
+[connection signal="body_entered" from="Placement/Overlap" to="." method="_on_overlap_body_entered"]
+[connection signal="body_exited" from="Placement/Overlap" to="." method="_on_overlap_body_exited"]
+
+[editable path="Placement"]

@@ -1,17 +1,18 @@
-class_name MatchController 
-extends Node
-## Holds all instances of managers and controllers
+## Root of the match being played
 ##
-## Doesn't actually do anything with them, just holds them. 
-## When player is not in a match, these are deleted for performance.
+## The lobby sets this up?
+class_name MatchController extends Node
 
 @export var map_controller: MapController
 @export var map: MapScene
 
 @onready var player_manager := PlayerManager.new()
-@onready var building_factory := BuildingFactory.new()
 
 
 func _ready() -> void:
-	#TODO: map should be selected through the menus
+	#TODO: should be set up through the lobby menu
+	#map_controller = MapController.new()
+	#add_child(map_controller)
+	#map = preload("res://Features/Worlds/map1.tscn").instantiate()
+	#map_controller.add_child(map)
 	map_controller.setup(map)

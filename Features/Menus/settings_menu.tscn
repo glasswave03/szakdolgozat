@@ -1,0 +1,88 @@
+[gd_scene format=3 uid="uid://bcmbdpv24k3pp"]
+
+[node name="SettingsMenu" type="Control" unique_id=1229616044]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1858997573]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0.39607844)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=195419259]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -117.0
+offset_top = -87.5
+offset_right = 117.0
+offset_bottom = 87.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=1987349745]
+layout_mode = 2
+text = "SETTINGS"
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer" unique_id=37022189]
+layout_mode = 2
+columns = 2
+
+[node name="MuteLabel" type="Label" parent="VBoxContainer/GridContainer" unique_id=2030588966]
+layout_mode = 2
+text = "Mute sound:"
+
+[node name="MuteCheck" type="CheckButton" parent="VBoxContainer/GridContainer" unique_id=623845931]
+layout_mode = 2
+
+[node name="Resolution" type="Label" parent="VBoxContainer/GridContainer" unique_id=1432999598]
+layout_mode = 2
+text = "Resolution: "
+
+[node name="Fullscreen" type="OptionButton" parent="VBoxContainer/GridContainer" unique_id=584642059]
+layout_mode = 2
+item_count = 3
+popup/item_0/text = "1280x720"
+popup/item_0/id = 0
+popup/item_1/text = "1920x1080"
+popup/item_1/id = 1
+popup/item_2/text = "1920x1200"
+popup/item_2/id = 2
+
+[node name="MusicLabel" type="Label" parent="VBoxContainer/GridContainer" unique_id=1719534167]
+layout_mode = 2
+text = "Music volume: "
+
+[node name="Music" type="HSlider" parent="VBoxContainer/GridContainer" unique_id=428098097]
+layout_mode = 2
+
+[node name="SFXLabel" type="Label" parent="VBoxContainer/GridContainer" unique_id=367298848]
+layout_mode = 2
+text = "SFX volume: "
+
+[node name="SFX" type="HSlider" parent="VBoxContainer/GridContainer" unique_id=920195458]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1097392884]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=268834605]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Save"
+
+[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=707448466]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Back"

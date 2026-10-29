@@ -3,13 +3,15 @@ class_name UIActionService extends RefCounted
 
 func spawn_units_at_selected_buildings(buildings: Array[BaseBuilding]) -> void:
 	for building: BaseBuilding in buildings:
+		if not is_instance_valid(building):
+			printerr("Building not found!")
+			return
 		building.unit_factory.queue_unit()
-	print("spawn unit button clicked!")
-	pass
 
 
 func destroy_selected_buildings(buildings: Array[BaseBuilding]) -> void:
 	for building: BaseBuilding in buildings:
+		if not is_instance_valid(building):
+			printerr("Building not found!")
+			return
 		building.health = 0.0
-	print("destroy building button clicked!")
-	pass

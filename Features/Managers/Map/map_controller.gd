@@ -14,6 +14,7 @@ var formations: FormationService
 var movement: MovementService
 var dragbox: DragboxService
 var placement: BuildingPlacement
+var canvas: CanvasLayer
 var ui: Control
 var ui_actions: UIActionService
 
@@ -47,7 +48,12 @@ func setup(_map: MapScene) -> void:
 	
 	astar_grid_setup()
 	
-	ui = $UserInterface/SelectionUI
+	canvas = CanvasLayer.new()
+	canvas.name = "UserInterface"
+	add_child(canvas)
+	ui = preload("res://Features/UI/selection_ui.tscn").instantiate()
+	ui.name = "SelectionUI"
+	canvas.add_child(ui)
 	selection.changed.connect(ui._on_selection_changed)
 	ui_actions = UIActionService.new()
 	
@@ -80,6 +86,7 @@ func astar_grid_setup() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	await get_parent().ready
 	var mouse_pos: Vector2 = camera.get_global_mouse_position()
 	
 	if event is InputEventMouseButton:
