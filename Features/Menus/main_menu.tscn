@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://b3tbcbe8u7aiw"]
 
+[ext_resource type="Script" uid="uid://dtdfset6c4pw3" path="res://Features/Menus/main_menu.gd" id="1_7y4d3"]
+
 [node name="MainMenu" type="Control" unique_id=169445803]
 layout_mode = 3
 anchors_preset = 15
@@ -7,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_7y4d3")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=23898312]
 layout_mode = 1
@@ -47,3 +50,7 @@ text = "Settings"
 [node name="Quit" type="Button" parent="VBox" unique_id=37842244]
 layout_mode = 2
 text = "Quit"
+
+[connection signal="pressed" from="VBox/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="VBox/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="VBox/Quit" to="." method="_on_quit_pressed"]

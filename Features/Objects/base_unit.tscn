@@ -5,13 +5,13 @@
 [ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="2_4jhad"]
 [ext_resource type="Script" uid="uid://cewmlxh0qog2d" path="res://Features/Resources/object.gd" id="2_gtde7"]
 
-[sub_resource type="Resource" id="Resource_3cgxv"]
+[sub_resource type="Resource" id="Resource_upyqu"]
 script = ExtResource("2_3cgxv")
 gold_cost = 50
 move_speed = 250.0
-attack_damage = 10.0
+attack_damage = 3.0
 attack_rate = 1.0
-attack_range = 20.0
+attack_range = 10.0
 armor = 5.0
 metadata/_custom_type_script = "uid://cbl8iqefwvy8x"
 
@@ -39,7 +39,7 @@ bg_color = Color(0, 1, 0, 1)
 y_sort_enabled = true
 collision_layer = 2
 script = ExtResource("1_4jhad")
-unit = SubResource("Resource_3cgxv")
+unit_resource = SubResource("Resource_upyqu")
 object = SubResource("Resource_gtde7")
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1947353019]
@@ -62,3 +62,8 @@ theme_override_styles/background = SubResource("StyleBoxFlat_50br4")
 theme_override_styles/fill = SubResource("StyleBoxFlat_tpjtd")
 show_percentage = false
 metadata/_edit_use_anchors_ = true
+
+[connection signal="attack" from="." to="." method="_on_attack"]
+[connection signal="damaged" from="." to="." method="_on_damaged"]
+[connection signal="death" from="." to="." method="_on_death"]
+[connection signal="input_event" from="." to="." method="_on_input_event"]

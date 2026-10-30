@@ -1,12 +1,12 @@
-## Handles the inputs and 
+## Handles the building placement on the map
 class_name BuildingPlacement extends Node
 
 var map: MapScene
 var placing_building: bool = false
 var building_preview: BaseBuilding
 var mouse_pos: Vector2
-@onready var building_factory: BuildingFactory = BuildingFactory.new()
 
+@onready var building_factory: BuildingFactory = BuildingFactory.new()
 
 
 func setup(_map: MapScene) -> void:

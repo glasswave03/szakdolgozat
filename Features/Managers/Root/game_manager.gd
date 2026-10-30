@@ -2,10 +2,10 @@ class_name GameManager extends Node
 
 const FPS_TIMER_LIMIT: float = 1.0
 
-@onready var match_controller: MatchController = $MatchController
 
-#TODO: game_manager should not know about the map, it should only care about switching between
-# menu scenes and handling game start/end
+#TODO: game_manager should not care about the map or matchcontroller, it should only care about
+# switching between menu scenes and handling game start/end
+@export var match_controller: MatchController
 @export var scene: Node2D
 
 var current_scene: Node2D
@@ -25,7 +25,7 @@ func _ready() -> void:
 	player2.name = "testenemy"
 	
 	#TODO: only start on button press
-	_start_match([player1, player2])
+	start_match([player1, player2])
 
 
 func _process(delta: float) -> void:
@@ -35,7 +35,7 @@ func _process(delta: float) -> void:
 		fps_label.text = "FPS: " + str(Engine.get_frames_per_second())
 
 
-func _start_match(players: Array[Player]) -> bool:
+func start_match(players: Array[Player]) -> bool:
 	# for each player, give them a team number?
 	if players.size() <= 1 or players.size() >= PlayerManager.Teams.TEAM_MAX:
 		return false
@@ -68,3 +68,7 @@ func change_scene(new_scene: String, delete: bool = true) -> void:
 		scene.add_child(new_node)
 	
 	current_scene = new_node
+
+
+func quit_game() -> void:
+	get_tree().quit()

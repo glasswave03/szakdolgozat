@@ -5,7 +5,7 @@ signal spawned(unit: BaseUnit)
 const SPAWN_TIME: float = 1.0
 const QUEUE_LIMIT: int = 10
 
-@export var unit_scene: PackedScene = preload("res://Features/Objects/base_unit.tscn")
+const BaseUnitScene: PackedScene = preload("res://Features/Objects/base_unit.tscn")
 
 @onready var timer: Timer = $SpawnTimer
 @onready var spawn_bar: ProgressBar = $SpawnBar
@@ -36,7 +36,7 @@ func queue_unit() -> void:
 		printerr("reached max amount of units in queue!")
 		return
 	
-	var unit: BaseUnit = unit_scene.instantiate()
+	var unit: BaseUnit = BaseUnitScene.instantiate()
 	
 	spawn_queue.push_back(unit)
 	print("queued unit")

@@ -2,15 +2,25 @@ class_name BaseUnit extends BaseObject
 
 signal attack
 
-@export var unit: Resource
+const BaseUnitScene: PackedScene = preload("res://Features/Objects/base_unit.tscn")
 
-var attack_target: BaseObject
+@export var unit_resource: Resource
+
+var attack_target: BaseObject = null
 
 var current_cell: Vector2
 var next_cell: Vector2
 var is_set_up: bool = false
 var current_path: PackedVector2Array
 var current_path_index: int
+
+@onready var team: PlayerManager.Teams = unit_resource.team
+@onready var state: UnitResource.States = unit_resource.state
+@onready var move_speed: float = unit_resource.move_speed
+@onready var attack_damage: float = unit_resource.attack_damage
+@onready var attack_rate: float = unit_resource.attack_rate
+@onready var attack_range: float = unit_resource.attack_range
+@onready var armor: float = unit_resource.armor
 
 
 func _ready() -> void:
@@ -26,7 +36,6 @@ func _ready() -> void:
 
 
 func setup(cell_pos: Vector2i) -> void:
-	unit.team = PlayerManager.Teams.TEAM_NEUTRAL
 	current_cell = cell_pos
 	is_set_up = true
 
@@ -38,21 +47,21 @@ func _draw() -> void:
 func _physics_process(delta: float) -> void:
 	assert(is_set_up, "Unit is not set up")
 	
-	if unit.state == unit.States.STATE_DEAD:
+	if state == unit_resource.States.STATE_DEAD:
 		#TODO: play death animation
 		return
 	
 	if attack_target != null:
 		target_check()
 	
-	if current_path.is_empty() and not unit.state in [unit.States.STATE_DEAD, unit.States.STATE_ATTACK] \
+	if current_path.is_empty() and \
+	not state in [unit_resource.States.STATE_DEAD, unit_resource.States.STATE_ATTACK] \
 	or current_path_index >= current_path.size():
-		unit.state = unit.States.STATE_IDLE
+		state = unit_resource.States.STATE_IDLE
 		return
 	
 	next_cell = current_path[current_path_index]
 	
-	var move_speed: float = unit.move_speed
 	global_position = global_position.move_toward(next_cell, move_speed * delta)
 	
 	if global_position.is_equal_approx(next_cell):
@@ -74,28 +83,27 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 func set_path(path: PackedVector2Array) -> void:
 	current_path = path
 	current_path_index = 0
-	unit.state = unit.States.STATE_MOVE
+	state = unit_resource.States.STATE_MOVE
 	#TODO: animations
 
 
 func target_check() -> void:
-	if global_position.distance_to(attack_target.global_position) < unit.attack_range:
+	if global_position.distance_to(attack_target.global_position) < attack_range:
 		#TODO: move in range
 		printerr("out of range!")
 		#move_to(attack_target.position)
 	else:
-		if attack_target.team != unit.team:
+		if attack_target.team != team:
 			attack.emit()
 
 
 func _on_attack() -> void:
-	attack_target.take_damage(unit.attack_damage)
-	unit.state = unit.States.STATE_ATTACK
+	attack_target.take_damage(attack_damage)
+	state = unit_resource.States.STATE_ATTACK
 	#TODO: wait for attack_rate timer to go off
 
 
 func take_damage(amount: float) -> void:
-	var armor: float = unit.armor
 	var dmg_reduction := armor / (armor + 100.0)
 	var actual_damage := amount * (1.0 - dmg_reduction)
 	health -= actual_damage
@@ -109,7 +117,14 @@ func _on_damaged() -> void:
 func _on_death() -> void:
 	#TODO: instead of queue_free, state should be set to dead,
 	# play death animation, after a timer it disappears and then queue_free
-	unit.state = unit.States.STATE_DEAD
+	state = unit_resource.States.STATE_DEAD
 	deselect()
 	call_deferred("queue_free")
 	print("Unit died")
+
+
+static func create_unit(unit_res: Resource, object_res: Resource) -> BaseUnit:
+	var new_unit: BaseUnit = BaseUnitScene.instantiate()
+	new_unit.unit = unit_res
+	new_unit.object = object_res
+	return new_unit

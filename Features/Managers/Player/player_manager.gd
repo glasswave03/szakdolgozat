@@ -1,4 +1,4 @@
-class_name PlayerManager extends RefCounted
+class_name PlayerManager extends Node
 
 enum Teams {
 	TEAM_NEUTRAL,
@@ -11,4 +11,4 @@ enum Teams {
 	TEAM_MAX,
 }
 
-var players: Array[Player]
+var players: Array[Player] = []

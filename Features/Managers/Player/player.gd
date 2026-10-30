@@ -6,10 +6,6 @@ enum PlayerState {
 	PLACING,
 }
 
-@export var starting_gold: int = 30
-@export var starting_wood: int = 10
-@export var max_population: int = 50
-
 var gold: int
 var wood: int
 var population: int

@@ -8,8 +8,10 @@
 [ext_resource type="PackedScene" uid="uid://d1ru5xdxgkem2" path="res://Features/UI/selection_ui.tscn" id="5_3hfp1"]
 [ext_resource type="Resource" uid="uid://bq6v6dhgnf86e" path="res://Features/Resources/default_map_settings.tres" id="5_xbj3v"]
 
-[node name="MainGame" type="Node" unique_id=606005864]
+[node name="MainGame" type="Node" unique_id=606005864 node_paths=PackedStringArray("match_controller", "scene")]
 script = ExtResource("1_l756w")
+match_controller = NodePath("MatchController")
+scene = NodePath("MatchController/MapController/map1")
 
 [node name="MatchController" type="Node" parent="." unique_id=942870765 node_paths=PackedStringArray("map_controller", "map")]
 script = ExtResource("2_301ul")
