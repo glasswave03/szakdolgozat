@@ -10,6 +10,7 @@ script = ExtResource("2_pcj3k")
 name = "BaseBuilding"
 max_health = 10.0
 selection_size = 160.0
+group = 2
 metadata/_custom_type_script = "uid://cewmlxh0qog2d"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gtde7"]
@@ -51,6 +52,7 @@ offset_right = 65.0
 offset_bottom = 74.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_cjm8d")
 theme_override_styles/fill = SubResource("StyleBoxFlat_aun05")
 max_value = 15.0
@@ -73,6 +75,7 @@ shape = SubResource("RectangleShape2D_q5kjn")
 
 [connection signal="damaged" from="." to="." method="_on_damaged"]
 [connection signal="death" from="." to="." method="_on_death"]
+[connection signal="input_event" from="." to="." method="_on_input_event"]
 [connection signal="placed" from="." to="." method="_on_placed"]
 [connection signal="body_entered" from="Overlap" to="." method="_on_overlap_body_entered"]
 [connection signal="body_exited" from="Overlap" to="." method="_on_overlap_body_exited"]

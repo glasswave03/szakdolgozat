@@ -18,6 +18,28 @@ enum States {
 }
 
 
+static func create_resource(
+		_gold_cost: int, 
+		_move_speed: float, 
+		_attack_damage: float, 
+		_attack_rate: float,
+		_attack_range: float, 
+		_armor: float, 
+		_state: States = States.STATE_IDLE
+	) -> Resource:
+	
+	var res: Resource = UnitResource.new()
+	res.gold_cost = _gold_cost
+	res.move_speed = _move_speed
+	res.attack_damage = _attack_damage
+	res.attack_rate = _attack_rate
+	res.attack_range = _attack_range
+	res.armor = _armor
+	res.state = _state
+	
+	return res
+
+
 func set_state(new_state: States) -> void:
 	#var previous_state := state
 	state = new_state

@@ -1,7 +1,5 @@
 extends Node2D
 
-signal spawned(unit: BaseUnit)
-
 const SPAWN_TIME: float = 1.0
 const QUEUE_LIMIT: int = 10
 
@@ -31,14 +29,19 @@ func _process(_delta: float) -> void:
 		rally_point.visible = false
 
 
-func queue_unit() -> void:
+func queue_unit() -> void: #TODO: add type param
 	if spawn_queue.size() >= QUEUE_LIMIT:
 		printerr("reached max amount of units in queue!")
 		return
 	
 	var unit: BaseUnit = BaseUnitScene.instantiate()
+	var unit_res: Resource = load("res://Features/Resources/peasant_unit_resource.tres")
+	var object_res: Resource = load("res://Features/Resources/peasant_object_resource.tres")
+	unit_res = load("res://Features/Resources/peasant_unit_resource.tres")
+	var peasant: PeasantUnit = PeasantUnit.create_unit(unit_res, object_res)
 	
 	spawn_queue.push_back(unit)
+	spawn_queue.push_back(peasant)
 	print("queued unit")
 	
 	if timer.is_stopped():
@@ -50,7 +53,6 @@ func _on_spawn_timer_timeout() -> void:
 		return
 	
 	var unit: BaseUnit = spawn_queue.pop_front()
-	spawned.emit(unit)
 	
 	building.add_sibling(unit, true)
 	unit.global_position += building.global_position + spawn_offset

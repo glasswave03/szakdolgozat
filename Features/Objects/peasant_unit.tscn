@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://df0kug833d165"]
+
+[ext_resource type="Script" uid="uid://coj654ocf6u3s" path="res://Features/Objects/peasant_unit.gd" id="1_8bwep"]
+[ext_resource type="Script" uid="uid://cbl8iqefwvy8x" path="res://Features/Resources/unit.gd" id="2_j3gn4"]
+[ext_resource type="Script" uid="uid://cewmlxh0qog2d" path="res://Features/Resources/object.gd" id="3_g0ngw"]
+
+[sub_resource type="Resource" id="Resource_8c242"]
+script = ExtResource("2_j3gn4")
+gold_cost = 30
+move_speed = 100.0
+attack_damage = 1.0
+attack_rate = 1.0
+attack_range = 16.0
+armor = 1.0
+metadata/_custom_type_script = "uid://cbl8iqefwvy8x"
+
+[sub_resource type="Resource" id="Resource_q5kjn"]
+script = ExtResource("3_g0ngw")
+name = "Peasant"
+max_health = 5.0
+group = 1
+metadata/_custom_type_script = "uid://cewmlxh0qog2d"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8c242"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f6w88"]
+bg_color = Color(1, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8bwep"]
+bg_color = Color(0, 1, 0, 1)
+
+[node name="Peasant" type="Area2D" unique_id=1546903729]
+script = ExtResource("1_8bwep")
+unit_resource = SubResource("Resource_8c242")
+object = SubResource("Resource_q5kjn")
+metadata/_custom_type_script = "uid://bn2vaamhphpjd"
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=2004708181]
+
+[node name="Collision" type="CollisionShape2D" parent="." unique_id=770254311]
+shape = SubResource("RectangleShape2D_8c242")
+
+[node name="HealthBar" type="ProgressBar" parent="." unique_id=631067907]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -10.0
+offset_top = 18.0
+offset_right = 10.0
+offset_bottom = 22.0
+grow_horizontal = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_f6w88")
+theme_override_styles/fill = SubResource("StyleBoxFlat_8bwep")
+show_percentage = false
+metadata/_edit_use_anchors_ = true

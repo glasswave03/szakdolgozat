@@ -129,6 +129,6 @@ func _on_object_clicked(object: BaseObject, event: InputEventMouseButton) -> voi
 		
 		else:
 			select_single(object)
+			print("selected clicked object")
 	
 	changed.emit(selected_objects)
-	print("object clicked!")

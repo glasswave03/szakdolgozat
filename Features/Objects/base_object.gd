@@ -48,6 +48,9 @@ func set_select_mode(value: bool) -> void:
 	queue_redraw()
 
 
+@abstract func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void
+
+
 func _ready() -> void:
 	health = object.max_health
 	if object.selectable:

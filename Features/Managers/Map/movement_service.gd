@@ -33,7 +33,7 @@ func move_selected(objects: Array[BaseObject], global_pos: Vector2) -> void:
 	if units.is_empty(): return
 	
 	var positions := formation_service.create_formation(
-		objects.size(),
+		units.size(),
 		target_cell
 	)
 	

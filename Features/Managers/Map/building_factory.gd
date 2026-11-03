@@ -7,5 +7,6 @@ func preview_building(scene: PackedScene, parent: Node, layer: TileMapLayer, mou
 	#TODO: there should be something like building.set_preview(true)
 	# and change to false on placement
 	building.modulate = building.placement_color
+	building.clicked.connect(parent.get_parent()._on_object_clicked)
 	
 	return building

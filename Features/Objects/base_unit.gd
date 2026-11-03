@@ -1,6 +1,6 @@
 class_name BaseUnit extends BaseObject
 
-signal attack
+signal interact
 
 const BaseUnitScene: PackedScene = preload("res://Features/Objects/base_unit.tscn")
 
@@ -77,7 +77,7 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			#TODO: maybe this isnt how this should be done?
 			targeted.emit(self)
-			print("unit targeted")
+			print("unit targeted: ", self)
 
 
 func set_path(path: PackedVector2Array) -> void:
@@ -94,7 +94,7 @@ func target_check() -> void:
 		#move_to(attack_target.position)
 	else:
 		if attack_target.team != team:
-			attack.emit()
+			interact.emit()
 
 
 func _on_attack() -> void:
@@ -111,7 +111,6 @@ func take_damage(amount: float) -> void:
 
 func _on_damaged() -> void:
 	$HealthBar.value = health
-	print("Unit damaged: ", health)
 
 
 func _on_death() -> void:
@@ -125,10 +124,14 @@ func _on_death() -> void:
 
 static func create_unit(unit_res: Resource, object_res: Resource) -> BaseUnit:
 	var new_unit: BaseUnit = BaseUnitScene.instantiate()
-	new_unit.unit = unit_res
+	new_unit.unit_resource = unit_res
 	new_unit.object = object_res
 	return new_unit
 
 
 func _on_targeted(object: BaseObject) -> void:
+	pass # Replace with function body.
+
+
+func _on_interact() -> void:
 	pass # Replace with function body.

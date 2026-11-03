@@ -5,7 +5,6 @@
 [ext_resource type="Script" uid="uid://bwl02iq4pugnv" path="res://Features/Managers/Root/match_controller.gd" id="2_301ul"]
 [ext_resource type="Script" uid="uid://cr22w8eaiyaup" path="res://Features/Managers/Map/map_controller.gd" id="3_xbj3v"]
 [ext_resource type="PackedScene" uid="uid://yisl65elbd4" path="res://Features/UI/debug_ui.tscn" id="4_mkl18"]
-[ext_resource type="PackedScene" uid="uid://d1ru5xdxgkem2" path="res://Features/UI/selection_ui.tscn" id="5_3hfp1"]
 [ext_resource type="Resource" uid="uid://bq6v6dhgnf86e" path="res://Features/Resources/default_map_settings.tres" id="5_xbj3v"]
 
 [node name="MainGame" type="Node" unique_id=606005864 node_paths=PackedStringArray("match_controller", "scene")]
@@ -23,10 +22,6 @@ script = ExtResource("3_xbj3v")
 
 [node name="map1" parent="MatchController/MapController" unique_id=849731125 instance=ExtResource("2_0e3vx")]
 map_settings = ExtResource("5_xbj3v")
-
-[node name="UserInterface" type="CanvasLayer" parent="MatchController/MapController" unique_id=529392270]
-
-[node name="SelectionUI" parent="MatchController/MapController/UserInterface" unique_id=1841617272 instance=ExtResource("5_3hfp1")]
 
 [node name="Debug" type="CanvasLayer" parent="MatchController" unique_id=521639533]
 

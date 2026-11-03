@@ -3,27 +3,29 @@
 ## Initiates everything required by the player to play.
 class_name MapController extends Node2D
 
-var tile_size: int
-var camera_controller: CameraController
 var map_scene: MapScene
-var camera: Camera2D
 var tilemap: TileMapLayer
+var camera: Camera2D
+var camera_controller: CameraController
+
 var selection: SelectionManager
 var groups: GroupManager
 var formations: FormationService
 var movement: MovementService
 var dragbox: DragboxService
 var placement: BuildingPlacement
+
 var canvas: CanvasLayer
 var ui: Control
 var ui_actions: UIActionService
 
+var tile_size: int
 @onready var astar_grid: AStarGrid2D = AStarGrid2D.new()
 
 
 func setup(_map: MapScene) -> void:
 	map_scene = _map
-	tile_size = map_scene.map_settings.tile_size
+	tile_size = map_scene.settings.tile_size
 	tilemap = map_scene.tilemap
 	camera = map_scene.camera
 	
@@ -90,6 +92,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+			#TODO: check if the click has targeted anything
 			movement.move_selected(selection.selected_objects, mouse_pos)
 	
 	if event is InputEventKey:
@@ -102,5 +105,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			new_unit.setup(tilemap.to_local(tilemap.local_to_map(mouse_pos)))
 			new_unit.position = mouse_pos
 			map_scene.add_child(new_unit)
-			new_unit.clicked.connect(selection._on_object_clicked)
+			#TODO: replace line below with object spawned signal
+			new_unit.clicked.connect(_on_object_clicked)
 			print("unit spawned: ", new_unit)
+
+
+func _on_object_clicked(object: BaseObject, event: InputEventMouseButton) -> void:
+	selection._on_object_clicked(object, event)
