@@ -1,7 +1,6 @@
 class_name DragboxService extends Node2D
 
 signal released(rect: Rect2)
-signal clicked(event: InputEventMouseButton)
 
 var camera: Camera2D
 var drawing: bool = false
@@ -53,7 +52,8 @@ func selection_box_drag(mouse_pos: Vector2) -> void:
 	end_pos = mouse_pos
 
 func selection_box_release() -> void:
-	released.emit(selection_rect)
+	if not selection_rect.size == Vector2.ZERO:
+		released.emit(selection_rect)
 	
 	selection_width = 0
 	drawing = false

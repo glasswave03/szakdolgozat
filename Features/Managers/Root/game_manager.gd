@@ -71,4 +71,4 @@ func change_scene(new_scene: String, delete: bool = true) -> void:
 
 
 func quit_game() -> void:
-	get_tree().quit()
+	get_tree().quit(0)

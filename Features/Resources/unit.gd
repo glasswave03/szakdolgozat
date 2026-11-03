@@ -6,7 +6,6 @@ class_name UnitResource extends Resource
 @export var attack_rate: float
 @export var attack_range: float
 @export var armor: float
-@export var team: PlayerManager.Teams
 @export var state: States = States.STATE_IDLE: set = set_state
 
 enum States {

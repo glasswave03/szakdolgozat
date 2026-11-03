@@ -6,6 +6,6 @@ func preview_building(scene: PackedScene, parent: Node, layer: TileMapLayer, mou
 	building.position = layer.map_to_local(Vector2i(mouse_pos))
 	#TODO: there should be something like building.set_preview(true)
 	# and change to false on placement
-	building.modulate = building.placement.placement_color
+	building.modulate = building.placement_color
 	
 	return building

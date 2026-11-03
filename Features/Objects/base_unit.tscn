@@ -67,3 +67,4 @@ metadata/_edit_use_anchors_ = true
 [connection signal="damaged" from="." to="." method="_on_damaged"]
 [connection signal="death" from="." to="." method="_on_death"]
 [connection signal="input_event" from="." to="." method="_on_input_event"]
+[connection signal="targeted" from="." to="." method="_on_targeted"]

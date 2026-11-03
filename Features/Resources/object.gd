@@ -5,7 +5,8 @@ class_name ObjectResource extends Resource
 @export var group: Groups
 @export var selectable: bool = true
 @export var selection_size: float
-@export var select_mode: bool = false
+@export var team: PlayerManager.Teams
+var select_mode: bool = false
 
 enum Groups {
 	OBJECT,

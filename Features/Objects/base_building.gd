@@ -4,7 +4,6 @@ const BaseBuildingScene: PackedScene = preload("res://Features/Objects/base_buil
 
 @export var gold_cost: int
 
-@onready var placement: Node2D = $Placement
 @onready var unit_factory: Node2D = $UnitFactory
 
 
@@ -41,22 +40,6 @@ func _on_death() -> void:
 	print("building destroyed")
 
 
-func _on_placed() -> void:
-	placement.overlap_area.monitoring = false
-	modulate = Color.WHITE
-	set_preview(false)
-
-
-func _on_overlap_body_entered(body: Node2D) -> void:
-	placement.overlap_counter += 1
-	print("overlapping with: ", body)
-
-
-func _on_overlap_body_exited(body: Node2D) -> void:
-	placement.overlap_counter -= 1
-	print("overlap exited: ", body)
-
-
 func _on_spawn_requested() -> void:
 	unit_factory.queue_unit(unit_factory.unit_scene)
 
@@ -83,4 +66,20 @@ func _process(_delta: float) -> void:
 	
 	if not is_overlapping and overlap_area.monitoring:
 		modulate = placement_color
+
+
+func _on_placed() -> void:
+	overlap_area.monitoring = false
+	modulate = Color.WHITE
+	set_preview(false)
+
+
+func _on_overlap_body_entered(body: Node2D) -> void:
+	overlap_counter += 1
+	print("overlapping with: ", body)
+
+
+func _on_overlap_body_exited(body: Node2D) -> void:
+	overlap_counter -= 1
+	print("overlap exited: ", body)
 #endregion

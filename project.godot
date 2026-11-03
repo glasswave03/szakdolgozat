@@ -11,9 +11,11 @@ config_version=5
 [application]
 
 config/name="rts game"
+config/description="Szakdolgozat projektmunka"
 run/main_scene="uid://c76mxvgur7bfd"
 config/features=PackedStringArray("4.7", "Forward Plus")
-config/icon="res://Assets/icon.svg"
+config/icon="uid://curl474s8liu4"
+config/version.demo_build=""
 
 [autoload]
 
@@ -34,7 +36,7 @@ window/vsync/vsync_mode=0
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg", "res://addons/godotsteam/plugin.cfg")
+enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg", "res://addons/gdUnit4/plugin.cfg", "res://addons/godotsteam/plugin.cfg")
 
 [input]
 

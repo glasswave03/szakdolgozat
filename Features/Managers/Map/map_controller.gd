@@ -44,7 +44,6 @@ func setup(_map: MapScene) -> void:
 	add_child(placement)
 	
 	dragbox.released.connect(selection._on_dragbox_released)
-	dragbox.clicked.connect(selection._on_click)
 	
 	astar_grid_setup()
 	
@@ -54,6 +53,7 @@ func setup(_map: MapScene) -> void:
 	ui = preload("res://Features/UI/selection_ui.tscn").instantiate()
 	ui.name = "SelectionUI"
 	canvas.add_child(ui)
+	
 	selection.changed.connect(ui._on_selection_changed)
 	ui_actions = UIActionService.new()
 	
@@ -86,14 +86,12 @@ func astar_grid_setup() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	await get_parent().ready
 	var mouse_pos: Vector2 = camera.get_global_mouse_position()
 	
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			movement.move_selected(selection.selected_objects, mouse_pos)
 	
-	#TODO: input_handler should handle key inputs i think...
 	if event is InputEventKey:
 		if event.pressed:
 			groups.handle_group_input(event as InputEventKey, selection)

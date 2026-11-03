@@ -30,7 +30,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if not placing_building: return
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			if not building_preview.placement.is_overlapping:
+			if not building_preview.is_overlapping:
 				place_building()
 	
 	if event is InputEventKey:
@@ -43,7 +43,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.pressed and event.keycode == KEY_W:
 			if not placing_building:
 				building_preview = building_factory.preview_building(
-					building_factory.building_scene, 
+					BaseBuilding.BaseBuildingScene, 
 					map, 
 					map.tilemap, 
 					mouse_pos
@@ -53,7 +53,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func place_building() -> void:
 	#TODO: when placing a building, it should set points solid under itself
-	building_preview.placement.placed.emit()
+	building_preview.placed.emit()
 	building_preview.modulate = Color.WHITE
 	
 	building_preview = null

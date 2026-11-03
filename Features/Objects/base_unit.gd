@@ -14,7 +14,7 @@ var is_set_up: bool = false
 var current_path: PackedVector2Array
 var current_path_index: int
 
-@onready var team: PlayerManager.Teams = unit_resource.team
+@onready var team: PlayerManager.Teams = object.team
 @onready var state: UnitResource.States = unit_resource.state
 @onready var move_speed: float = unit_resource.move_speed
 @onready var attack_damage: float = unit_resource.attack_damage
@@ -128,3 +128,7 @@ static func create_unit(unit_res: Resource, object_res: Resource) -> BaseUnit:
 	new_unit.unit = unit_res
 	new_unit.object = object_res
 	return new_unit
+
+
+func _on_targeted(object: BaseObject) -> void:
+	pass # Replace with function body.

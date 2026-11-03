@@ -69,23 +69,16 @@ func clear_selection() -> void:
 	selected_objects.clear()
 
 
-func _on_object_clicked(object: BaseObject, event: InputEventMouseButton) -> void:
-	if event.double_click:
-		select_group(get_tree().get_nodes_in_group(object.group_type))
-	else:
-		if event.ctrl_pressed:
-			add_to_selection(object)
-		else:
-			select_single(object)
-	
-	changed.emit(selected_objects)
-	print("object clicked!")
-
-
 func add_to_selection(object: BaseObject) -> void:
 	clear_freed_objects()
 	object.select()
 	selected_objects.append(object)
+
+
+func remove_from_selection(object: BaseObject) -> void:
+	clear_freed_objects()
+	object.deselect()
+	selected_objects.erase(object)
 
 
 func select_group(group: Array[Node]) -> void:
@@ -123,16 +116,19 @@ func _on_dragbox_released(rect: Rect2) -> void:
 	select_objects(objects)
 
 
-func _on_click(event: InputEventMouseButton) -> void:
-	for object: BaseObject in get_tree().get_nodes_in_group("Selectable"):
-		if object.global_position.distance_to(event.global_position) < 20:
-			if event.double_click:
-				select_group(get_tree().get_nodes_in_group("Selectable"))
+func _on_object_clicked(object: BaseObject, event: InputEventMouseButton) -> void:
+	if event.double_click:
+		var group: StringName = object.object.get_group_name()
+		select_group(get_tree().get_nodes_in_group(group))
+	else:
+		if event.ctrl_pressed:
+			if not object in selected_objects:
+				add_to_selection(object)
 			else:
-				if event.ctrl_pressed:
-					add_to_selection(object)
-				else:
-					select_single(object)
+				remove_from_selection(object)
+		
+		else:
+			select_single(object)
 	
 	changed.emit(selected_objects)
 	print("object clicked!")
