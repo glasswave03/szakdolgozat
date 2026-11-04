@@ -53,6 +53,6 @@ func _on_selection_changed(objects: Array[BaseObject]) -> void:
 #TODO: on unit_button clicked: focuses on that single unit
 func make_unit_button(unit: BaseUnit) -> Button:
 	var button: Button = Button.new()
-	button.text = unit.name
+	button.text = unit.object.name
 	
 	return button

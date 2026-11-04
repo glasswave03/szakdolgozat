@@ -6,8 +6,6 @@ var placing_building: bool = false
 var building_preview: BaseBuilding
 var mouse_pos: Vector2
 
-@onready var building_factory: BuildingFactory = BuildingFactory.new()
-
 
 func setup(_map: MapScene) -> void:
 	map = _map
@@ -42,8 +40,18 @@ func _unhandled_input(event: InputEvent) -> void:
 		
 		if event.pressed and event.keycode == KEY_W:
 			if not placing_building:
-				building_preview = building_factory.preview_building(
-					BaseBuilding.BaseBuildingScene, 
+				building_preview = preview_building(
+					BaseBuilding.scene, 
+					map, 
+					map.tilemap, 
+					mouse_pos
+					)
+				placing_building = true
+		
+		if event.pressed and event.keycode == KEY_E:
+			if not placing_building:
+				building_preview = preview_building(
+					BarracksBuilding.scene, 
 					map, 
 					map.tilemap, 
 					mouse_pos
@@ -58,3 +66,15 @@ func place_building() -> void:
 	
 	building_preview = null
 	placing_building = false
+
+
+func preview_building(scene: PackedScene, parent: Node, layer: TileMapLayer, _mouse_pos: Vector2) -> BaseBuilding:
+	var building := scene.instantiate()
+	parent.add_child(building)
+	building.position = layer.map_to_local(Vector2i(_mouse_pos))
+	#TODO: there should be something like building.set_preview(true)
+	# and change to false on placement
+	building.modulate = building.placement_color
+	building.clicked.connect(parent.get_parent()._on_object_clicked)
+	
+	return building

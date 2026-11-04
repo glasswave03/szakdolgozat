@@ -1,5 +1,7 @@
 extends Node2D
 
+signal unit_spawned(unit: BaseUnit)
+
 const SPAWN_TIME: float = 1.0
 const QUEUE_LIMIT: int = 10
 
@@ -29,19 +31,27 @@ func _process(_delta: float) -> void:
 		rally_point.visible = false
 
 
-func queue_unit() -> void: #TODO: add type param
+func queue_unit() -> void:
 	if spawn_queue.size() >= QUEUE_LIMIT:
 		printerr("reached max amount of units in queue!")
 		return
 	
-	var unit: BaseUnit = BaseUnitScene.instantiate()
 	var unit_res: Resource = load("res://Features/Resources/peasant_unit_resource.tres")
 	var object_res: Resource = load("res://Features/Resources/peasant_object_resource.tres")
-	unit_res = load("res://Features/Resources/peasant_unit_resource.tres")
-	var peasant: PeasantUnit = PeasantUnit.create_unit(unit_res, object_res)
+	var unit := BaseUnit.create_unit(unit_res, object_res)
+	#match _name:
+		#"BaseUnit":
+			#printerr("Cannot create BaseUnit!")
+		#"Peasant":
+			#var unit_res: Resource = load("res://Features/Resources/peasant_unit_resource.tres")
+			#var object_res: Resource = load("res://Features/Resources/peasant_object_resource.tres")
+			#unit = PeasantUnit.create_unit(unit_res, object_res)
+		#"Warrior":
+			#var unit_res: Resource = load("res://Features/Resources/warrior_unit_resource.tres")
+			#var object_res: Resource = load("res://Features/Resources/warrior_object_resource.tres")
+			#unit = BaseUnit.create_unit(unit_res, object_res)
 	
 	spawn_queue.push_back(unit)
-	spawn_queue.push_back(peasant)
 	print("queued unit")
 	
 	if timer.is_stopped():
@@ -59,6 +69,7 @@ func _on_spawn_timer_timeout() -> void:
 	unit.setup(Vector2i(unit.global_position))
 	#TODO: make the unit do something like below
 	#unit.move_to(building.rally_point.global_position)
+	unit_spawned.emit(unit)
 	print("remaining: ", spawn_queue)
 	
 	if not spawn_queue.is_empty():

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="UnitResource" format=3 uid="uid://dtifc2731b5t2"]
+
+[ext_resource type="Script" uid="uid://cbl8iqefwvy8x" path="res://Features/Resources/unit.gd" id="1_n5ecs"]
+
+[resource]
+script = ExtResource("1_n5ecs")
+gold_cost = 80
+move_speed = 250.0
+attack_damage = 3.0
+attack_rate = 0.5
+attack_range = 20.0
+armor = 5.0
+metadata/_custom_type_script = "uid://cbl8iqefwvy8x"

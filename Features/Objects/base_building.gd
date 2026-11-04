@@ -2,7 +2,7 @@ class_name BaseBuilding extends BaseObject
 
 signal placed
 
-const BaseBuildingScene: PackedScene = preload("res://Features/Objects/base_building.tscn")
+static var scene: PackedScene = preload("res://Features/Objects/base_building.tscn")
 
 @export var gold_cost: int
 
@@ -63,7 +63,7 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 
 
 static func create_building(cost: int, object_res: Resource) -> BaseBuilding:
-	var building: BaseBuilding = BaseBuildingScene.instantiate()
+	var building: BaseBuilding = scene.instantiate()
 	building.gold_cost = cost
 	building.object = object_res
 	return building

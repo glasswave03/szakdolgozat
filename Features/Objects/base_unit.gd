@@ -2,7 +2,7 @@ class_name BaseUnit extends BaseObject
 
 signal interact
 
-const BaseUnitScene: PackedScene = preload("res://Features/Objects/base_unit.tscn")
+static var scene: PackedScene = preload("res://Features/Objects/base_unit.tscn")
 
 @export var unit_resource: Resource
 
@@ -24,6 +24,8 @@ var current_path_index: int
 
 
 func _ready() -> void:
+	$Sprite.texture = object.sprite
+	
 	health = object.max_health
 	$HealthBar.max_value = object.max_health
 	$HealthBar.value = health
@@ -123,7 +125,7 @@ func _on_death() -> void:
 
 
 static func create_unit(unit_res: Resource, object_res: Resource) -> BaseUnit:
-	var new_unit: BaseUnit = BaseUnitScene.instantiate()
+	var new_unit: BaseUnit = scene.instantiate()
 	new_unit.unit_resource = unit_res
 	new_unit.object = object_res
 	return new_unit

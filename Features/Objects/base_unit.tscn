@@ -15,17 +15,18 @@ attack_range = 10.0
 armor = 5.0
 metadata/_custom_type_script = "uid://cbl8iqefwvy8x"
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_3cgxv"]
+atlas = ExtResource("2_4jhad")
+region = Rect2(0, 32, 32, 32)
+
 [sub_resource type="Resource" id="Resource_gtde7"]
 script = ExtResource("2_gtde7")
 name = "BaseUnit"
+sprite = SubResource("AtlasTexture_3cgxv")
 max_health = 10.0
-group = 1
 selection_size = 32.0
+group = 1
 metadata/_custom_type_script = "uid://cewmlxh0qog2d"
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jfiep"]
-atlas = ExtResource("2_4jhad")
-region = Rect2(0, 32, 32, 32)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q5kjn"]
 size = Vector2(31, 39)
@@ -44,7 +45,6 @@ unit_resource = SubResource("Resource_upyqu")
 object = SubResource("Resource_gtde7")
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1947353019]
-texture = SubResource("AtlasTexture_jfiep")
 
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=973093022]
 position = Vector2(-1.5, 2.5)

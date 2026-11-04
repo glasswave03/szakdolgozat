@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ObjectResource" format=3 uid="uid://cvpyhbfo2u7ds"]
+
+[ext_resource type="Script" uid="uid://cewmlxh0qog2d" path="res://Features/Resources/object.gd" id="1_85g4a"]
+[ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="2_8dwah"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sdnn5"]
+atlas = ExtResource("2_8dwah")
+region = Rect2(32, 32, 32, 32)
+
+[resource]
+script = ExtResource("1_85g4a")
+name = "Warrior"
+sprite = SubResource("AtlasTexture_sdnn5")
+max_health = 20.0
+selection_size = 32.0
+group = 1
+metadata/_custom_type_script = "uid://cewmlxh0qog2d"

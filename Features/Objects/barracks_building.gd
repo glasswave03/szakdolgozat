@@ -1,6 +1,8 @@
 class_name BarracksBuilding extends BaseBuilding
 
-const BarracksScene: PackedScene = preload("res://Features/Objects/barracks_building.tscn")
+
+func _init() -> void:
+	scene = preload("res://Features/Objects/barracks_building.tscn")
 
 
 func _ready() -> void:

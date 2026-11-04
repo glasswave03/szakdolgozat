@@ -1,10 +1,17 @@
 [gd_resource type="Resource" script_class="ObjectResource" format=3 uid="uid://cwbkutfou5yjh"]
 
 [ext_resource type="Script" uid="uid://cewmlxh0qog2d" path="res://Features/Resources/object.gd" id="1_p8u1n"]
+[ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="2_b6s1f"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3cgxv"]
+atlas = ExtResource("2_b6s1f")
+region = Rect2(0, 32, 32, 32)
+margin = Rect2(2, 0, 0, 0)
 
 [resource]
 script = ExtResource("1_p8u1n")
 name = "Peasant"
+sprite = SubResource("AtlasTexture_3cgxv")
 max_health = 10.0
 selection_size = 32.0
 group = 1
