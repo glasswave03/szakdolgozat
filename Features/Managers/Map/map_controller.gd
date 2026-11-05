@@ -28,6 +28,7 @@ func setup(_map: MapScene) -> void:
 	tile_size = map_scene.settings.tile_size
 	tilemap = map_scene.tilemap
 	camera = map_scene.camera
+	#TODO: add_child(map_scene) so that match controller doesn't have to
 	
 	camera_controller = CameraController.new(camera)
 	add_child(camera_controller)
