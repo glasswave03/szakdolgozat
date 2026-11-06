@@ -6,7 +6,6 @@
 
 [node name="MainGame" type="Node" unique_id=606005864]
 script = ExtResource("1_l756w")
-scene = null
 
 [node name="Debug" type="CanvasLayer" parent="." unique_id=521639533]
 

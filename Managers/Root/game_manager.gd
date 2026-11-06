@@ -41,5 +41,11 @@ func start_match(players: Array[Player]) -> bool:
 	return true
 
 
+func change_scene(path: String) -> void:
+	current_scene.queue_free()
+	current_scene = load(path).instantiate()
+	add_child(current_scene)
+
+
 func quit_game() -> void:
 	get_tree().quit(0)

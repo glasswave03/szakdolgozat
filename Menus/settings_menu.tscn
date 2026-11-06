@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bcmbdpv24k3pp"]
 
-[ext_resource type="Script" uid="uid://covod33216a8g" path="res://Features/Menus/settings_menu.gd" id="1_3ebxb"]
+[ext_resource type="Script" uid="uid://covod33216a8g" path="res://Menus/settings_menu.gd" id="1_3ebxb"]
 
 [node name="SettingsMenu" type="Control" unique_id=1229616044]
 layout_mode = 3
@@ -90,4 +90,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Back"
 
+[connection signal="toggled" from="MainBody/SettingsGrid/MuteCheck" to="." method="_on_mute_toggled"]
+[connection signal="value_changed" from="MainBody/SettingsGrid/MusicSlider" to="." method="_on_music_slider_value_changed"]
+[connection signal="value_changed" from="MainBody/SettingsGrid/SFXSlider" to="." method="_on_sfx_slider_value_changed"]
+[connection signal="pressed" from="MainBody/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="MainBody/HBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

@@ -90,20 +90,17 @@ func set_path(path: PackedVector2Array) -> void:
 
 
 func target_check() -> void:
-	if target == self: 
+	if target == self or target.team == team: 
 		target = null
 		return
 	
 	if global_position.distance_to(target.global_position) > attack_range:
 		#TODO: move in range
 		print("out of range!")
-		#move_to(target.position)
-	else:
-		if target.team != team:
-			if attack_cooldown <= 0:
-				target.take_damage(attack_damage)
-				attack_cooldown = attack_rate
-				state = unit_resource.States.STATE_ATTACK
+	elif attack_cooldown <= 0:
+		target.take_damage(attack_damage)
+		attack_cooldown = attack_rate
+		state = unit_resource.States.STATE_ATTACK
 
 
 func take_damage(amount: float) -> void:

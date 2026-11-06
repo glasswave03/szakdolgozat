@@ -7,13 +7,14 @@ func _on_play_pressed() -> void:
 	var player2: Player = Player.new()
 	if Global.game_manager.start_match([player, player2]):
 		queue_free()
+		print("Starting match! ", Global.game_manager.match_controller)
 	else:
 		printerr("Cannot start game! Maybe too few players?")
 
 
 func _on_settings_pressed() -> void:
 	#Global.game_manager.change_scene(SettingsMenu)
-	get_tree().change_scene_to_file(SettingsMenu)
+	Global.game_manager.change_scene(SettingsMenu)
 
 
 func _on_quit_pressed() -> void:

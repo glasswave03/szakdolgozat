@@ -105,16 +105,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.pressed:
 			groups.handle_group_input(event as InputEventKey, selection)
 		
-		if event.pressed and event.keycode == KEY_Q:
-			var unit_scene := load("res://Features/Objects/warrior_unit.tscn")
-			var new_unit: BaseUnit = unit_scene.instantiate()
-			new_unit.setup(tilemap.to_local(tilemap.local_to_map(mouse_pos)))
-			new_unit.position = mouse_pos
-			map.add_child(new_unit)
-			#TODO: replace line below with object spawned signal
-			new_unit.clicked.connect(_on_object_clicked)
-			new_unit.targeted.connect(_on_object_targeted)
-			print("unit spawned: ", new_unit)
+		if OS.has_feature("debug"):
+			if event.pressed and event.keycode == KEY_Q:
+				map.add_child(debug_spawn_warrior(mouse_pos))
 
 
 func _on_object_clicked(object: BaseObject, event: InputEventMouseButton) -> void:
@@ -123,3 +116,14 @@ func _on_object_clicked(object: BaseObject, event: InputEventMouseButton) -> voi
 
 func _on_object_targeted(object: BaseObject) -> void:
 	interactions._on_object_targeted(object)
+
+
+func debug_spawn_warrior(mouse_pos: Vector2) -> WarriorUnit:
+	var unit_scene := load("res://Features/Objects/warrior_unit.tscn")
+	var new_unit: BaseUnit = unit_scene.instantiate()
+	new_unit.setup(tilemap.to_local(tilemap.local_to_map(mouse_pos)))
+	new_unit.global_position = mouse_pos
+	#TODO: replace line below with object spawned signal
+	new_unit.clicked.connect(_on_object_clicked)
+	new_unit.targeted.connect(_on_object_targeted)
+	return new_unit
