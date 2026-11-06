@@ -64,7 +64,8 @@ func has_building_in_selection() -> bool:
 
 func clear_selection() -> void:
 	for object: BaseObject in selected_objects:
-		object.deselect()
+		if is_instance_valid(object):
+			object.deselect()
 	
 	selected_objects.clear()
 

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CombatResource" format=3 uid="uid://ba0edyv5ucu6i"]
+
+[ext_resource type="Script" uid="uid://dafmwb6b4etsf" path="res://Features/Resources/combat.gd" id="1_0obpo"]
+
+[resource]
+script = ExtResource("1_0obpo")
+attack_damage = 3.0
+attack_rate = 1.0
+attack_range = 20.0
+armor = 5.0
+metadata/_custom_type_script = "uid://dafmwb6b4etsf"

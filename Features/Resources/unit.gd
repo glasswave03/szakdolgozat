@@ -2,10 +2,6 @@ class_name UnitResource extends Resource
 
 @export var gold_cost: int
 @export var move_speed: float
-@export var attack_damage: float
-@export var attack_rate: float
-@export var attack_range: float
-@export var armor: float
 @export var state: States = States.STATE_IDLE: set = set_state
 
 enum States {

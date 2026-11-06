@@ -1,5 +1,6 @@
 extends Node2D
 
+# this signal might be useless...
 signal unit_spawned(unit: BaseUnit)
 
 const SPAWN_TIME: float = 1.0
@@ -17,8 +18,8 @@ var spawn_queue: Array[BaseUnit] = []
 
 
 func _ready() -> void:
-	rally_point.position += Vector2(-20, 140)
-	rally_point.visible = false
+	rally_point.global_position = building.global_position
+	rally_point.visible = true
 
 
 func _process(_delta: float) -> void:
@@ -36,20 +37,13 @@ func queue_unit() -> void:
 		printerr("reached max amount of units in queue!")
 		return
 	
-	var unit_res: Resource = load("res://Features/Resources/peasant_unit_resource.tres")
-	var object_res: Resource = load("res://Features/Resources/peasant_object_resource.tres")
-	var unit := BaseUnit.create_unit(unit_res, object_res)
-	#match _name:
-		#"BaseUnit":
-			#printerr("Cannot create BaseUnit!")
-		#"Peasant":
-			#var unit_res: Resource = load("res://Features/Resources/peasant_unit_resource.tres")
-			#var object_res: Resource = load("res://Features/Resources/peasant_object_resource.tres")
-			#unit = PeasantUnit.create_unit(unit_res, object_res)
-		#"Warrior":
-			#var unit_res: Resource = load("res://Features/Resources/warrior_unit_resource.tres")
-			#var object_res: Resource = load("res://Features/Resources/warrior_object_resource.tres")
-			#unit = BaseUnit.create_unit(unit_res, object_res)
+	var rand := randf()
+	var unit
+	print(rand)
+	if rand < 0.5:
+		unit = create_peasant()
+	else:
+		unit = create_warrior()
 	
 	spawn_queue.push_back(unit)
 	print("queued unit")
@@ -58,18 +52,35 @@ func queue_unit() -> void:
 		timer.start(SPAWN_TIME)
 
 
+func create_warrior() -> WarriorUnit:
+	var unit_res: Resource = load("res://Features/Resources/warrior_unit_resource.tres")
+	var combat_res: Resource = load("res://Features/Resources/warrior_combat_resource.tres")
+	var object_res: Resource = load("res://Features/Resources/warrior_object_resource.tres")
+	var new_warrior: WarriorUnit = WarriorUnit.create_unit(unit_res, combat_res, object_res)
+	return new_warrior
+
+
+func create_peasant() -> PeasantUnit:
+	var unit_res: Resource = load("res://Features/Resources/peasant_unit_resource.tres")
+	var combat_res: Resource = load("res://Features/Resources/peasant_combat_resource.tres")
+	var object_res: Resource = load("res://Features/Resources/peasant_object_resource.tres")
+	var new_warrior: PeasantUnit = PeasantUnit.create_unit(unit_res, combat_res, object_res)
+	return new_warrior
+
+
 func _on_spawn_timer_timeout() -> void:
 	if spawn_queue.is_empty():
 		return
 	
-	var unit: BaseUnit = spawn_queue.pop_front()
+	var unit = spawn_queue.pop_front()
 	
 	building.add_sibling(unit, true)
 	unit.global_position += building.global_position + spawn_offset
 	unit.setup(Vector2i(unit.global_position))
 	#TODO: make the unit do something like below
 	#unit.move_to(building.rally_point.global_position)
-	unit_spawned.emit(unit)
+	#TODO: connect this to somewhere maybe idk
+	#unit_spawned.emit(unit)
 	print("remaining: ", spawn_queue)
 	
 	if not spawn_queue.is_empty():

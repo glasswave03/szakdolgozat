@@ -5,9 +5,5 @@
 [resource]
 script = ExtResource("1_n5ecs")
 gold_cost = 80
-move_speed = 250.0
-attack_damage = 3.0
-attack_rate = 0.5
-attack_range = 20.0
-armor = 5.0
+move_speed = 150.0
 metadata/_custom_type_script = "uid://cbl8iqefwvy8x"

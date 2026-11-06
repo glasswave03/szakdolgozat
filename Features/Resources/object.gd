@@ -1,8 +1,6 @@
 class_name ObjectResource extends Resource
 
 @export var name: String
-@export var sprite: Texture2D
-var shape: CollisionShape2D
 @export var max_health: float
 @export var selectable: bool = true
 @export var selection_size: float
@@ -40,11 +38,11 @@ static func create_resource(
 
 func get_group_name() -> StringName:
 	match group:
-		0:
+		Groups.OBJECT:
 			return StringName("Object")
-		1:
+		Groups.UNIT:
 			return StringName("Unit")
-		2:
+		Groups.BUILDING:
 			return StringName("Building")
 		_:
 			return StringName("Unknown")

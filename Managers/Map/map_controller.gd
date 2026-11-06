@@ -3,7 +3,7 @@
 ## Initiates everything required by the player to play.
 class_name MapController extends Node2D
 
-var map_scene: MapScene
+var map: MapScene
 var tilemap: TileMapLayer
 var camera: Camera2D
 var camera_controller: CameraController
@@ -14,6 +14,7 @@ var formations: FormationService
 var movement: MovementService
 var dragbox: DragboxService
 var placement: BuildingPlacement
+var interactions: InteractionService
 
 var canvas: CanvasLayer
 var ui: Control
@@ -24,14 +25,15 @@ var tile_size: int
 
 
 func setup(_map: MapScene) -> void:
-	map_scene = _map
-	tile_size = map_scene.settings.tile_size
-	tilemap = map_scene.tilemap
-	camera = map_scene.camera
-	#TODO: add_child(map_scene) so that match controller doesn't have to
+	map = _map
+	tile_size = map.settings.tile_size
+	tilemap = map.tilemap
+	camera = map.camera
+	add_child(map)
 	
 	camera_controller = CameraController.new(camera)
 	add_child(camera_controller)
+	
 	
 	formations = FormationService.new()
 	movement = MovementService.new(formations, astar_grid, tilemap)
@@ -41,10 +43,12 @@ func setup(_map: MapScene) -> void:
 	selection = SelectionManager.new()
 	groups = GroupManager.new()
 	placement = BuildingPlacement.new()
-	placement.setup(map_scene)
+	placement.setup(map)
 	add_child(selection)
 	add_child(groups)
 	add_child(placement)
+	
+	interactions = InteractionService.new()
 	
 	dragbox.released.connect(selection._on_dragbox_released)
 	
@@ -57,6 +61,7 @@ func setup(_map: MapScene) -> void:
 	ui.name = "SelectionUI"
 	canvas.add_child(ui)
 	
+	selection.changed.connect(interactions._on_selection_changed)
 	selection.changed.connect(ui._on_selection_changed)
 	ui_actions = UIActionService.new()
 	
@@ -101,15 +106,20 @@ func _unhandled_input(event: InputEvent) -> void:
 			groups.handle_group_input(event as InputEventKey, selection)
 		
 		if event.pressed and event.keycode == KEY_Q:
-			var unit_scene := load("res://Features/Objects/base_unit.tscn")
+			var unit_scene := load("res://Features/Objects/warrior_unit.tscn")
 			var new_unit: BaseUnit = unit_scene.instantiate()
 			new_unit.setup(tilemap.to_local(tilemap.local_to_map(mouse_pos)))
 			new_unit.position = mouse_pos
-			map_scene.add_child(new_unit)
+			map.add_child(new_unit)
 			#TODO: replace line below with object spawned signal
 			new_unit.clicked.connect(_on_object_clicked)
+			new_unit.targeted.connect(_on_object_targeted)
 			print("unit spawned: ", new_unit)
 
 
 func _on_object_clicked(object: BaseObject, event: InputEventMouseButton) -> void:
 	selection._on_object_clicked(object, event)
+
+
+func _on_object_targeted(object: BaseObject) -> void:
+	interactions._on_object_targeted(object)

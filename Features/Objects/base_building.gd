@@ -55,11 +55,10 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			clicked.emit(self, event)
-			print("building clicked")
+		
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			#TODO: maybe this isnt how this should be done?
 			targeted.emit(self)
-			print("building targeted: ", self)
 
 
 static func create_building(cost: int, object_res: Resource) -> BaseBuilding:

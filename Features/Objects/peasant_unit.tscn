@@ -2,9 +2,17 @@
 
 [ext_resource type="Script" uid="uid://coj654ocf6u3s" path="res://Features/Objects/peasant_unit.gd" id="1_8bwep"]
 [ext_resource type="Resource" uid="uid://bc7ckrqo5h6fo" path="res://Features/Resources/peasant_unit_resource.tres" id="2_nthv2"]
+[ext_resource type="Resource" uid="uid://bipgfw7jtooh5" path="res://Features/Resources/peasant_combat_resource.tres" id="3_gim76"]
 [ext_resource type="Resource" uid="uid://cwbkutfou5yjh" path="res://Features/Resources/peasant_object_resource.tres" id="3_rdp2c"]
+[ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="4_rdp2c"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nthv2"]
+atlas = ExtResource("4_rdp2c")
+region = Rect2(0, 32, 32, 32)
+margin = Rect2(2, 0, 0, 0)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8c242"]
+size = Vector2(32, 32)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f6w88"]
 bg_color = Color(1, 0, 0, 1)
@@ -15,10 +23,12 @@ bg_color = Color(0, 1, 0, 1)
 [node name="Peasant" type="Area2D" unique_id=1546903729]
 script = ExtResource("1_8bwep")
 unit_resource = ExtResource("2_nthv2")
+combat_resource = ExtResource("3_gim76")
 object = ExtResource("3_rdp2c")
 metadata/_custom_type_script = "uid://bn2vaamhphpjd"
 
-[node name="Sprite" type="Sprite2D" parent="." unique_id=2004708181]
+[node name="Sprite" type="Sprite2D" parent="." unique_id=1235343755]
+texture = SubResource("AtlasTexture_nthv2")
 
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=770254311]
 shape = SubResource("RectangleShape2D_8c242")
@@ -36,3 +46,7 @@ theme_override_styles/background = SubResource("StyleBoxFlat_f6w88")
 theme_override_styles/fill = SubResource("StyleBoxFlat_8bwep")
 show_percentage = false
 metadata/_edit_use_anchors_ = true
+
+[connection signal="damaged" from="." to="." method="_on_damaged"]
+[connection signal="death" from="." to="." method="_on_death"]
+[connection signal="input_event" from="." to="." method="_on_input_event"]

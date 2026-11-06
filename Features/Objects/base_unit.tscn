@@ -2,28 +2,18 @@
 
 [ext_resource type="Script" uid="uid://bn2vaamhphpjd" path="res://Features/Objects/base_unit.gd" id="1_4jhad"]
 [ext_resource type="Script" uid="uid://cbl8iqefwvy8x" path="res://Features/Resources/unit.gd" id="2_3cgxv"]
-[ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="2_4jhad"]
 [ext_resource type="Script" uid="uid://cewmlxh0qog2d" path="res://Features/Resources/object.gd" id="2_gtde7"]
+[ext_resource type="Resource" uid="uid://bipgfw7jtooh5" path="res://Features/Resources/peasant_combat_resource.tres" id="3_3cgxv"]
 
 [sub_resource type="Resource" id="Resource_upyqu"]
 script = ExtResource("2_3cgxv")
-gold_cost = 50
-move_speed = 250.0
-attack_damage = 3.0
-attack_rate = 1.0
-attack_range = 10.0
-armor = 5.0
+move_speed = 10.0
 metadata/_custom_type_script = "uid://cbl8iqefwvy8x"
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3cgxv"]
-atlas = ExtResource("2_4jhad")
-region = Rect2(0, 32, 32, 32)
 
 [sub_resource type="Resource" id="Resource_gtde7"]
 script = ExtResource("2_gtde7")
 name = "BaseUnit"
-sprite = SubResource("AtlasTexture_3cgxv")
-max_health = 10.0
+max_health = 1.0
 selection_size = 32.0
 group = 1
 metadata/_custom_type_script = "uid://cewmlxh0qog2d"
@@ -42,6 +32,7 @@ y_sort_enabled = true
 collision_layer = 2
 script = ExtResource("1_4jhad")
 unit_resource = SubResource("Resource_upyqu")
+combat_resource = ExtResource("3_3cgxv")
 object = SubResource("Resource_gtde7")
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1947353019]
@@ -51,6 +42,7 @@ position = Vector2(-1.5, 2.5)
 shape = SubResource("RectangleShape2D_q5kjn")
 
 [node name="HealthBar" type="ProgressBar" parent="." unique_id=923963053]
+top_level = true
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -68,5 +60,3 @@ metadata/_edit_use_anchors_ = true
 [connection signal="damaged" from="." to="." method="_on_damaged"]
 [connection signal="death" from="." to="." method="_on_death"]
 [connection signal="input_event" from="." to="." method="_on_input_event"]
-[connection signal="interact" from="." to="." method="_on_interact"]
-[connection signal="targeted" from="." to="." method="_on_targeted"]

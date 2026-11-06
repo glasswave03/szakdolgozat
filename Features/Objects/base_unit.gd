@@ -1,26 +1,25 @@
 class_name BaseUnit extends BaseObject
 
-signal interact
-
 static var scene: PackedScene = preload("res://Features/Objects/base_unit.tscn")
 
 @export var unit_resource: Resource
+@export var combat_resource: Resource
 
-var attack_target: BaseObject = null
-
+var is_set_up: bool = false
+var target: BaseObject = null
+var attack_cooldown: float
 var current_cell: Vector2
 var next_cell: Vector2
-var is_set_up: bool = false
 var current_path: PackedVector2Array
 var current_path_index: int
 
 @onready var team: PlayerManager.Teams = object.team
 @onready var state: UnitResource.States = unit_resource.state
 @onready var move_speed: float = unit_resource.move_speed
-@onready var attack_damage: float = unit_resource.attack_damage
-@onready var attack_rate: float = unit_resource.attack_rate
-@onready var attack_range: float = unit_resource.attack_range
-@onready var armor: float = unit_resource.armor
+@onready var attack_damage: float = combat_resource.attack_damage
+@onready var attack_rate: float = combat_resource.attack_rate
+@onready var attack_range: float = combat_resource.attack_range
+@onready var armor: float = combat_resource.armor
 
 
 func _ready() -> void:
@@ -46,14 +45,17 @@ func _draw() -> void:
 	draw_rect(selection_rect, selection_color, false, selection_width)
 
 
-func _physics_process(delta: float) -> void:
+func _process(delta: float) -> void:
 	assert(is_set_up, "Unit is not set up")
+	
+	if attack_cooldown > 0:
+		attack_cooldown -= delta
 	
 	if state == unit_resource.States.STATE_DEAD:
 		#TODO: play death animation
 		return
 	
-	if attack_target != null:
+	if target != null:
 		target_check()
 	
 	if current_path.is_empty() and \
@@ -75,11 +77,9 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			clicked.emit(self, event)
-			print("unit clicked")
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-			#TODO: maybe this isnt how this should be done?
+			get_tree().get_root().set_input_as_handled()
 			targeted.emit(self)
-			print("unit targeted: ", self)
 
 
 func set_path(path: PackedVector2Array) -> void:
@@ -90,19 +90,20 @@ func set_path(path: PackedVector2Array) -> void:
 
 
 func target_check() -> void:
-	if global_position.distance_to(attack_target.global_position) < attack_range:
+	if target == self: 
+		target = null
+		return
+	
+	if global_position.distance_to(target.global_position) > attack_range:
 		#TODO: move in range
-		printerr("out of range!")
-		#move_to(attack_target.position)
+		print("out of range!")
+		#move_to(target.position)
 	else:
-		if attack_target.team != team:
-			interact.emit()
-
-
-func _on_attack() -> void:
-	attack_target.take_damage(attack_damage)
-	state = unit_resource.States.STATE_ATTACK
-	#TODO: wait for attack_rate timer to go off
+		if target.team != team:
+			if attack_cooldown <= 0:
+				target.take_damage(attack_damage)
+				attack_cooldown = attack_rate
+				state = unit_resource.States.STATE_ATTACK
 
 
 func take_damage(amount: float) -> void:
@@ -124,16 +125,9 @@ func _on_death() -> void:
 	print("Unit died")
 
 
-static func create_unit(unit_res: Resource, object_res: Resource) -> BaseUnit:
+static func create_unit(unit_res: Resource, combat_res: Resource, object_res: Resource) -> BaseUnit:
 	var new_unit: BaseUnit = scene.instantiate()
 	new_unit.unit_resource = unit_res
+	new_unit.combat_resource = combat_res
 	new_unit.object = object_res
 	return new_unit
-
-
-func _on_targeted(object: BaseObject) -> void:
-	pass # Replace with function body.
-
-
-func _on_interact() -> void:
-	pass # Replace with function body.

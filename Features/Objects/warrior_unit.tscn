@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://epcndduay2sp"]
+
+[ext_resource type="Script" uid="uid://b4nd4s7vypa3i" path="res://Features/Objects/warrior_unit.gd" id="1_wkpx5"]
+[ext_resource type="Resource" uid="uid://dtifc2731b5t2" path="res://Features/Resources/warrior_unit_resource.tres" id="2_44ynn"]
+[ext_resource type="Resource" uid="uid://ba0edyv5ucu6i" path="res://Features/Resources/warrior_combat_resource.tres" id="3_ari8m"]
+[ext_resource type="Resource" uid="uid://cvpyhbfo2u7ds" path="res://Features/Resources/warrior_object_resource.tres" id="3_oir68"]
+[ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="5_1waid"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q5kjn"]
+atlas = ExtResource("5_1waid")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8c242"]
+size = Vector2(32, 32)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oir68"]
+bg_color = Color(1, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ari8m"]
+bg_color = Color(0, 1, 0, 1)
+
+[node name="WarriorUnit" type="Area2D" unique_id=1991387416]
+script = ExtResource("1_wkpx5")
+unit_resource = ExtResource("2_44ynn")
+combat_resource = ExtResource("3_ari8m")
+object = ExtResource("3_oir68")
+metadata/_custom_type_script = "uid://bn2vaamhphpjd"
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=525387994]
+texture = SubResource("AtlasTexture_q5kjn")
+
+[node name="Collision" type="CollisionShape2D" parent="." unique_id=130839417]
+shape = SubResource("RectangleShape2D_8c242")
+
+[node name="HealthBar" type="ProgressBar" parent="." unique_id=1305388645]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -10.0
+offset_top = 18.0
+offset_right = 10.0
+offset_bottom = 22.0
+grow_horizontal = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_oir68")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ari8m")
+show_percentage = false
+metadata/_edit_use_anchors_ = true
+
+[connection signal="damaged" from="." to="." method="_on_damaged"]
+[connection signal="death" from="." to="." method="_on_death"]
+[connection signal="input_event" from="." to="." method="_on_input_event"]
