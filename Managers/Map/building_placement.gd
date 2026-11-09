@@ -1,6 +1,12 @@
 ## Handles the building placement on the map
 class_name BuildingPlacement extends Node
 
+const BaseBuildingScene := preload("res://Features/Objects/base_building.tscn")
+const BarracksScene := preload("res://Features/Objects/barracks_building.tscn")
+const HouseScene := preload("res://Features/Objects/house_building.tscn")
+const TownHallScene := preload("res://Features/Objects/town_hall_building.tscn")
+
+
 var map: MapScene
 var placing_building: bool = false
 var building_preview: BaseBuilding
@@ -41,7 +47,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.pressed and event.keycode == KEY_W:
 			if not placing_building:
 				building_preview = preview_building(
-					BaseBuilding.scene, 
+					BaseBuildingScene, 
 					map, 
 					map.tilemap, 
 					mouse_pos
@@ -51,7 +57,27 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.pressed and event.keycode == KEY_E:
 			if not placing_building:
 				building_preview = preview_building(
-					BarracksBuilding.scene, 
+					BarracksScene, 
+					map, 
+					map.tilemap, 
+					mouse_pos
+					)
+				placing_building = true
+		
+		if event.pressed and event.keycode == KEY_R:
+			if not placing_building:
+				building_preview = preview_building(
+					HouseScene, 
+					map, 
+					map.tilemap,
+					mouse_pos
+					)
+				placing_building = true
+		
+		if event.pressed and event.keycode == KEY_T:
+			if not placing_building:
+				building_preview = preview_building(
+					TownHallScene, 
 					map, 
 					map.tilemap, 
 					mouse_pos
@@ -61,6 +87,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func place_building() -> void:
 	#TODO: when placing a building, it should set points solid under itself
+	#TODO: connect unit spawned
 	building_preview.placed.emit()
 	building_preview.modulate = Color.WHITE
 	

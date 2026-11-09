@@ -2,11 +2,8 @@ class_name BaseBuilding extends BaseObject
 
 signal placed
 
-static var scene: PackedScene = preload("res://Features/Objects/base_building.tscn")
+@export var building_res: Resource
 
-@export var gold_cost: int
-
-@onready var unit_factory: Node2D = $UnitFactory
 @onready var overlap_area: Area2D = $Overlap
 
 var is_overlapping: bool = false
@@ -15,21 +12,16 @@ var overlap_color: Color = Color(1,0,0,0.3)
 var placement_color: Color = Color(1,1,1,0.3)
 
 func _ready() -> void:
-	set_preview(true)
-	
 	var group_name: StringName = object.get_group_name()
 	add_to_group(group_name)
 	
 	health = object.max_health
 	$HealthBar.max_value = object.max_health
 	$HealthBar.value = health
+	$HealthBar.visible = false
 	
 	if object.selectable:
 		add_to_group("Selectable", true)
-
-
-func set_preview(on: bool) -> void:
-	pass #TODO: preview is when the building hasnt been placed yet
 
 
 func _on_damaged() -> void:
@@ -47,10 +39,6 @@ func _on_death() -> void:
 	print("building destroyed")
 
 
-func _on_spawn_requested() -> void:
-	unit_factory.queue_unit(unit_factory.unit_scene)
-
-
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -61,11 +49,8 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 			targeted.emit(self)
 
 
-static func create_building(cost: int, object_res: Resource) -> BaseBuilding:
-	var building: BaseBuilding = scene.instantiate()
-	building.gold_cost = cost
-	building.object = object_res
-	return building
+func has_unit_factory() -> bool:
+	return false
 
 
 #region placement
@@ -86,7 +71,7 @@ func _process(_delta: float) -> void:
 func _on_placed() -> void:
 	overlap_area.monitoring = false
 	modulate = Color.WHITE
-	set_preview(false)
+	$HealthBar.visible = true
 
 
 func _on_overlap_body_entered(body: Node2D) -> void:

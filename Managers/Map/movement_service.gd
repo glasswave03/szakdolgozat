@@ -29,7 +29,7 @@ func move_selected(objects: Array[BaseObject], global_pos: Vector2) -> void:
 	
 	if not buildings.is_empty():
 		for building: BaseBuilding in buildings:
-			if building.unit_factory:
+			if building.has_unit_factory():
 				var pos := tilemap.to_global(tilemap.map_to_local(target_cell))
 				building.unit_factory.set_rally_point(pos)
 	
@@ -48,3 +48,7 @@ func move_selected(objects: Array[BaseObject], global_pos: Vector2) -> void:
 		
 		if not path.is_empty():
 			units[i].set_path(path)
+
+
+func _on_unit_spawned(unit: BaseUnit, rally_pos: Vector2):
+	move_selected([unit], rally_pos)

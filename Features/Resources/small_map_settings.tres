@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MapSettings" format=3 uid="uid://c1w143n30jnau"]
+
+[ext_resource type="Script" uid="uid://cr8eex4p7h431" path="res://Features/Resources/map_settings.gd" id="1_x5vtk"]
+
+[resource]
+script = ExtResource("1_x5vtk")
+max_players = 2
+starting_gold = 50
+starting_peasants = 5
+metadata/_custom_type_script = "uid://cr8eex4p7h431"

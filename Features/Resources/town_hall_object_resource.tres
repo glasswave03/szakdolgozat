@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ObjectResource" format=3 uid="uid://co8oe426ncwtn"]
+
+[ext_resource type="Script" uid="uid://cewmlxh0qog2d" path="res://Features/Resources/object.gd" id="1_c22o8"]
+
+[resource]
+script = ExtResource("1_c22o8")
+name = "Town Hall"
+max_health = 500.0
+selection_size = 128.0
+group = 2
+metadata/_custom_type_script = "uid://cewmlxh0qog2d"

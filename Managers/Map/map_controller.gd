@@ -105,6 +105,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.pressed:
 			groups.handle_group_input(event as InputEventKey, selection)
 		
+		# Debug features
 		if OS.has_feature("debug"):
 			if event.pressed and event.keycode == KEY_Q:
 				map.add_child(debug_spawn_warrior(mouse_pos))

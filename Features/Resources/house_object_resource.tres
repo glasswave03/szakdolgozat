@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ObjectResource" format=3 uid="uid://d3feicbiqeu03"]
+
+[ext_resource type="Script" uid="uid://cewmlxh0qog2d" path="res://Features/Resources/object.gd" id="1_8tikr"]
+
+[resource]
+script = ExtResource("1_8tikr")
+name = "House"
+max_health = 50.0
+selection_size = 64.0
+group = 2
+metadata/_custom_type_script = "uid://cewmlxh0qog2d"

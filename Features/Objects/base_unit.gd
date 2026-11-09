@@ -107,6 +107,7 @@ func take_damage(amount: float) -> void:
 	var dmg_reduction := armor / (armor + 100.0)
 	var actual_damage := amount * (1.0 - dmg_reduction)
 	health -= actual_damage
+	#TODO: damage numbers?
 
 
 func _on_damaged() -> void:

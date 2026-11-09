@@ -1,13 +1,9 @@
 class_name BarracksBuilding extends BaseBuilding
 
-
-func _init() -> void:
-	scene = preload("res://Features/Objects/barracks_building.tscn")
+@onready var unit_factory: Node2D = $UnitFactory
 
 
 func _ready() -> void:
-	set_preview(true)
-	
 	var group_name: StringName = object.get_group_name()
 	add_to_group(group_name)
 	
@@ -17,3 +13,11 @@ func _ready() -> void:
 	
 	if object.selectable:
 		add_to_group("Selectable", true)
+
+
+func _on_spawn_requested() -> void:
+	unit_factory.queue_unit(unit_factory.unit_scene)
+
+
+func has_unit_factory() -> bool:
+	return true

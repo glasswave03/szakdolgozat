@@ -35,7 +35,6 @@ bg_color = Color(0, 1, 0, 1)
 
 [node name="Barracks" type="Area2D" unique_id=1966122901]
 script = ExtResource("1_rdxay")
-gold_cost = 150
 object = SubResource("Resource_pcj3k")
 metadata/_custom_type_script = "uid://ra6knyinp1ee"
 

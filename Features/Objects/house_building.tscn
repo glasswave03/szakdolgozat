@@ -1,8 +1,21 @@
 [gd_scene format=3 uid="uid://wi5c4ow3dqyt"]
 
 [ext_resource type="Script" uid="uid://cdg2ienbmtp7l" path="res://Features/Objects/house_building.gd" id="1_ox2kw"]
+[ext_resource type="Script" uid="uid://ee72xshp8oxc" path="res://Features/Resources/building.gd" id="2_e52ni"]
+[ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="2_winti"]
+[ext_resource type="Resource" uid="uid://d3feicbiqeu03" path="res://Features/Resources/house_object_resource.tres" id="3_nfxtr"]
+
+[sub_resource type="Resource" id="Resource_tuf76"]
+script = ExtResource("2_e52ni")
+gold_cost = 100
+metadata/_custom_type_script = "uid://ee72xshp8oxc"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8c242"]
+atlas = ExtResource("2_winti")
+region = Rect2(64, 64, 64, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8c242"]
+size = Vector2(64, 64)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_winti"]
 bg_color = Color(1, 0, 0, 1)
@@ -11,13 +24,16 @@ bg_color = Color(1, 0, 0, 1)
 bg_color = Color(0, 1, 0, 1)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e52ni"]
-size = Vector2(66, 91)
+size = Vector2(64, 64)
 
 [node name="HouseBuilding" type="Area2D" unique_id=302943964]
 script = ExtResource("1_ox2kw")
+building_res = SubResource("Resource_tuf76")
+object = ExtResource("3_nfxtr")
 metadata/_custom_type_script = "uid://ra6knyinp1ee"
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=483246648]
+texture = SubResource("AtlasTexture_8c242")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=265545126]
 shape = SubResource("RectangleShape2D_8c242")
@@ -47,7 +63,6 @@ collision_layer = 0
 collision_mask = 3
 
 [node name="Detector" type="CollisionShape2D" parent="Overlap" unique_id=233587123]
-position = Vector2(0, -1.5)
 shape = SubResource("RectangleShape2D_e52ni")
 
 [connection signal="damaged" from="." to="." method="_on_damaged"]

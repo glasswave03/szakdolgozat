@@ -1,7 +1,6 @@
 extends Node2D
 
-# this signal might be useless...
-signal unit_spawned(unit: BaseUnit)
+signal unit_spawned(unit: BaseUnit, rally_pos: Vector2)
 
 const SPAWN_TIME: float = 1.0
 const QUEUE_LIMIT: int = 10
@@ -37,13 +36,7 @@ func queue_unit() -> void:
 		printerr("reached max amount of units in queue!")
 		return
 	
-	var rand := randf()
-	var unit
-	print(rand)
-	if rand < 0.5:
-		unit = create_peasant()
-	else:
-		unit = create_warrior()
+	var unit: PeasantUnit = create_peasant()
 	
 	spawn_queue.push_back(unit)
 	print("queued unit")
@@ -74,13 +67,13 @@ func _on_spawn_timer_timeout() -> void:
 	
 	var unit = spawn_queue.pop_front()
 	
-	building.add_sibling(unit, true)
+	building.add_sibling(unit)
 	unit.global_position += building.global_position + spawn_offset
 	unit.setup(Vector2i(unit.global_position))
 	#TODO: make the unit do something like below
 	#unit.move_to(building.rally_point.global_position)
-	#TODO: connect this to somewhere maybe idk
-	#unit_spawned.emit(unit)
+	#TODO: connect this to movement_service
+	unit_spawned.emit(unit, rally_point.global_position)
 	print("remaining: ", spawn_queue)
 	
 	if not spawn_queue.is_empty():
