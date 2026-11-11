@@ -9,3 +9,10 @@ class_name MapScene extends Node2D
 @export var settings: Resource
 @export var tilemap: TileMapLayer
 @export var camera: Camera2D
+
+func _ready() -> void:
+	for object: BaseObject in get_tree().get_nodes_in_group("Selectable"):
+		if object is BaseUnit:
+			object.setup(tilemap.local_to_map(tilemap.to_local(object.global_position)))
+		elif object is BaseBuilding:
+			object.placed.emit()

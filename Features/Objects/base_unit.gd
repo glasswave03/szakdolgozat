@@ -37,6 +37,8 @@ func _ready() -> void:
 
 
 func setup(cell_pos: Vector2i) -> void:
+	var map_controller = get_parent().get_parent()
+	clicked.connect(map_controller._on_object_clicked)
 	current_cell = cell_pos
 	is_set_up = true
 

@@ -91,6 +91,9 @@ func place_building() -> void:
 	building_preview.placed.emit()
 	building_preview.modulate = Color.WHITE
 	
+	if building_preview.has_unit_factory():
+		building_preview.unit_factory.unit_spawned.connect(get_parent()._on_unit_spawned)
+	
 	building_preview = null
 	placing_building = false
 
@@ -99,9 +102,6 @@ func preview_building(scene: PackedScene, parent: Node, layer: TileMapLayer, _mo
 	var building := scene.instantiate()
 	parent.add_child(building)
 	building.position = layer.map_to_local(Vector2i(_mouse_pos))
-	#TODO: there should be something like building.set_preview(true)
-	# and change to false on placement
 	building.modulate = building.placement_color
-	building.clicked.connect(parent.get_parent()._on_object_clicked)
 	
 	return building

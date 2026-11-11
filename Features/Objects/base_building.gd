@@ -4,8 +4,6 @@ signal placed
 
 @export var building_res: Resource
 
-@onready var overlap_area: Area2D = $Overlap
-
 var is_overlapping: bool = false
 var overlap_counter: int = 0
 var overlap_color: Color = Color(1,0,0,0.3)
@@ -55,31 +53,33 @@ func has_unit_factory() -> bool:
 
 #region placement
 func _process(_delta: float) -> void:
-	if not overlap_area.monitoring: return
+	if not monitoring: return
 	
 	if overlap_counter > 0:
 		is_overlapping = true
 		modulate = overlap_color
-		print("Overlapping with ", overlap_counter, " objects!")
 	else:
 		is_overlapping = false
 	
-	if not is_overlapping and overlap_area.monitoring:
+	if not is_overlapping and monitoring:
 		modulate = placement_color
 
 
 func _on_placed() -> void:
-	overlap_area.monitoring = false
+	var map_controller = get_parent().get_parent()
+	clicked.connect(map_controller._on_object_clicked)
+	
+	monitoring = false
 	modulate = Color.WHITE
 	$HealthBar.visible = true
 
 
-func _on_overlap_body_entered(body: Node2D) -> void:
+func _on_area_entered(area: Node2D) -> void:
 	overlap_counter += 1
-	print("overlapping with ", overlap_counter, " objects, detected ", body)
+	print("overlapping with ", overlap_counter, " objects, detected ", area)
 
 
-func _on_overlap_body_exited(body: Node2D) -> void:
+func _on_area_exited(area: Node2D) -> void:
 	overlap_counter -= 1
-	print("overlap exited: ", body)
+	print("overlap exited: ", area)
 #endregion

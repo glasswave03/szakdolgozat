@@ -17,7 +17,6 @@ var spawn_queue: Array[BaseUnit] = []
 
 
 func _ready() -> void:
-	rally_point.global_position = building.global_position
 	rally_point.visible = true
 
 
@@ -80,6 +79,5 @@ func _on_spawn_timer_timeout() -> void:
 		timer.start(SPAWN_TIME)
 
 
-func set_rally_point(global_pos: Vector2) -> void:
-	#TODO: somehow check if the tile is valid and snap to tile_pos
-	rally_point.global_position = global_pos
+func set_rally_point(pos: Vector2) -> void:
+	rally_point.global_position = pos

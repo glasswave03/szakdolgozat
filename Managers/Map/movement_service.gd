@@ -50,5 +50,5 @@ func move_selected(objects: Array[BaseObject], global_pos: Vector2) -> void:
 			units[i].set_path(path)
 
 
-func _on_unit_spawned(unit: BaseUnit, rally_pos: Vector2):
+func _on_unit_spawned(unit: BaseUnit, rally_pos: Vector2) -> void:
 	move_selected([unit], rally_pos)

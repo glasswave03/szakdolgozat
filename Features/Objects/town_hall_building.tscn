@@ -5,7 +5,6 @@
 [ext_resource type="Resource" uid="uid://co8oe426ncwtn" path="res://Features/Resources/town_hall_object_resource.tres" id="2_omf8o"]
 [ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="3_u74c7"]
 [ext_resource type="Script" uid="uid://0oviid6tptnx" path="res://Features/Objects/Components/unit_factory_component.gd" id="4_tklu7"]
-[ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://Assets/icon.svg" id="5_i44ql"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q5kjn"]
 atlas = ExtResource("3_u74c7")
@@ -20,8 +19,9 @@ bg_color = Color(1, 0, 0, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5unkm"]
 bg_color = Color(0, 1, 0, 1)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_8dd2n"]
-size = Vector2(98, 105)
+[sub_resource type="AtlasTexture" id="AtlasTexture_i44ql"]
+atlas = ExtResource("3_u74c7")
+region = Rect2(0, 128, 32, 32)
 
 [node name="TownHall" type="Area2D" unique_id=818635033]
 script = ExtResource("1_u74c7")
@@ -73,24 +73,17 @@ offset_right = 25.0
 offset_bottom = 107.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 max_value = 1.0
 
 [node name="RallyPoint" type="Sprite2D" parent="UnitFactory" unique_id=1154899531]
-scale = Vector2(0.2, 0.2)
-texture = ExtResource("5_i44ql")
+top_level = true
+texture = SubResource("AtlasTexture_i44ql")
 
-[node name="Overlap" type="Area2D" parent="." unique_id=864743096]
-collision_layer = 0
-collision_mask = 3
-
-[node name="Detector" type="CollisionShape2D" parent="Overlap" unique_id=1531067668]
-position = Vector2(0, -1.5)
-shape = SubResource("RectangleShape2D_8dd2n")
-
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]
 [connection signal="damaged" from="." to="." method="_on_damaged"]
 [connection signal="death" from="." to="." method="_on_death"]
 [connection signal="input_event" from="." to="." method="_on_input_event"]
 [connection signal="placed" from="." to="." method="_on_placed"]
 [connection signal="timeout" from="UnitFactory/SpawnTimer" to="UnitFactory" method="_on_spawn_timer_timeout"]
-[connection signal="body_entered" from="Overlap" to="." method="_on_overlap_body_entered"]
-[connection signal="body_exited" from="Overlap" to="." method="_on_overlap_body_exited"]

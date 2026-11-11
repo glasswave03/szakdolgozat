@@ -23,9 +23,6 @@ bg_color = Color(1, 0, 0, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_de3to"]
 bg_color = Color(0, 1, 0, 1)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_e52ni"]
-size = Vector2(64, 64)
-
 [node name="HouseBuilding" type="Area2D" unique_id=302943964]
 script = ExtResource("1_ox2kw")
 building_res = SubResource("Resource_tuf76")
@@ -58,16 +55,9 @@ step = 0.1
 value = 15.0
 show_percentage = false
 
-[node name="Overlap" type="Area2D" parent="." unique_id=737109043]
-collision_layer = 0
-collision_mask = 3
-
-[node name="Detector" type="CollisionShape2D" parent="Overlap" unique_id=233587123]
-shape = SubResource("RectangleShape2D_e52ni")
-
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]
 [connection signal="damaged" from="." to="." method="_on_damaged"]
 [connection signal="death" from="." to="." method="_on_death"]
 [connection signal="input_event" from="." to="." method="_on_input_event"]
 [connection signal="placed" from="." to="." method="_on_placed"]
-[connection signal="body_entered" from="Overlap" to="." method="_on_overlap_body_entered"]
-[connection signal="body_exited" from="Overlap" to="." method="_on_overlap_body_exited"]

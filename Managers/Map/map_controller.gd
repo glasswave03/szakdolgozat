@@ -119,6 +119,10 @@ func _on_object_targeted(object: BaseObject) -> void:
 	interactions._on_object_targeted(object)
 
 
+func _on_unit_spawned(unit: BaseUnit, rally_pos: Vector2) -> void:
+	movement._on_unit_spawned(unit, rally_pos)
+
+
 func debug_spawn_warrior(mouse_pos: Vector2) -> WarriorUnit:
 	var unit_scene := load("res://Features/Objects/warrior_unit.tscn")
 	var new_unit: BaseUnit = unit_scene.instantiate()

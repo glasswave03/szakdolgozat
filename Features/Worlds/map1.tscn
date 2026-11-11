@@ -4,6 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://Assets/icon.svg" id="2_18ja4"]
 [ext_resource type="Resource" uid="uid://2quclpouodlp" path="res://Features/Resources/big_map_settings.tres" id="2_wh76p"]
 [ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="3_k145m"]
+[ext_resource type="PackedScene" uid="uid://df0kug833d165" path="res://Features/Objects/peasant_unit.tscn" id="5_n1r7g"]
+[ext_resource type="PackedScene" uid="uid://ci1dagr0qp7b3" path="res://Features/Objects/town_hall_building.tscn" id="6_6y2sj"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7vjjh"]
 texture = ExtResource("2_18ja4")
@@ -50,3 +52,9 @@ limit_left = -2048
 limit_top = -2048
 limit_right = 2080
 limit_bottom = 2080
+
+[node name="Peasant" parent="." unique_id=1546903729 instance=ExtResource("5_n1r7g")]
+position = Vector2(-1531, -1597)
+
+[node name="TownHall" parent="." unique_id=818635033 instance=ExtResource("6_6y2sj")]
+position = Vector2(-1459, -1481)

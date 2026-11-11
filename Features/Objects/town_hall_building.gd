@@ -7,6 +7,9 @@ func _ready() -> void:
 	var group_name: StringName = object.get_group_name()
 	add_to_group(group_name)
 	
+	if has_unit_factory():
+		unit_factory.position = Vector2.ZERO
+	
 	health = object.max_health
 	$HealthBar.max_value = object.max_health
 	$HealthBar.value = health
