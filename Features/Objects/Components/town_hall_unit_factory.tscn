@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://dxqmk1mn0x17h"]
+
+[ext_resource type="Script" uid="uid://55rjkueg5fjy" path="res://Features/Objects/Components/town_hall_unit_factory.gd" id="1_5pa3j"]
+[ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="2_xlke5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4bqqb"]
+atlas = ExtResource("2_xlke5")
+region = Rect2(0, 128, 32, 32)
+
+[node name="TownHallUnitFactory" type="Node2D" unique_id=823901136]
+script = ExtResource("1_5pa3j")
+
+[node name="SpawnTimer" type="Timer" parent="." unique_id=1588544420]
+one_shot = true
+
+[node name="SpawnBar" type="ProgressBar" parent="." unique_id=2014730461]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = 80.0
+offset_right = 25.0
+offset_bottom = 107.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+max_value = 1.0
+
+[node name="RallyPoint" type="Sprite2D" parent="." unique_id=1816581337]
+texture = SubResource("AtlasTexture_4bqqb")
+
+[connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]

@@ -7,6 +7,7 @@
 
 [sub_resource type="Resource" id="Resource_upyqu"]
 script = ExtResource("2_3cgxv")
+gold_cost = 1
 move_speed = 10.0
 metadata/_custom_type_script = "uid://cbl8iqefwvy8x"
 

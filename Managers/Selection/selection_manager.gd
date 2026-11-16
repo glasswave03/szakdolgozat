@@ -92,8 +92,6 @@ func select_single(object: BaseObject) -> void:
 	clear_selection()
 	
 	add_to_selection(object)
-	
-	print("single object selected: ", selected_objects)
 
 
 func select_objects(objects: Array[BaseObject]) -> void:
@@ -130,7 +128,6 @@ func _on_object_clicked(object: BaseObject, event: InputEventMouseButton) -> voi
 		
 		else:
 			select_single(object)
-			print("selected clicked object")
 	
 	changed.emit(selected_objects)
 

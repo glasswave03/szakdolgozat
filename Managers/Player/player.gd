@@ -1,16 +1,8 @@
+## A player in the match currently being played
 class_name Player extends Node
 
-enum PlayerState {
-	IN_LOBBY,
-	SELECTING,
-	PLACING,
-}
-
+var display_name: String
 var gold: int
-var wood: int
 var population: int
+var buildings: int
 var team: PlayerManager.Teams
-var state: PlayerState
-#TODO: an instance of an online player that can control things independently
-# from other players, only exception being the lobby admin which can move and
-# kick it from lobbies

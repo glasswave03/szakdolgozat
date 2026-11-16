@@ -9,10 +9,15 @@ class_name MapScene extends Node2D
 @export var settings: Resource
 @export var tilemap: TileMapLayer
 @export var camera: Camera2D
+@export var spawn_points: Array[Vector2]
 
 func _ready() -> void:
+	for child in get_children():
+		if child is Marker2D:
+			spawn_points.append(child.global_position)
+	
 	for object: BaseObject in get_tree().get_nodes_in_group("Selectable"):
 		if object is BaseUnit:
-			object.setup(tilemap.local_to_map(tilemap.to_local(object.global_position)))
+			object.setup(tilemap.local_to_map(tilemap.to_local(object.global_position)), get_parent())
 		elif object is BaseBuilding:
 			object.placed.emit()

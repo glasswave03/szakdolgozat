@@ -54,6 +54,7 @@ func setup(_map: MapScene) -> void:
 	
 	astar_grid_setup()
 	
+	# making UI dynamically
 	canvas = CanvasLayer.new()
 	canvas.name = "UserInterface"
 	add_child(canvas)
@@ -126,9 +127,8 @@ func _on_unit_spawned(unit: BaseUnit, rally_pos: Vector2) -> void:
 func debug_spawn_warrior(mouse_pos: Vector2) -> WarriorUnit:
 	var unit_scene := load("res://Features/Objects/warrior_unit.tscn")
 	var new_unit: BaseUnit = unit_scene.instantiate()
-	new_unit.setup(tilemap.to_local(tilemap.local_to_map(mouse_pos)))
+	new_unit.setup(tilemap.to_local(tilemap.local_to_map(mouse_pos)), self)
 	new_unit.global_position = mouse_pos
-	#TODO: replace line below with object spawned signal
-	new_unit.clicked.connect(_on_object_clicked)
-	new_unit.targeted.connect(_on_object_targeted)
+	#TODO: object spawned signal
+	
 	return new_unit

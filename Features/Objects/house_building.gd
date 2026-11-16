@@ -1,4 +1,7 @@
 class_name HouseBuilding extends BaseBuilding
+#TODO: implement population (player.max_population += EXTRA_POPULATION)
+
+const EXTRA_POPULATION: int = 10
 
 
 func _ready() -> void:

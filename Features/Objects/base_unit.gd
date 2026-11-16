@@ -36,9 +36,9 @@ func _ready() -> void:
 		add_to_group("Selectable", true)
 
 
-func setup(cell_pos: Vector2i) -> void:
-	var map_controller = get_parent().get_parent()
+func setup(cell_pos: Vector2i, map_controller: MapController) -> void:
 	clicked.connect(map_controller._on_object_clicked)
+	targeted.connect(map_controller._on_object_targeted)
 	current_cell = cell_pos
 	is_set_up = true
 
@@ -80,8 +80,8 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			clicked.emit(self, event)
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-			get_tree().get_root().set_input_as_handled()
 			targeted.emit(self)
+			get_tree().get_root().set_input_as_handled()
 
 
 func set_path(path: PackedVector2Array) -> void:
@@ -106,7 +106,7 @@ func target_check() -> void:
 
 
 func take_damage(amount: float) -> void:
-	var dmg_reduction := armor / (armor + 100.0)
+	var dmg_reduction := armor / (armor + 15.0)
 	var actual_damage := amount * (1.0 - dmg_reduction)
 	health -= actual_damage
 	#TODO: damage numbers?
@@ -125,8 +125,11 @@ func _on_death() -> void:
 	print("Unit died")
 
 
-static func create_unit(unit_res: Resource, combat_res: Resource, object_res: Resource) -> BaseUnit:
+static func create_unit() -> BaseUnit:
 	var new_unit: BaseUnit = scene.instantiate()
+	var unit_res: Resource = load("res://Features/Resources/peasant_unit_resource.tres")
+	var combat_res: Resource = load("res://Features/Resources/peasant_combat_resource.tres")
+	var object_res: Resource = load("res://Features/Resources/peasant_object_resource.tres")
 	new_unit.unit_resource = unit_res
 	new_unit.combat_resource = combat_res
 	new_unit.object = object_res

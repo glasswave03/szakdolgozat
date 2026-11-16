@@ -13,10 +13,13 @@ func _ready() -> void:
 		add_to_group("Selectable", true)
 
 
-static func create_unit(unit_res: Resource, combat_res: Resource, object_res: Resource) -> WarriorUnit:
+static func create_unit() -> WarriorUnit:
 	scene = preload("res://Features/Objects/warrior_unit.tscn")
 	
 	var new_unit: WarriorUnit = scene.instantiate()
+	var unit_res: Resource = load("res://Features/Resources/warrior_unit_resource.tres")
+	var combat_res: Resource = load("res://Features/Resources/warrior_combat_resource.tres")
+	var object_res: Resource = load("res://Features/Resources/warrior_object_resource.tres")
 	new_unit.unit_resource = unit_res
 	new_unit.combat_resource = combat_res
 	new_unit.object = object_res

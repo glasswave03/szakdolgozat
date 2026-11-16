@@ -9,6 +9,9 @@ var overlap_counter: int = 0
 var overlap_color: Color = Color(1,0,0,0.3)
 var placement_color: Color = Color(1,1,1,0.3)
 
+@onready var team: PlayerManager.Teams = object.team
+
+
 func _ready() -> void:
 	var group_name: StringName = object.get_group_name()
 	add_to_group(group_name)
@@ -26,6 +29,10 @@ func _on_damaged() -> void:
 	$HealthBar.value = health
 
 
+func take_damage(amount: float) -> void:
+	health -= amount
+
+
 func destroy() -> void:
 	#TODO: disable interaction and await animations
 	death.emit()
@@ -34,7 +41,7 @@ func destroy() -> void:
 func _on_death() -> void:
 	deselect()
 	call_deferred("queue_free")
-	print("building destroyed")
+	print(object.name, " destroyed")
 
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
@@ -68,6 +75,7 @@ func _process(_delta: float) -> void:
 func _on_placed() -> void:
 	var map_controller = get_parent().get_parent()
 	clicked.connect(map_controller._on_object_clicked)
+	targeted.connect(map_controller._on_object_targeted)
 	
 	monitoring = false
 	modulate = Color.WHITE

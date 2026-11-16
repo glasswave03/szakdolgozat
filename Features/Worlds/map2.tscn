@@ -37,3 +37,9 @@ tile_map_data = PackedByteArray("AADw//D/AAABAAAAAADw//H/AAABAAAAAADw//L/AAABAAA
 tile_set = SubResource("TileSet_8c242")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1416230654]
+
+[node name="SpawnPoint1" type="Marker2D" parent="." unique_id=1306163282]
+position = Vector2(-281, -372)
+
+[node name="SpawnPoint2" type="Marker2D" parent="." unique_id=1113444398]
+position = Vector2(302, 423)

@@ -15,4 +15,3 @@ func _on_selection_changed(selection: Array[BaseObject]) -> void:
 	for unit in selection:
 		if unit is BaseUnit:
 			units.append(unit)
-	print("this is from InteractionService: ", units)

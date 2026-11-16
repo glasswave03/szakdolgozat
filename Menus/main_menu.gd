@@ -4,10 +4,12 @@ const SettingsMenu: String = "res://Menus/settings_menu.tscn"
 
 func _on_play_pressed() -> void:
 	var player: Player = Player.new()
+	player.display_name = "noobmaster69"
 	var player2: Player = Player.new()
+	player2.display_name = "fagormagorreconstructor"
 	if Global.game_manager.start_match([player, player2]):
 		queue_free()
-		print("Starting match! ", Global.game_manager.match_controller)
+		print("Starting match!")
 	else:
 		printerr("Cannot start game! Maybe too few players?")
 

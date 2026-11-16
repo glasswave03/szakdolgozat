@@ -27,17 +27,30 @@ func _process(delta: float) -> void:
 
 
 func start_match(players: Array[Player]) -> bool:
-	if players.size() <= 1 or players.size() >= PlayerManager.Teams.TEAM_MAX:
-		return false
 	
 	match_controller = MatchController.new()
 	add_child(match_controller)
+	var map_scene := match_controller.map_controller.map
+	
+	if players.size() <= 1 or players.size() > map_scene.settings.max_players:
+		return false
 	
 	for i in range(players.size()):
 		players[i].team = i+1 as PlayerManager.Teams
-		match_controller.player_manager.players.append(players[i])
+		players[i].gold = map_scene.settings.starting_gold
+		
+		for p in range(map_scene.settings.starting_peasants):
+			var peasant := PeasantUnit.create_unit()
+			map_scene.add_child(peasant)
+			peasant.global_position = map_scene.spawn_points[i]
+			var local_pos := map_scene.tilemap.to_local(peasant.global_position)
+			var tile_pos := map_scene.tilemap.local_to_map(local_pos)
+			peasant.setup(tile_pos, match_controller.map_controller)
+			peasant.team = players[i].team
+		
+		match_controller.player_manager.add_child(players[i])
 	
-	current_scene = match_controller.map_controller.map
+	current_scene = map_scene
 	return true
 
 
