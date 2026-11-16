@@ -12,9 +12,8 @@ var current_cell: Vector2
 var next_cell: Vector2
 var current_path: PackedVector2Array
 var current_path_index: int
+var team: PlayerManager.Teams
 
-@onready var team: PlayerManager.Teams = object.team
-@onready var state: UnitResource.States = unit_resource.state
 @onready var move_speed: float = unit_resource.move_speed
 @onready var attack_damage: float = combat_resource.attack_damage
 @onready var attack_rate: float = combat_resource.attack_rate
@@ -53,17 +52,10 @@ func _process(delta: float) -> void:
 	if attack_cooldown > 0:
 		attack_cooldown -= delta
 	
-	if state == unit_resource.States.STATE_DEAD:
-		#TODO: play death animation
-		return
-	
 	if target != null:
 		target_check()
 	
-	if current_path.is_empty() and \
-	not state in [unit_resource.States.STATE_DEAD, unit_resource.States.STATE_ATTACK] \
-	or current_path_index >= current_path.size():
-		state = unit_resource.States.STATE_IDLE
+	if current_path.is_empty() or current_path_index >= current_path.size():
 		return
 	
 	next_cell = current_path[current_path_index]
@@ -87,7 +79,6 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 func set_path(path: PackedVector2Array) -> void:
 	current_path = path
 	current_path_index = 0
-	state = unit_resource.States.STATE_MOVE
 	#TODO: animations
 
 
@@ -102,7 +93,6 @@ func target_check() -> void:
 	elif attack_cooldown <= 0:
 		target.take_damage(attack_damage)
 		attack_cooldown = attack_rate
-		state = unit_resource.States.STATE_ATTACK
 
 
 func take_damage(amount: float) -> void:
@@ -119,7 +109,6 @@ func _on_damaged() -> void:
 func _on_death() -> void:
 	#TODO: instead of queue_free, state should be set to dead,
 	# play death animation, after a timer it disappears and then queue_free
-	state = unit_resource.States.STATE_DEAD
 	deselect()
 	call_deferred("queue_free")
 	print("Unit died")

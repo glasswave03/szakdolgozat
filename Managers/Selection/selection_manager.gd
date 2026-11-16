@@ -21,29 +21,6 @@ func check_unit() -> void:
 			object.deselect()
 
 
-func get_units() -> Array[BaseUnit]:
-	var new_selected_objects: Array[BaseUnit] = []
-	clear_freed_objects()
-	
-	for unit: BaseUnit in selected_objects:
-		if unit.group_type == "Unit":
-			new_selected_objects.append(unit)
-		else:
-			unit.deselect()
-	
-	return new_selected_objects
-
-
-func get_buildings() -> Array[BaseBuilding]:
-	var buildings: Array[BaseBuilding] = []
-	
-	for unit: BaseBuilding in selected_objects:
-		if unit.group_type == "Building":
-			buildings.append(unit)
-	
-	return buildings
-
-
 func clear_freed_objects() -> void:
 	var new_selected_objects: Array[BaseObject] = []
 	for unit: BaseObject in selected_objects:

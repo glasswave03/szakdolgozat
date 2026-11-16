@@ -13,7 +13,8 @@ func _init(_formation_service: FormationService,
 	grid = _grid
 	tilemap = _tilemap
 
-
+## Moves selected units in formation, sets rally point for buildings at 
+## [param global_pos] snapped to the tilemap
 func move_selected(objects: Array[BaseObject], global_pos: Vector2) -> void:
 	var units: Array[BaseUnit] = []
 	var buildings: Array[BaseBuilding] = []
@@ -24,12 +25,14 @@ func move_selected(objects: Array[BaseObject], global_pos: Vector2) -> void:
 		
 		if object is BaseUnit:
 			units.append(object)
+			object.target = null
 		elif object is BaseBuilding:
 			buildings.append(object)
 	
 	if not buildings.is_empty():
 		for building: BaseBuilding in buildings:
 			if building.has_unit_factory():
+				# converts position back to global for correct placement
 				var pos := tilemap.to_global(tilemap.map_to_local(target_cell))
 				building.unit_factory.set_rally_point(pos)
 	
@@ -48,6 +51,18 @@ func move_selected(objects: Array[BaseObject], global_pos: Vector2) -> void:
 		
 		if not path.is_empty():
 			units[i].set_path(path)
+
+
+func move_unit_to_target(object: BaseUnit, target: BaseObject) -> void:
+	if not is_instance_valid(object) or not is_instance_valid(target): return
+	
+	var path := grid.get_point_path(
+		tilemap.local_to_map(object.global_position),
+		tilemap.local_to_map(target.global_position)
+	).slice(1)
+	
+	if not path.is_empty():
+		object.set_path(path)
 
 
 func _on_unit_spawned(unit: BaseUnit, rally_pos: Vector2) -> void:

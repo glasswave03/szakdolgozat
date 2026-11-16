@@ -37,3 +37,6 @@ func camera_zoom(event: InputEvent) -> void:
 		camera.zoom += SCROLL_SPEED
 	if event.is_action_pressed("scroll_down") and camera.zoom >= MIN_ZOOM:
 		camera.zoom -= SCROLL_SPEED
+	
+	clampf(camera.zoom.x, MIN_ZOOM.x, MAX_ZOOM.x)
+	clampf(camera.zoom.y, MIN_ZOOM.y, MAX_ZOOM.y)

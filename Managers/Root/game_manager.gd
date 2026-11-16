@@ -33,6 +33,7 @@ func start_match(players: Array[Player]) -> bool:
 	var map_scene := match_controller.map_controller.map
 	
 	if players.size() <= 1 or players.size() > map_scene.settings.max_players:
+		match_controller.queue_free()
 		return false
 	
 	for i in range(players.size()):

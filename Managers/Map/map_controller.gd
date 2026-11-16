@@ -34,7 +34,6 @@ func setup(_map: MapScene) -> void:
 	camera_controller = CameraController.new(camera)
 	add_child(camera_controller)
 	
-	
 	formations = FormationService.new()
 	movement = MovementService.new(formations, astar_grid, tilemap)
 	dragbox = DragboxService.new(camera)
@@ -64,6 +63,7 @@ func setup(_map: MapScene) -> void:
 	
 	selection.changed.connect(interactions._on_selection_changed)
 	selection.changed.connect(ui._on_selection_changed)
+	
 	ui_actions = UIActionService.new()
 	
 	ui.spawn_requested.connect(ui_actions.spawn_units_at_selected_buildings)
@@ -99,8 +99,16 @@ func _unhandled_input(event: InputEvent) -> void:
 	
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
-			#TODO: check if the click has targeted anything
-			movement.move_selected(selection.selected_objects, mouse_pos)
+			for object: BaseObject in selection.selected_objects:
+				#TODO: clicking an empty tile should clear the target
+				if object is BaseUnit:
+					if object.target != null:
+						movement.move_unit_to_target(object, object.target)
+					else:
+						movement.move_selected(selection.selected_objects, mouse_pos)
+				
+				if object is BaseBuilding:
+					movement.move_selected(selection.selected_objects, mouse_pos)
 	
 	if event is InputEventKey:
 		if event.pressed:

@@ -5,7 +5,6 @@ class_name ObjectResource extends Resource
 @export var selectable: bool = true
 @export var selection_size: float
 @export var group: Groups
-@export var team: PlayerManager.Teams
 var select_mode: bool = false
 
 enum Groups {
@@ -22,7 +21,6 @@ static func create_resource(
 		_selectable: bool,
 		_selection_size: float, 
 		_group: Groups = Groups.OBJECT, 
-		_team: PlayerManager.Teams = PlayerManager.Teams.TEAM_NEUTRAL, 
 	) -> Resource:
 	
 	var res: Resource = ObjectResource.new()
@@ -31,7 +29,6 @@ static func create_resource(
 	res.selectable = _selectable
 	res.selection_size = _selection_size
 	res.group = _group
-	res.team = _team
 	
 	return res
 

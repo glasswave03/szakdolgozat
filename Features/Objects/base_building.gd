@@ -8,8 +8,7 @@ var is_overlapping: bool = false
 var overlap_counter: int = 0
 var overlap_color: Color = Color(1,0,0,0.3)
 var placement_color: Color = Color(1,1,1,0.3)
-
-@onready var team: PlayerManager.Teams = object.team
+var team: PlayerManager.Teams
 
 
 func _ready() -> void:

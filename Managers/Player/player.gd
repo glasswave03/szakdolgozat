@@ -2,7 +2,9 @@
 class_name Player extends Node
 
 var display_name: String
+var team: PlayerManager.Teams
+var buildings: int
+var units: int
 var gold: int
 var population: int
-var buildings: int
-var team: PlayerManager.Teams
+var max_population: int

@@ -15,6 +15,10 @@ func _save() -> void:
 
 func _load() -> void:
 	var file := FileAccess.open(save_location, FileAccess.READ)
+	if file == null:
+		printerr("File could not be opened: ", FileAccess.get_open_error())
+		return
+	
 	var data: Variant = file.get_var()
 	file.close()
 	
