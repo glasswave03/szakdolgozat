@@ -5,4 +5,5 @@
 [resource]
 script = ExtResource("1_auwue")
 gold_cost = 300
+size = Vector2(96, 96)
 metadata/_custom_type_script = "uid://ee72xshp8oxc"

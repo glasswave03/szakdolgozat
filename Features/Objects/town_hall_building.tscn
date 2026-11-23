@@ -11,7 +11,7 @@ atlas = ExtResource("3_u74c7")
 region = Rect2(0, 160, 96, 96)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8c242"]
-size = Vector2(98, 98)
+size = Vector2(78, 86)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5x7m6"]
 bg_color = Color(1, 0, 0, 1)

@@ -8,6 +8,7 @@
 [sub_resource type="Resource" id="Resource_tuf76"]
 script = ExtResource("2_e52ni")
 gold_cost = 100
+size = Vector2(64, 64)
 metadata/_custom_type_script = "uid://ee72xshp8oxc"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8c242"]
@@ -15,7 +16,7 @@ atlas = ExtResource("2_winti")
 region = Rect2(64, 64, 64, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8c242"]
-size = Vector2(64, 64)
+size = Vector2(46, 58)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_winti"]
 bg_color = Color(1, 0, 0, 1)

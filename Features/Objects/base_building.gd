@@ -38,6 +38,7 @@ func destroy() -> void:
 
 
 func _on_death() -> void:
+	#TODO: set cells under building to be walkable again
 	deselect()
 	call_deferred("queue_free")
 	print(object.name, " destroyed")

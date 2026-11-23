@@ -6,6 +6,7 @@ const BarracksScene := preload("res://Features/Objects/barracks_building.tscn")
 const HouseScene := preload("res://Features/Objects/house_building.tscn")
 const TownHallScene := preload("res://Features/Objects/town_hall_building.tscn")
 
+const WALL_COORDS := Vector2i(1,0)
 
 var map: MapScene
 var placing_building: bool = false
@@ -19,15 +20,17 @@ func setup(_map: MapScene) -> void:
 
 func _process(_delta: float) -> void:
 	if not placing_building: return
-	#TODO: set player state to placing
+	
 	mouse_pos = map.camera.get_global_mouse_position()
 	
 	var local_pos: Vector2 = map.tilemap.to_local(mouse_pos)
 	var map_pos: Vector2i = map.tilemap.local_to_map(local_pos)
 	var snapped_pos: Vector2 = map.tilemap.map_to_local(map_pos)
-	#TODO: this offset should be in the building_scene data or somewhere
-	# to be able to automatically get it and use it here
-	building_preview.position = snapped_pos - Vector2(-16, -16)
+	
+	var size: Vector2 = building_preview.building_res.size
+	var half_tile: Vector2 = map.tilemap.tile_set.tile_size / 2
+	var offset := Vector2(size.x/2, size.y/2) - half_tile
+	building_preview.position = snapped_pos + offset
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -35,7 +38,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if not placing_building: return
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			if not building_preview.is_overlapping:
-				place_building()
+				place_building(mouse_pos)
 	
 	if event is InputEventKey:
 		if event.pressed and event.is_action_pressed("ui_cancel"):
@@ -85,9 +88,28 @@ func _unhandled_input(event: InputEvent) -> void:
 				placing_building = true
 
 
-func place_building() -> void:
-	#TODO: when placing a building, it should set points solid under itself
-	#TODO: connect unit spawned
+func place_building(global_pos: Vector2) -> void:
+	var tilemap := map.tilemap
+	var local_pos: Vector2 = map.tilemap.to_local(global_pos)
+	var coords: Vector2i = map.tilemap.local_to_map(local_pos)
+	var tilesize: Vector2i = building_preview.building_res.calculate_tilesize()
+	
+	for x in tilemap.get_used_rect().size.x:
+		for y in tilemap.get_used_rect().size.y:
+			if x >= 0 and x < tilesize.x and y >= 0 and y < tilesize.y:
+				var cell_coords := Vector2i(coords.x + x, coords.y + y)
+				
+				tilemap.set_cell(cell_coords, 1, WALL_COORDS, 0)
+			
+			var tile_pos := Vector2i(
+				x + tilemap.get_used_rect().position.x, 
+				y + tilemap.get_used_rect().position.y
+			)
+			var tile_data := tilemap.get_cell_tile_data(tile_pos)
+			
+			if tile_data == null or not tile_data.get_custom_data("walkable"):
+				get_parent().astar_grid.set_point_solid(tile_pos, true)
+	
 	building_preview.placed.emit()
 	building_preview.modulate = Color.WHITE
 	
