@@ -12,6 +12,7 @@ var contents_to_save: Dictionary = {
 
 func _ready() -> void:
 	_load_settings_into(settings_data)
+	Settings._set_settings()
 
 
 func _save() -> void:

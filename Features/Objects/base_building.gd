@@ -9,6 +9,7 @@ var overlap_counter: int = 0
 var overlap_color: Color = Color(1,0,0,0.3)
 var placement_color: Color = Color(1,1,1,0.3)
 var team: PlayerManager.Teams
+var occupied_cells: Array[Vector2i]
 
 
 func _ready() -> void:
@@ -39,6 +40,7 @@ func destroy() -> void:
 
 func _on_death() -> void:
 	#TODO: set cells under building to be walkable again
+	
 	deselect()
 	call_deferred("queue_free")
 	print(object.name, " destroyed")
@@ -72,8 +74,9 @@ func _process(_delta: float) -> void:
 		modulate = placement_color
 
 
-func _on_placed() -> void:
+func _on_placed(cells: Array[Vector2i]) -> void:
 	var map_controller = get_parent().get_parent()
+	occupied_cells = cells
 	clicked.connect(map_controller._on_object_clicked)
 	targeted.connect(map_controller._on_object_targeted)
 	
