@@ -2,6 +2,7 @@ extends Control
 
 signal spawn_requested(buildings: Array[BaseBuilding])
 signal destroy_requested(buildings: Array[BaseBuilding])
+signal unit_button_pressed(unit: BaseUnit)
 
 @onready var building_ui: Control = $Layout/BuildingUI
 @onready var unit_ui: Control = $Layout/UnitUI
@@ -11,6 +12,7 @@ var has_building := false
 var has_unit := false
 var units: Array[BaseUnit] = []
 var buildings: Array[BaseBuilding] = []
+var unit_buttons: Array[Button] = []
 
 
 func _ready() -> void:
@@ -45,7 +47,10 @@ func _on_selection_changed(objects: Array[BaseObject]) -> void:
 			units.append(object)
 	
 	for unit: BaseUnit in units:
-		unit_grid.add_child(make_unit_button(unit))
+		var new_button := make_unit_button(unit)
+		unit_grid.add_child(new_button)
+		unit_buttons.append(new_button)
+		
 	
 	unit_ui.visible = has_unit
 	building_ui.visible = has_building
@@ -54,5 +59,12 @@ func _on_selection_changed(objects: Array[BaseObject]) -> void:
 func make_unit_button(unit: BaseUnit) -> Button:
 	var button: Button = Button.new()
 	button.text = unit.object.name
+	button.pressed.connect(_on_unit_button_pressed.bind(unit))
+	print("connections to unit button: ", button.pressed.get_connections())
 	
 	return button
+
+
+func _on_unit_button_pressed(unit: BaseUnit) -> void:
+	var map_controller := get_parent().get_parent()
+	map_controller.selection._on_unit_button_pressed(unit)

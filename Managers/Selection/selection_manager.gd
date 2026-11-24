@@ -111,3 +111,5 @@ func _on_object_clicked(object: BaseObject, event: InputEventMouseButton) -> voi
 
 func _on_unit_button_pressed(unit: BaseUnit) -> void:
 	select_single(unit)
+	
+	changed.emit(selected_objects)
