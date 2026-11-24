@@ -100,18 +100,15 @@ func place_building(global_pos: Vector2) -> void:
 			if x >= 0 and x < tilesize.x and y >= 0 and y < tilesize.y:
 				var cell_coords := Vector2i(coords.x + x, coords.y + y)
 				
+				cells.append(cell_coords)
+				
 				#TODO: set to rubble coords on atlas
 				tilemap.set_cell(cell_coords, 1, WALL_COORDS, 0)
-			
-			var tile_pos := Vector2i(
-				x + tilemap.get_used_rect().position.x, 
-				y + tilemap.get_used_rect().position.y
-			)
-			cells.append(tile_pos)
-			
-			var tile_data := tilemap.get_cell_tile_data(tile_pos)
-			if tile_data == null or not tile_data.get_custom_data("walkable"):
-				get_parent().astar_grid.set_point_solid(tile_pos, true)
+				
+				var tile_data := tilemap.get_cell_tile_data(cell_coords)
+				if tile_data == null or not tile_data.get_custom_data("walkable"):
+					get_parent().astar_grid.set_point_solid(cell_coords, true)
+					print("made tile solid at ", cell_coords)
 	
 	building_preview.placed.emit(cells)
 	building_preview.modulate = Color.WHITE
@@ -134,7 +131,25 @@ func preview_building(scene: PackedScene, parent: Node, layer: TileMapLayer, _mo
 
 
 func _on_building_destroyed(building: BaseBuilding) -> void:
-	for cell in building.occupied_cells:
-		var tile_data := map.tilemap.get_cell_tile_data(cell)
-		if tile_data == null or not tile_data.get_custom_data("walkable"):
-			get_parent().astar_grid.set_point_solid(cell, false)
+	var counter := 0
+	var tilemap := map.tilemap
+	print("building cells: ", building.occupied_cells)
+	print(tilemap.get_used_rect())
+	for x in tilemap.get_used_rect().size.x:
+		for y in tilemap.get_used_rect().size.y:
+			if counter >= building.occupied_cells.size():
+				return
+			
+			var cell := building.occupied_cells[counter]
+			var tile_pos := Vector2i(
+				x + tilemap.get_used_rect().position.x, 
+				y + tilemap.get_used_rect().position.y
+			)
+			
+			if tile_pos == cell:
+				var tile_data := tilemap.get_cell_tile_data(cell)
+				if tile_data == null or not tile_data.get_custom_data("walkable"):
+					get_parent().astar_grid.set_point_solid(cell, false)
+					print("it's not solid anymore")
+				counter += 1
+				

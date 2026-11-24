@@ -20,4 +20,5 @@ func _ready() -> void:
 		if object is BaseUnit:
 			object.setup(tilemap.local_to_map(tilemap.to_local(object.global_position)), get_parent())
 		elif object is BaseBuilding:
+			#TODO: get occupied cells
 			object.placed.emit()
