@@ -3,8 +3,8 @@ class_name GameManager extends Node
 const FPS_TIMER_LIMIT: float = 1.0
 
 
-#TODO: game_manager should not care about the map or matchcontroller, it should only care about
-# switching between menu scenes and handling game start/end
+#TODO: game_manager should not care about the map or matchcontroller, it should only care 
+# about switching between menu scenes and handling game start/end
 @export var scene: Node
 
 var fps_timer: float = 0.0
@@ -16,7 +16,6 @@ var match_controller: MatchController
 
 func _ready() -> void:
 	Global.game_manager = self
-	
 
 
 func _process(delta: float) -> void:

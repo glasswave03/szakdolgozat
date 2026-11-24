@@ -7,7 +7,13 @@ func _on_object_targeted(object: BaseObject) -> void:
 	for unit: BaseUnit in units:
 		if is_instance_valid(unit) and is_instance_valid(object):
 			unit.target = object
-			print(unit, " targeted ", unit.target.name)
+			
+			if unit == object: 
+				print("same unit")
+			elif unit.team == unit.target.team:
+				print("same team")
+			else:
+				print(unit, " targeted ", unit.target.name)
 
 
 func _on_selection_changed(selection: Array[BaseObject]) -> void:

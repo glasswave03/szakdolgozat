@@ -48,6 +48,15 @@ text = "Mute sound:"
 
 [node name="MuteCheck" type="CheckButton" parent="MainBody/SettingsGrid" unique_id=623845931]
 layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Fullscreen" type="Label" parent="MainBody/SettingsGrid" unique_id=1629687810]
+layout_mode = 2
+text = "Fullscreen:"
+
+[node name="FullscreenCheck" type="CheckBox" parent="MainBody/SettingsGrid" unique_id=1126107798]
+layout_mode = 2
+size_flags_horizontal = 4
 
 [node name="Resolution" type="Label" parent="MainBody/SettingsGrid" unique_id=1432999598]
 layout_mode = 2
@@ -55,13 +64,16 @@ text = "Resolution: "
 
 [node name="ResolutionOptions" type="OptionButton" parent="MainBody/SettingsGrid" unique_id=584642059]
 layout_mode = 2
-item_count = 3
+selected = 0
+item_count = 4
 popup/item_0/text = "1280x720"
 popup/item_0/id = 0
-popup/item_1/text = "1920x1080"
-popup/item_1/id = 1
-popup/item_2/text = "1920x1200"
-popup/item_2/id = 2
+popup/item_1/text = "1600x900"
+popup/item_1/id = 3
+popup/item_2/text = "1920x1080"
+popup/item_2/id = 1
+popup/item_3/text = "1920x1200"
+popup/item_3/id = 2
 
 [node name="Music" type="Label" parent="MainBody/SettingsGrid" unique_id=1719534167]
 layout_mode = 2
@@ -69,6 +81,9 @@ text = "Music volume: "
 
 [node name="MusicSlider" type="HSlider" parent="MainBody/SettingsGrid" unique_id=428098097]
 layout_mode = 2
+max_value = 2.0
+step = 0.01
+value = 1.0
 
 [node name="SFX" type="Label" parent="MainBody/SettingsGrid" unique_id=367298848]
 layout_mode = 2
@@ -76,6 +91,9 @@ text = "SFX volume: "
 
 [node name="SFXSlider" type="HSlider" parent="MainBody/SettingsGrid" unique_id=920195458]
 layout_mode = 2
+max_value = 2.0
+step = 0.01
+value = 1.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MainBody" unique_id=1097392884]
 layout_mode = 2
@@ -90,8 +108,58 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Back"
 
+[node name="Popup" type="Popup" parent="." unique_id=1544383400]
+oversampling_override = 1.0
+title = "Settings unsaved"
+initial_position = 2
+size = Vector2i(345, 100)
+
+[node name="MarginContainer" type="MarginContainer" parent="Popup" unique_id=1470443281]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -162.5
+offset_top = -29.0
+offset_right = 162.5
+offset_bottom = 29.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Popup/MarginContainer" unique_id=999429771]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Popup/MarginContainer/VBoxContainer" unique_id=2096137248]
+layout_mode = 2
+size_flags_vertical = 6
+text = "Quit settings without saving?"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Popup/MarginContainer/VBoxContainer" unique_id=157781146]
+layout_mode = 2
+
+[node name="SaveButton" type="Button" parent="Popup/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1861655415]
+layout_mode = 2
+text = "Save and quit"
+
+[node name="DiscardButton" type="Button" parent="Popup/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1625896077]
+layout_mode = 2
+text = "Discard"
+
+[node name="DontButton" type="Button" parent="Popup/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1154064039]
+layout_mode = 2
+text = "Cancel"
+
 [connection signal="toggled" from="MainBody/SettingsGrid/MuteCheck" to="." method="_on_mute_toggled"]
+[connection signal="toggled" from="MainBody/SettingsGrid/FullscreenCheck" to="." method="_on_fullscreen_check_toggled"]
+[connection signal="item_selected" from="MainBody/SettingsGrid/ResolutionOptions" to="." method="_on_resolution_options_item_selected"]
 [connection signal="value_changed" from="MainBody/SettingsGrid/MusicSlider" to="." method="_on_music_slider_value_changed"]
 [connection signal="value_changed" from="MainBody/SettingsGrid/SFXSlider" to="." method="_on_sfx_slider_value_changed"]
 [connection signal="pressed" from="MainBody/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="MainBody/HBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="Popup/MarginContainer/VBoxContainer/HBoxContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="Popup/MarginContainer/VBoxContainer/HBoxContainer/DiscardButton" to="." method="_on_discard_button_pressed"]
+[connection signal="pressed" from="Popup/MarginContainer/VBoxContainer/HBoxContainer/DontButton" to="." method="_on_dont_button_pressed"]

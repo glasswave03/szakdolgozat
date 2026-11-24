@@ -6,7 +6,6 @@
 script = ExtResource("1_c22o8")
 name = "Town Hall"
 max_health = 50.0
-selection_size = 128.0
+selection_size = 96.0
 group = 2
-team = 2
 metadata/_custom_type_script = "uid://cewmlxh0qog2d"

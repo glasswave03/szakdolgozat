@@ -4,7 +4,6 @@ class_name FormationService extends RefCounted
 func create_formation(unit_count: int, origin: Vector2i) -> Array[Vector2i]:
 	#TODO: check terrain when creating formation
 	var result: Array[Vector2i] = []
-	# unit_count must not count buildings
 	var width: int = ceili(sqrt(unit_count))
 	
 	for x in range(width):

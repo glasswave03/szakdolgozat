@@ -29,16 +29,6 @@ func clear_freed_objects() -> void:
 	selected_objects = new_selected_objects
 
 
-func has_building_in_selection() -> bool:
-	clear_freed_objects()
-	
-	for unit: BaseBuilding in selected_objects:
-		if unit.group_type == "Building":
-			return true
-	
-	return false
-
-
 func clear_selection() -> void:
 	for object: BaseObject in selected_objects:
 		if is_instance_valid(object):

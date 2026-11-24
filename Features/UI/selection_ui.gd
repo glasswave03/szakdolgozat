@@ -2,11 +2,11 @@ extends Control
 
 signal spawn_requested(buildings: Array[BaseBuilding])
 signal destroy_requested(buildings: Array[BaseBuilding])
-signal unit_button_pressed(unit: BaseUnit)
 
 @onready var building_ui: Control = $Layout/BuildingUI
 @onready var unit_ui: Control = $Layout/UnitUI
 @onready var unit_grid: GridContainer = $Layout/UnitUI/Grid
+@onready var map_controller := get_parent().get_parent()
 
 var has_building := false
 var has_unit := false
@@ -55,16 +55,11 @@ func _on_selection_changed(objects: Array[BaseObject]) -> void:
 	unit_ui.visible = has_unit
 	building_ui.visible = has_building
 
-#TODO: on unit_button clicked: focuses on that single unit
+
 func make_unit_button(unit: BaseUnit) -> Button:
 	var button: Button = Button.new()
 	button.text = unit.object.name
-	button.pressed.connect(_on_unit_button_pressed.bind(unit))
-	print("connections to unit button: ", button.pressed.get_connections())
+	var button_press: Callable = map_controller.selection._on_unit_button_pressed
+	button.pressed.connect(button_press.bind(unit))
 	
 	return button
-
-
-func _on_unit_button_pressed(unit: BaseUnit) -> void:
-	var map_controller := get_parent().get_parent()
-	map_controller.selection._on_unit_button_pressed(unit)
