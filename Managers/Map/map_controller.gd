@@ -61,8 +61,9 @@ func setup(_map: MapScene) -> void:
 	ui.name = "SelectionUI"
 	canvas.add_child(ui)
 	
+	var ui_selection_changed: Callable = ui._on_selection_changed
+	selection.changed.connect(ui_selection_changed)
 	selection.changed.connect(interactions._on_selection_changed)
-	selection.changed.connect(ui._on_selection_changed)
 	
 	ui_actions = UIActionService.new()
 	
@@ -101,7 +102,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			for object: BaseObject in selection.selected_objects:
 				#TODO: clicking an empty tile should clear the target
-				if not is_instance_valid(object): continue
+				if not is_instance_valid(object): 
+					continue #TODO: maybe this should move the unit?
 				
 				if object is BaseUnit:
 					if object.target != null:

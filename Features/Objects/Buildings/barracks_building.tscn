@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://cmbxi6wkfm7sn"]
+
+[ext_resource type="Script" uid="uid://fdiwilntht0h" path="res://Features/Objects/Buildings/barracks_building.gd" id="1_rdxay"]
+[ext_resource type="Script" uid="uid://ee72xshp8oxc" path="res://Features/Resources/building.gd" id="2_ncr8o"]
+[ext_resource type="Script" uid="uid://cewmlxh0qog2d" path="res://Features/Resources/object.gd" id="2_u1e5c"]
+[ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="3_ncr8o"]
+[ext_resource type="PackedScene" uid="uid://bytrkgy72kydm" path="res://Features/Objects/Components/barracks_unit_factory.tscn" id="5_u1e5c"]
+
+[sub_resource type="Resource" id="Resource_rsn0r"]
+script = ExtResource("2_ncr8o")
+gold_cost = 200
+size = Vector2(64, 64)
+metadata/_custom_type_script = "uid://ee72xshp8oxc"
+
+[sub_resource type="Resource" id="Resource_pcj3k"]
+script = ExtResource("2_u1e5c")
+name = "Barracks"
+max_health = 30.0
+selection_size = 64.0
+group = 2
+metadata/_custom_type_script = "uid://cewmlxh0qog2d"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q5kjn"]
+atlas = ExtResource("3_ncr8o")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8c242"]
+size = Vector2(56, 58)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4dk4u"]
+bg_color = Color(1, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_63s0x"]
+bg_color = Color(0, 1, 0, 1)
+
+[node name="Barracks" type="Area2D" unique_id=1966122901]
+script = ExtResource("1_rdxay")
+building_res = SubResource("Resource_rsn0r")
+object = SubResource("Resource_pcj3k")
+metadata/_custom_type_script = "uid://ra6knyinp1ee"
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=1404205777]
+texture = SubResource("AtlasTexture_q5kjn")
+
+[node name="Collision" type="CollisionShape2D" parent="." unique_id=217764417]
+shape = SubResource("RectangleShape2D_8c242")
+
+[node name="HealthBar" type="ProgressBar" parent="." unique_id=1188264443]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -65.0
+offset_top = 70.0
+offset_right = 65.0
+offset_bottom = 74.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_4dk4u")
+theme_override_styles/fill = SubResource("StyleBoxFlat_63s0x")
+max_value = 15.0
+step = 0.1
+value = 15.0
+show_percentage = false
+
+[node name="UnitFactory" parent="." unique_id=696653899 instance=ExtResource("5_u1e5c")]
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]
+[connection signal="damaged" from="." to="." method="_on_damaged"]
+[connection signal="death" from="." to="." method="_on_death"]
+[connection signal="input_event" from="." to="." method="_on_input_event"]
+[connection signal="placed" from="." to="." method="_on_placed"]

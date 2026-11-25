@@ -1,10 +1,9 @@
 ## Handles the building placement on the map
 class_name BuildingPlacement extends Node
 
-const BaseBuildingScene := preload("res://Features/Objects/base_building.tscn")
-const BarracksScene := preload("res://Features/Objects/barracks_building.tscn")
-const HouseScene := preload("res://Features/Objects/house_building.tscn")
-const TownHallScene := preload("res://Features/Objects/town_hall_building.tscn")
+const BarracksScene := preload("res://Features/Objects/Buildings/barracks_building.tscn")
+const HouseScene := preload("res://Features/Objects/Buildings/house_building.tscn")
+const TownHallScene := preload("res://Features/Objects/Buildings/town_hall_building.tscn")
 
 const WALL_COORDS := Vector2i(1,0)
 
@@ -50,7 +49,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.pressed and event.keycode == KEY_W:
 			if not placing_building:
 				building_preview = preview_building(
-					BaseBuildingScene, 
+					BarracksScene, 
 					map, 
 					map.tilemap, 
 					mouse_pos
@@ -60,16 +59,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.pressed and event.keycode == KEY_E:
 			if not placing_building:
 				building_preview = preview_building(
-					BarracksScene, 
-					map, 
-					map.tilemap, 
-					mouse_pos
-					)
-				placing_building = true
-		
-		if event.pressed and event.keycode == KEY_R:
-			if not placing_building:
-				building_preview = preview_building(
 					HouseScene, 
 					map, 
 					map.tilemap,
@@ -77,7 +66,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					)
 				placing_building = true
 		
-		if event.pressed and event.keycode == KEY_T:
+		if event.pressed and event.keycode == KEY_R:
 			if not placing_building:
 				building_preview = preview_building(
 					TownHallScene, 
