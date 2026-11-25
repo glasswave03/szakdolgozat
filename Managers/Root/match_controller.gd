@@ -22,7 +22,8 @@ func _ready() -> void:
 	
 	map_controller = MapController.new()
 	add_child(map_controller)
-	set_map_scene(maps.get("test_map"))
+	var selected_map_scene: PackedScene = maps.get("test_map")
+	set_map_scene(selected_map_scene)
 	map_controller.setup(map)
 	
 

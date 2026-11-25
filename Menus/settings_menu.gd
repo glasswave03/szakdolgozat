@@ -102,11 +102,17 @@ func reset_settings() -> void:
 
 
 static func _set_settings() -> void:
-	set_mute(Global.settings_data.get("mute"))
-	set_music_volume(Global.settings_data.get("music"))
-	set_sfx_volume(Global.settings_data.get("sfx"))
-	set_resolution(Global.settings_data.get("resolution"))
-	set_fullscreen(Global.settings_data.get("fullscreen"))
+	var mute: bool = Global.settings_data.get("mute")
+	var music_vol: float = Global.settings_data.get("music")
+	var sfx_vol: float = Global.settings_data.get("sfx")
+	var resolution: int = Global.settings_data.get("resolution")
+	var fullscreen: bool = Global.settings_data.get("fullscreen")
+	
+	set_mute(mute)
+	set_music_volume(music_vol)
+	set_sfx_volume(sfx_vol)
+	set_resolution(resolution)
+	set_fullscreen(fullscreen)
 
 
 static func set_mute(toggled_on: bool) -> void:
