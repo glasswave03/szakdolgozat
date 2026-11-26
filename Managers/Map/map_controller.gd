@@ -69,6 +69,8 @@ func setup(_map: MapScene) -> void:
 	
 	ui.spawn_requested.connect(ui_actions.spawn_units_at_selected_buildings)
 	ui.destroy_requested.connect(ui_actions.destroy_selected_buildings)
+	
+	map.setup_objects()
 
 
 func astar_grid_setup() -> void:

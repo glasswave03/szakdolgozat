@@ -3,11 +3,14 @@ extends Control
 const SettingsMenu: String = "res://Menus/settings_menu.tscn"
 
 func _on_play_pressed() -> void:
-	var player: Player = Player.new()
-	player.display_name = "noobmaster69"
-	var player2: Player = Player.new()
-	player2.display_name = "fagormagorreconstructor"
-	if Global.game_manager.start_match([player, player2]):
+	var players: Array[Player] = []
+	
+	for i in range(0, 3):
+		var player: Player = Player.new()
+		player.display_name = "player" + str(i)
+		players.append(player)
+	
+	if Global.game_manager.start_match(players):
 		queue_free()
 		print("Starting match!")
 	else:

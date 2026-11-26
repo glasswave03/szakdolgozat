@@ -18,13 +18,8 @@ func _ready() -> void:
 	Global._load_settings_into(Global.settings_data)
 	Global._load_settings_into(unsaved_settings)
 	
-	reset_settings()
-	
-	#_on_mute_toggled(mute_check.button_pressed)
-	#_on_music_slider_value_changed(music_slider.value)
-	#_on_sfx_slider_value_changed(sfx_slider.value)
-	#_on_resolution_options_item_selected(resolutions.selected)
-	#_on_fullscreen_check_toggled(fullscreen_check.button_pressed)
+	# settings_data is loaded into unsaved_settings and sets every item
+	initialize_settings()
 
 
 func _on_back_button_pressed() -> void:
@@ -60,6 +55,7 @@ func _on_resolution_options_item_selected(index: int) -> void:
 func _on_fullscreen_check_toggled(toggled_on: bool) -> void:
 	var index: int = unsaved_settings.get("resolution")
 	
+	# instantly toggles whether resolutions are disabled or not
 	if toggled_on:
 		resolutions.disabled = true
 		resolutions.text = "Fullscreen enabled"
@@ -92,7 +88,7 @@ func _go_to_main_menu() -> void:
 	Global.game_manager.change_scene(MainMenu)
 
 
-func reset_settings() -> void:
+func initialize_settings() -> void:
 	mute_check.button_pressed = unsaved_settings.get("mute")
 	music_slider.value = unsaved_settings.get("music")
 	sfx_slider.value = unsaved_settings.get("sfx")

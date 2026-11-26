@@ -7,4 +7,4 @@ var buildings: int
 var units: int
 var gold: int
 var population: int
-var max_population: int
+var max_population: int = 20

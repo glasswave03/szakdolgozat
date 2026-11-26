@@ -22,8 +22,6 @@ var team: PlayerManager.Teams
 
 
 func _ready() -> void:
-	$Sprite.texture = object.sprite
-	
 	health = object.max_health
 	$HealthBar.max_value = object.max_health
 	$HealthBar.value = health

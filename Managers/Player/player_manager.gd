@@ -8,7 +8,6 @@ enum Teams {
 	TEAM_FOUR,
 	TEAM_FIVE,
 	TEAM_SIX,
-	TEAM_MAX,
 }
 
 var players: Array[Player]

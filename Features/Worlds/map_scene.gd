@@ -22,6 +22,7 @@ func _ready() -> void:
 		if object is BaseUnit:
 			var map_controller := get_parent()
 			object.setup(tile_pos, map_controller)
+		
 		elif object is BaseBuilding:
 			var cells: Array[Vector2i] = []
 			var size: Vector2i = object.building_res.calculate_tilesize()
@@ -30,5 +31,15 @@ func _ready() -> void:
 				for y in size.y:
 					cells.append(Vector2i(tile_pos.x + x, tile_pos.y + y))
 			
+			#TODO: add town halls to spawn points or spawn them on match start
 			print(cells)
 			object.placed.emit(cells)
+
+
+func setup_objects() -> void:
+	var map_controller := get_parent()
+	var targeted_func: Callable = map_controller.interactions._on_object_targeted
+	
+	for child in get_children():
+		if child is GoldMine:
+			child.targeted.connect(targeted_func)

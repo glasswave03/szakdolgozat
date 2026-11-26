@@ -7,6 +7,7 @@ const team := PlayerManager.Teams.TEAM_NEUTRAL
 
 var is_depleted: bool = false
 
+@onready var sprite: Sprite2D = $Sprite
 @onready var gold_amount: int = object.max_health
 
 
@@ -16,6 +17,7 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 			clicked.emit(self, event)
 		if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
 			targeted.emit(self)
+			print("is goldmine targetable: ", targeted.has_connections())
 			get_tree().get_root().set_input_as_handled()
 
 
@@ -26,7 +28,7 @@ func _process(_delta: float) -> void:
 
 func _on_depleted() -> void:
 	is_depleted = true
-	modulate = Color.RED
+	sprite.texture.region.x = 128
 	input_pickable = false
 	printerr("Gold mine is empty!")
 
