@@ -48,9 +48,12 @@ func start_match(players: Array[Player]) -> bool:
 			peasant.setup(tile_pos, match_controller.map_controller)
 			peasant.team = players[i].team
 		
-		match_controller.player_manager.add_child(players[i])
+		match_controller.player_manager.add_player(players[i])
 	
+	for team in match_controller.player_manager.players.size():
+		print(match_controller.player_manager.get_player_by_team(team).display_name)
 	current_scene = map_scene
+	
 	return true
 
 

@@ -25,7 +25,6 @@ func _ready() -> void:
 	var selected_map_scene: PackedScene = maps.get("test_map")
 	set_map_scene(selected_map_scene)
 	map_controller.setup(map)
-	
 
 
 func set_map_scene(_map_scene: PackedScene) -> void:

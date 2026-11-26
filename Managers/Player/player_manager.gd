@@ -10,3 +10,12 @@ enum Teams {
 	TEAM_SIX,
 	TEAM_MAX,
 }
+
+var players: Array[Player]
+
+func add_player(player: Player) -> void:
+	players.append(player)
+
+
+func get_player_by_team(team: Teams) -> Player:
+	return players.get(team)

@@ -20,11 +20,11 @@ func _ready() -> void:
 	
 	reset_settings()
 	
-	_on_mute_toggled(mute_check.button_pressed)
-	_on_music_slider_value_changed(music_slider.value)
-	_on_sfx_slider_value_changed(sfx_slider.value)
-	_on_resolution_options_item_selected(resolutions.selected)
-	_on_fullscreen_check_toggled(fullscreen_check.button_pressed)
+	#_on_mute_toggled(mute_check.button_pressed)
+	#_on_music_slider_value_changed(music_slider.value)
+	#_on_sfx_slider_value_changed(sfx_slider.value)
+	#_on_resolution_options_item_selected(resolutions.selected)
+	#_on_fullscreen_check_toggled(fullscreen_check.button_pressed)
 
 
 func _on_back_button_pressed() -> void:
@@ -39,35 +39,34 @@ func _on_back_button_pressed() -> void:
 
 func _on_mute_toggled(toggled_on: bool) -> void:
 	set_mute(toggled_on)
-	
 	unsaved_settings.set("mute", toggled_on)
 
 
 func _on_music_slider_value_changed(value: float) -> void:
 	set_music_volume(value)
-	
 	unsaved_settings.set("music", value)
 
 
 func _on_sfx_slider_value_changed(value: float) -> void:
 	set_sfx_volume(value)
-	
 	unsaved_settings.set("sfx", value)
 
 
 func _on_resolution_options_item_selected(index: int) -> void:
-	if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN:
+	set_resolution(index)
+	unsaved_settings.set("resolution", index)
+
+
+func _on_fullscreen_check_toggled(toggled_on: bool) -> void:
+	var index: int = unsaved_settings.get("resolution")
+	
+	if toggled_on:
 		resolutions.disabled = true
 		resolutions.text = "Fullscreen enabled"
 	else:
 		resolutions.disabled = false
 		resolutions.text = resolutions.get_item_text(index)
 	
-	set_resolution(index)
-	unsaved_settings.set("resolution", index)
-
-
-func _on_fullscreen_check_toggled(toggled_on: bool) -> void:
 	set_fullscreen(toggled_on)
 	
 	unsaved_settings.set("fullscreen", toggled_on)

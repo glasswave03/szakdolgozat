@@ -1,5 +1,5 @@
 ## A player in the match currently being played
-class_name Player extends Node
+class_name Player extends RefCounted
 
 var display_name: String
 var team: PlayerManager.Teams
