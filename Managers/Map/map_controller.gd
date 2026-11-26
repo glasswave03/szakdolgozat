@@ -103,7 +103,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			for object: BaseObject in selection.selected_objects:
 				#TODO: clicking an empty tile should clear the target
 				if not is_instance_valid(object): 
-					continue #TODO: maybe this should move the unit?
+					continue
 				
 				if object is BaseUnit:
 					if object.target != null:
@@ -124,21 +124,9 @@ func _unhandled_input(event: InputEvent) -> void:
 				map.add_child(debug_spawn_warrior(mouse_pos))
 
 
-func _on_object_clicked(object: BaseObject, event: InputEventMouseButton) -> void:
-	selection._on_object_clicked(object, event)
-
-
-func _on_object_targeted(object: BaseObject) -> void:
-	interactions._on_object_targeted(object)
-
-
-func _on_unit_spawned(unit: BaseUnit, rally_pos: Vector2) -> void:
-	movement._on_unit_spawned(unit, rally_pos)
-
-
 func debug_spawn_warrior(mouse_pos: Vector2) -> WarriorUnit:
-	var unit_scene := load("res://Features/Objects/warrior_unit.tscn")
-	var new_unit: BaseUnit = unit_scene.instantiate()
+	var unit_scene := load("res://Features/Objects/Units/warrior_unit.tscn")
+	var new_unit: WarriorUnit = unit_scene.instantiate()
 	new_unit.setup(tilemap.to_local(tilemap.local_to_map(mouse_pos)), self)
 	new_unit.global_position = mouse_pos
 	#TODO: object spawned signal

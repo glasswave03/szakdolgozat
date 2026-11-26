@@ -24,3 +24,6 @@ func _on_spawn_requested() -> void:
 
 func has_unit_factory() -> bool:
 	return true
+
+
+#TODO: gold deposit

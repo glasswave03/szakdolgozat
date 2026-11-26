@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ObjectResource" format=3 uid="uid://qkoipnodix45"]
+
+[ext_resource type="Script" uid="uid://cewmlxh0qog2d" path="res://Features/Resources/object.gd" id="1_7wf6u"]
+
+[resource]
+script = ExtResource("1_7wf6u")
+name = "Goldmine"
+max_health = 5000.0
+selectable = false
+metadata/_custom_type_script = "uid://cewmlxh0qog2d"

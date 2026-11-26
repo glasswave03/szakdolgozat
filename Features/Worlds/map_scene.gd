@@ -17,8 +17,18 @@ func _ready() -> void:
 			spawn_points.append(child.global_position)
 	
 	for object: BaseObject in get_tree().get_nodes_in_group("Selectable"):
+		var tile_pos: Vector2i = tilemap.local_to_map(tilemap.to_local(object.global_position))
+		
 		if object is BaseUnit:
-			object.setup(tilemap.local_to_map(tilemap.to_local(object.global_position)), get_parent())
+			var map_controller := get_parent()
+			object.setup(tile_pos, map_controller)
 		elif object is BaseBuilding:
-			#TODO: get occupied cells
-			object.placed.emit()
+			var cells: Array[Vector2i] = []
+			var size: Vector2i = object.building_res.calculate_tilesize()
+			
+			for x in size.x:
+				for y in size.y:
+					cells.append(Vector2i(tile_pos.x + x, tile_pos.y + y))
+			
+			print(cells)
+			object.placed.emit(cells)

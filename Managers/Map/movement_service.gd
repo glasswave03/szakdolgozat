@@ -67,3 +67,7 @@ func move_unit_to_target(object: BaseUnit, target: BaseObject) -> void:
 
 func _on_unit_spawned(unit: BaseUnit, rally_pos: Vector2) -> void:
 	move_selected([unit], rally_pos)
+
+
+func _on_target_position_update_requested(from: BaseUnit, to: BaseObject) -> void:
+	move_unit_to_target(from, to)

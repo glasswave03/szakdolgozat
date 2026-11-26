@@ -5,7 +5,7 @@ const BarracksScene := preload("res://Features/Objects/Buildings/barracks_buildi
 const HouseScene := preload("res://Features/Objects/Buildings/house_building.tscn")
 const TownHallScene := preload("res://Features/Objects/Buildings/town_hall_building.tscn")
 
-const WALL_COORDS := Vector2i(1,0)
+const RUBBLE_COORDS := Vector2i(2,0)
 
 var map: MapScene
 var placing_building: bool = false
@@ -92,19 +92,18 @@ func place_building(global_pos: Vector2) -> void:
 				cells.append(cell_coords)
 				
 				#TODO: set to rubble coords on atlas
-				tilemap.set_cell(cell_coords, 1, WALL_COORDS, 0)
+				tilemap.set_cell(cell_coords, 1, RUBBLE_COORDS, 0)
 				
 				var tile_data := tilemap.get_cell_tile_data(cell_coords)
 				if tile_data == null or not tile_data.get_custom_data("walkable"):
 					get_parent().astar_grid.set_point_solid(cell_coords, true)
-					print("made tile solid at ", cell_coords)
 	
 	building_preview.placed.emit(cells)
 	building_preview.modulate = Color.WHITE
 	building_preview.death.connect(_on_building_destroyed.bind(building_preview))
 	
 	if building_preview.has_unit_factory():
-		building_preview.unit_factory.unit_spawned.connect(get_parent()._on_unit_spawned)
+		building_preview.unit_factory.unit_spawned.connect(get_parent().movement._on_unit_spawned)
 	
 	building_preview = null
 	placing_building = false
@@ -139,6 +138,5 @@ func _on_building_destroyed(building: BaseBuilding) -> void:
 				var tile_data := tilemap.get_cell_tile_data(cell)
 				if tile_data == null or not tile_data.get_custom_data("walkable"):
 					get_parent().astar_grid.set_point_solid(cell, false)
-					print("it's not solid anymore")
-				counter += 1
 				
+				counter += 1

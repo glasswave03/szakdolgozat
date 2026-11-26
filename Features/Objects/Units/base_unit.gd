@@ -1,5 +1,7 @@
 class_name BaseUnit extends BaseObject
 
+signal target_position_update_requested(from: BaseUnit, to: BaseObject)
+
 @export var unit_resource: Resource
 @export var combat_resource: Resource
 
@@ -34,8 +36,9 @@ func _ready() -> void:
 
 
 func setup(cell_pos: Vector2i, map_controller: MapController) -> void:
-	clicked.connect(map_controller._on_object_clicked)
-	targeted.connect(map_controller._on_object_targeted)
+	clicked.connect(map_controller.selection._on_object_clicked)
+	targeted.connect(map_controller.interactions._on_object_targeted)
+	target_position_update_requested.connect(map_controller.movement._on_target_position_update_requested)
 	current_cell = cell_pos
 	is_set_up = true
 
@@ -86,8 +89,7 @@ func target_check() -> void:
 		return
 	
 	if global_position.distance_to(target.global_position) > attack_range:
-		#TODO: move in range
-		print("out of range!")
+		target_position_update_requested.emit(self, target)
 	elif attack_cooldown <= 0:
 		target.take_damage(attack_damage)
 		attack_cooldown = attack_rate

@@ -1,6 +1,6 @@
 class_name BaseBuilding extends BaseObject
 
-signal placed
+signal placed(cells: Array[Vector2i])
 
 @export var building_res: Resource
 
@@ -77,8 +77,8 @@ func _process(_delta: float) -> void:
 func _on_placed(cells: Array[Vector2i]) -> void:
 	var map_controller := get_parent().get_parent()
 	occupied_cells = cells
-	var clicked_func: Callable = map_controller._on_object_clicked
-	var targeted_func: Callable = map_controller._on_object_targeted
+	var clicked_func: Callable = map_controller.selection._on_object_clicked
+	var targeted_func: Callable = map_controller.interactions._on_object_targeted
 	clicked.connect(clicked_func)
 	targeted.connect(targeted_func)
 	

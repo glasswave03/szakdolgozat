@@ -4,8 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://curl474s8liu4" path="res://Assets/icon.svg" id="2_18ja4"]
 [ext_resource type="Resource" uid="uid://2quclpouodlp" path="res://Features/Resources/big_map_settings.tres" id="2_wh76p"]
 [ext_resource type="Texture2D" uid="uid://ca66dlf4w6840" path="res://Assets/Sprites/atlas.png" id="3_k145m"]
-[ext_resource type="PackedScene" uid="uid://cmbxi6wkfm7sn" path="res://Features/Objects/Buildings/barracks_building.tscn" id="5_n1r7g"]
-[ext_resource type="PackedScene" uid="uid://epcndduay2sp" path="res://Features/Objects/Units/warrior_unit.tscn" id="6_6y2sj"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7vjjh"]
 texture = ExtResource("2_18ja4")
@@ -26,6 +24,20 @@ texture_region_size = Vector2i(32, 32)
 0:2/0/texture_origin = Vector2i(-16, -16)
 1:1/0 = 0
 0:4/0 = 0
+0:4/0/custom_data_0 = true
+2:0/0 = 0
+2:0/0/custom_data_0 = true
+2:2/size_in_atlas = Vector2i(2, 2)
+2:2/0 = 0
+2:2/0/texture_origin = Vector2i(-16, -16)
+4:2/size_in_atlas = Vector2i(2, 2)
+4:2/0 = 0
+4:2/0/texture_origin = Vector2i(-16, -16)
+6:2/size_in_atlas = Vector2i(2, 2)
+6:2/0 = 0
+6:2/0/texture_origin = Vector2i(-16, -16)
+0:5/size_in_atlas = Vector2i(3, 3)
+0:5/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_18ja4"]
 tile_size = Vector2i(32, 32)
@@ -64,7 +76,3 @@ position = Vector2(-1406, 1335)
 
 [node name="SpawnPoint4" type="Marker2D" parent="." unique_id=364338434]
 position = Vector2(1094, 1321)
-
-[node name="Barracks" parent="." unique_id=1966122901 instance=ExtResource("5_n1r7g")]
-
-[node name="WarriorUnit" parent="." unique_id=1991387416 instance=ExtResource("6_6y2sj")]
